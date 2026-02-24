@@ -31,5 +31,6 @@ if [[ "$PERMISSION_NAME" == "bash" ]] && [[ -n "$COMMAND" ]]; then
     fi
 fi
 
-# For non-whitelisted commands, let user decide (no output = ask user)
+# For non-whitelisted commands, notify and let user decide
+send_bark_notification "claude-permit" "$TITLE_PERMIT" "Manual approval: $COMMAND"
 exit 0

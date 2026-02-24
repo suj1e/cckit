@@ -80,3 +80,14 @@ The uninstall script SHALL remove all barnhk-related hooks from settings.
 #### Scenario: Preserve other hooks
 - **WHEN** uninstall.sh is run
 - **THEN** non-barnhk hooks SHALL remain unchanged in settings.json
+
+### Requirement: Notify on manual approval needed
+The system SHALL send Bark notification when a command requires user approval.
+
+#### Scenario: Send notification for non-whitelisted command
+- **WHEN** a command is not in the safe whitelist
+- **THEN** the hook SHALL send a Bark notification before waiting for user decision
+
+#### Scenario: Notification includes command details
+- **WHEN** sending manual approval notification
+- **THEN** the notification body SHALL include the command string

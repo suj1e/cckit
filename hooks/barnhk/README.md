@@ -29,6 +29,15 @@ Claude Code Hooks 增强工具包，提供危险命令防护、安全命令自�
 ```
 
 
+## 通知触发场景
+
+| 场景 | 分组 | 说明 |
+|------|------|------|
+| 危险命令被阻断 | `claude-danger` | Critical/High 级别命令被 PreToolUse 阻止 |
+| 命令自动批准 | `claude-permit` | 白名单命令被 PermissionRequest 自动批准 |
+| 命令等待审批 | `claude-permit` | 非白名单命令需要用户手动确认 |
+| 任务完成 | `claude-done` | Claude Code 任务执行完毕 |
+
 ## 通知分组
 
 | 分组 | 触发场景 | 默认声音 |
