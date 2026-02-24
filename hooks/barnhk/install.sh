@@ -47,18 +47,26 @@ fi
 
 # === Idempotent: Remove existing barnhk hooks first ===
 SETTINGS=$(echo "$SETTINGS" | jq '
-    .hooks.PreToolUse = [.hooks.PreToolUse[]? // empty | select(.hooks[0] | test("barnhk") | not)] |
-    .hooks.PermissionRequest = [.hooks.PermissionRequest[]? // empty | select(.hooks[0] | test("barnhk") | not)] |
-    .hooks.TaskCompleted = [.hooks.TaskCompleted[]? // empty | select(test("barnhk") | not)]
+    .hooks.PreToolUse = [.hooks.PreToolUse[]? // empty | select(.hooks[]?.command? | test("barnhk") | not)] |
+    .hooks.PermissionRequest = [.hooks.PermissionRequest[]? // empty | select(.hooks[]?.command? | test("barnhk") | not)] |
+    .hooks.TaskCompleted = [.hooks.TaskCompleted[]? // empty | select(.hooks[]?.command? | test("barnhk") | not)] |
+    .hooks.Stop = [.hooks.Stop[]? // empty | select(.hooks[]?.command? | test("barnhk") | not)] |
+    .hooks.TeammateIdle = [.hooks.TeammateIdle[]? // empty | select(.hooks[]?.command? | test("barnhk") | not)]
 ')
 
-# === Add new hooks with global paths ===
+# === Add new hooks with correct format ===
+# Note: matcher is a string regex for PreToolUse/PermissionRequest
+# TaskCompleted/Stop/TeammateIdle do not support matchers
 SETTINGS=$(echo "$SETTINGS" | jq --arg pre "$GLOBAL_LIB/pre-tool-use.sh" \
     --arg perm "$GLOBAL_LIB/permission-request.sh" \
-    --arg task "$GLOBAL_LIB/task-completed.sh" '
-    .hooks.PreToolUse = (.hooks.PreToolUse // []) + [{"matcher": "Bash", "hooks": [$pre]}] |
-    .hooks.PermissionRequest = (.hooks.PermissionRequest // []) + [{"matcher": "bash", "hooks": [$perm]}] |
-    .hooks.TaskCompleted = (.hooks.TaskCompleted // []) + [$task]
+    --arg task "$GLOBAL_LIB/task-completed.sh" \
+    --arg stop "$GLOBAL_LIB/stop.sh" \
+    --arg idle "$GLOBAL_LIB/teammate-idle.sh" '
+    .hooks.PreToolUse = (.hooks.PreToolUse // []) + [{"matcher": "Bash", "hooks": [{"type": "command", "command": $pre}]}] |
+    .hooks.PermissionRequest = (.hooks.PermissionRequest // []) + [{"matcher": "Bash", "hooks": [{"type": "command", "command": $perm}]}] |
+    .hooks.TaskCompleted = (.hooks.TaskCompleted // []) + [{"hooks": [{"type": "command", "command": $task}]}] |
+    .hooks.Stop = (.hooks.Stop // []) + [{"hooks": [{"type": "command", "command": $stop}]}] |
+    .hooks.TeammateIdle = (.hooks.TeammateIdle // []) + [{"hooks": [{"type": "command", "command": $idle}]}]
 ')
 
 # Write updated settings
@@ -74,3 +82,5 @@ echo "Installed hooks:"
 echo "  - PreToolUse: $GLOBAL_LIB/pre-tool-use.sh"
 echo "  - PermissionRequest: $GLOBAL_LIB/permission-request.sh"
 echo "  - TaskCompleted: $GLOBAL_LIB/task-completed.sh"
+echo "  - Stop: $GLOBAL_LIB/stop.sh"
+echo "  - TeammateIdle: $GLOBAL_LIB/teammate-idle.sh"

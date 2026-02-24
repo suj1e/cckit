@@ -70,6 +70,11 @@ The install script SHALL support repeated execution without creating duplicate h
 - **WHEN** barnhk directory is moved to a new location and install.sh is run
 - **THEN** old hooks SHALL be removed and new hooks with correct paths SHALL be added
 
+#### Scenario: Correct hook format with string matcher
+- **WHEN** install.sh adds hooks to settings.json
+- **THEN** PreToolUse and PermissionRequest hooks SHALL use `"Bash"` as matcher string
+- **AND** TaskCompleted, Stop, and TeammateIdle hooks SHALL NOT have a matcher field
+
 ### Requirement: Clean uninstallation
 The uninstall script SHALL remove all barnhk-related hooks from settings.
 
