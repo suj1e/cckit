@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProperty scope="context" name="appName" source="spring.application.name" defaultValue="{{SERVICE_NAME}}"/>
+
+    <!-- ==================== 开发/测试环境：文本 + 文件 ==================== -->
+    <springProfile name="dev | test">
+        <!-- 控制台 -->
+        <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) %cyan(%logger{36}) - %msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <!-- 文件 -->
+        <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>/app/logs/{{SERVICE_NAME}}.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>/app/logs/{{SERVICE_NAME}}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <maxFileSize>100MB</maxFileSize>
+                <maxHistory>7</maxHistory>
+                <totalSizeCap>1GB</totalSizeCap>
+            </rollingPolicy>
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="console"/>
+            <appender-ref ref="file"/>
+        </root>
+
+        <!-- 开发环境详细日志 -->
+        <logger name="io.github.suj1e" level="DEBUG"/>
+        <logger name="org.hibernate.SQL" level="DEBUG"/>
+        <logger name="org.springframework.security" level="DEBUG"/>
+    </springProfile>
+
+    <!-- ==================== 生产环境：JSON ==================== -->
+    <springProfile name="prod">
+        <appender name="jsonConsole" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <customFields>{"service":"${appName}"}</customFields>
+            </encoder>
+        </appender>
+        <root level="INFO">
+            <appender-ref ref="jsonConsole"/>
+        </root>
+
+        <!-- 生产环境只记录重要日志 -->
+        <logger name="io.github.suj1e" level="INFO"/>
+        <logger name="org.hibernate.SQL" level="WARN"/>
+        <logger name="org.springframework.security" level="INFO"/>
+    </springProfile>
+
+    <!-- ==================== 通用日志配置 ==================== -->
+    <!-- 第三方库日志级别 -->
+    <logger name="org.apache.catalina" level="INFO"/>
+    <logger name="org.springframework.cloud" level="INFO"/>
+    <logger name="com.alibaba.nacos" level="INFO"/>
+    <logger name="org.springframework.kafka" level="INFO"/>
+    <logger name="org.flywaydb" level="INFO"/>
+    <logger name="io.lettuce" level="WARN"/>
+    <logger name="com.zaxxer.hikari" level="WARN"/>
+</configuration>

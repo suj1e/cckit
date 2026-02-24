@@ -1,0 +1,92 @@
+[versions]
+# Spring
+spring-boot = "4.0.2"
+spring-cloud = "2025.1.1"
+spring-cloud-alibaba = "2025.1.0.0"
+
+# Nexora
+nexora = "1.0.0"
+
+# Database
+flyway = "11.3.4"
+mysql = "9.1.0"
+jakarta-persistence = "3.2.0"
+
+# Observability
+opentelemetry = "1.58.0"
+logstash-logback = "9.0"
+
+# Documentation
+springdoc = "2.8.2"
+
+# Code Quality
+lombok = "1.18.34"
+lombok-mapstruct-binding = "0.2.0"
+mapstruct = "1.6.0"
+querydsl = "5.1.0"
+
+# Testing
+testcontainers = "1.20.0"
+
+[libraries]
+# Nexora Spring Boot Starters
+nexora-spring-boot-starter-web = { module = "io.github.suj1e:nexora-spring-boot-starter-web", version.ref = "nexora" }
+nexora-spring-boot-starter-redis = { module = "io.github.suj1e:nexora-spring-boot-starter-redis", version.ref = "nexora" }
+nexora-spring-boot-starter-kafka = { module = "io.github.suj1e:nexora-spring-boot-starter-kafka", version.ref = "nexora" }
+nexora-spring-boot-starter-resilience = { module = "io.github.suj1e:nexora-spring-boot-starter-resilience", version.ref = "nexora" }
+nexora-spring-boot-starter-data-jpa = { module = "io.github.suj1e:nexora-spring-boot-starter-data-jpa", version.ref = "nexora" }
+nexora-spring-boot-starter-audit = { module = "io.github.suj1e:nexora-spring-boot-starter-audit", version.ref = "nexora" }
+
+# Spring Boot Starters
+spring-boot-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
+spring-boot-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
+spring-boot-aop = { module = "org.springframework:spring-aop" }
+spring-boot-quartz = { module = "org.springframework.boot:spring-boot-starter-quartz" }
+spring-boot-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+spring-security-test = { module = "org.springframework.security:spring-security-test" }
+
+# Spring Cloud
+spring-cloud-alibaba-nacos-config = { module = "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config" }
+spring-cloud-alibaba-nacos-discovery = { module = "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery" }
+spring-cloud-bootstrap = { module = "org.springframework.cloud:spring-cloud-starter-bootstrap" }
+spring-cloud-loadbalancer = { module = "org.springframework.cloud:spring-cloud-starter-loadbalancer" }
+
+# Spring Web
+spring-web = { module = "org.springframework:spring-web" }
+
+# Database
+flyway = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
+flyway-mysql = { module = "org.flywaydb:flyway-mysql", version.ref = "flyway" }
+mysql = { module = "com.mysql:mysql-connector-j", version.ref = "mysql" }
+jakarta-persistence-api = { module = "jakarta.persistence:jakarta.persistence-api", version.ref = "jakarta-persistence" }
+
+# Observability
+micrometer-prometheus = { module = "io.micrometer:micrometer-registry-prometheus" }
+micrometer-tracing-otel = { module = "io.micrometer:micrometer-tracing-bridge-otel" }
+opentelemetry-exporter = { module = "io.opentelemetry:opentelemetry-exporter-otlp", version.ref = "opentelemetry" }
+logstash-logback = { module = "net.logstash.logback:logstash-logback-encoder", version.ref = "logstash-logback" }
+
+# Documentation
+springdoc-openapi = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc" }
+
+# Lombok & MapStruct
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+lombok-mapstruct-binding = { module = "org.projectlombok:lombok-mapstruct-binding", version.ref = "lombok-mapstruct-binding" }
+mapstruct = { module = "org.mapstruct:mapstruct", version.ref = "mapstruct" }
+mapstruct-processor = { module = "org.mapstruct:mapstruct-processor", version.ref = "mapstruct" }
+
+# QueryDSL
+querydsl-jpa = { module = "com.querydsl:querydsl-jpa", version.ref = "querydsl" }
+querydsl-apt = { module = "com.querydsl:querydsl-apt", version.ref = "querydsl" }
+
+# Testcontainers
+testcontainers-kafka = { module = "org.testcontainers:kafka", version.ref = "testcontainers" }
+testcontainers-mysql = { module = "org.testcontainers:mysql", version.ref = "testcontainers" }
+testcontainers-junit = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers" }
+
+[bundles]
+observability = ["spring-boot-actuator", "micrometer-prometheus", "micrometer-tracing-otel", "opentelemetry-exporter", "logstash-logback"]
+testing = ["spring-boot-test", "spring-security-test"]
+
+[plugins]
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
