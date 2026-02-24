@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # stop.sh - Stop hook for session end notifications
 # Receives JSON via stdin
 

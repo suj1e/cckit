@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # task-completed.sh - TaskCompleted hook for completion notifications
 # Receives JSON via stdin
 

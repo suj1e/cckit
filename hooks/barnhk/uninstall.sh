@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # uninstall.sh - Uninstall barnhk hooks
 
 GLOBAL_DIR="$HOME/.claude/hooks/barnhk"

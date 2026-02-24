@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # teammate-idle.sh - TeammateIdle hook for teammate idle notifications
 # Receives JSON via stdin
 

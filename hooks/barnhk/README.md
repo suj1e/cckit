@@ -32,6 +32,7 @@ Claude Code Hooks 增强工具包，提供危险命令防护、安全命令自�
 
 ### 依赖
 
+- `bash` 3.0+ - Shell 解释器
 - `jq` - JSON 处理工具
 - `curl` - 发送 Bark 通知（可选）
 
@@ -39,6 +40,16 @@ Claude Code Hooks 增强工具包，提供危险命令防护、安全命令自�
 - **macOS**: `brew install jq`
 - **Debian/Ubuntu**: `sudo apt install jq`
 - **RHEL/CentOS/Fedora**: `sudo yum install jq` 或 `sudo dnf install jq`
+- **Arch Linux**: `sudo pacman -S jq`
+- **openSUSE**: `sudo zypper install jq`
+
+### 调试模式
+
+如果安装遇到问题，可以启用详细日志：
+
+```bash
+VERBOSE=true ./install.sh
+```
 
 ### 安装/卸载
 

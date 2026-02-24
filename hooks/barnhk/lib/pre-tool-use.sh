@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # pre-tool-use.sh - PreToolUse hook for dangerous command detection
 # Receives JSON via stdin, exits 0 to allow, non-zero to block
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # common.sh - Shared functions for barnhk hooks
 
 # Get the directory where this script is located

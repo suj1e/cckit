@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # permission-request.sh - PermissionRequest hook for auto-approval
 # Receives JSON via stdin, can output JSON to auto-approve
 

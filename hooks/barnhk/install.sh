@@ -1,7 +1,26 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # install.sh - Install barnhk hooks to global directory (idempotent)
 
 set -e
+
+# Minimum bash version required (3.0+ for BASH_SOURCE)
+MIN_BASH_MAJOR=3
+
+# Check bash version
+if [[ "${BASH_VERSINFO[0]}" -lt "$MIN_BASH_MAJOR" ]]; then
+    echo "Error: Bash version ${BASH_VERSINFO[0]}.${BASH_VERSINFO[1]} is too old."
+    echo "barnhk requires Bash $MIN_BASH_MAJOR.0 or later."
+    echo "Current bash: $BASH_VERSION"
+    exit 1
+fi
+
+# Verbose mode
+VERBOSE="${VERBOSE:-false}"
+debug() {
+    if [[ "$VERBOSE" == "true" ]]; then
+        echo "[DEBUG] $*"
+    fi
+}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LIB_DIR="$SCRIPT_DIR/lib"
@@ -9,14 +28,18 @@ GLOBAL_DIR="$HOME/.claude/hooks/barnhk"
 GLOBAL_LIB="$GLOBAL_DIR/lib"
 SETTINGS_FILE="$HOME/.claude/settings.json"
 
-echo "Installing barnhk hooks..."
-
 # Detect OS
 OS_TYPE=$(uname -s)
 
-# Check for jq
+echo "Installing barnhk hooks..."
+debug "OS: $OS_TYPE"
+debug "Bash version: $BASH_VERSION"
+debug "Script directory: $SCRIPT_DIR"
+
+# Check for jq (required)
 if ! command -v jq &>/dev/null; then
-    echo "Warning: jq is not installed. JSON parsing may not work."
+    echo "Error: jq is not installed. jq is required for JSON parsing."
+    echo ""
     case "$OS_TYPE" in
         Darwin)
             echo "Install jq with: brew install jq"
@@ -28,6 +51,10 @@ if ! command -v jq &>/dev/null; then
                 echo "Install jq with: sudo yum install jq"
             elif command -v dnf &>/dev/null; then
                 echo "Install jq with: sudo dnf install jq"
+            elif command -v pacman &>/dev/null; then
+                echo "Install jq with: sudo pacman -S jq"
+            elif command -v zypper &>/dev/null; then
+                echo "Install jq with: sudo zypper install jq"
             else
                 echo "Install jq using your package manager"
             fi
@@ -36,7 +63,11 @@ if ! command -v jq &>/dev/null; then
             echo "Install jq using your package manager"
             ;;
     esac
+    exit 1
 fi
+
+# Error handler for better debugging
+trap 'echo "Error: Installation failed at line $LINENO"; echo "Run with VERBOSE=true for more details"; exit 1' ERR
 
 # Make source scripts executable
 chmod +x "$SCRIPT_DIR"/*.sh
