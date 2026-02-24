@@ -12,14 +12,12 @@ if [[ -f "$SETTINGS_FILE" ]]; then
     # Read existing settings
     SETTINGS=$(cat "$SETTINGS_FILE")
 
-    # Remove barnhk hooks from settings
-    SETTINGS=$(echo "$SETTINGS" | jq --arg pre "$SCRIPT_DIR/pre-tool-use.sh" \
-        --arg perm "$SCRIPT_DIR/permission-request.sh" \
-        --arg task "$SCRIPT_DIR/task-completed.sh" '
-        .hooks.PreToolUse = [.hooks.PreToolUse[]? | select(.hooks[0] != $pre)] |
-        .hooks.PermissionRequest = [.hooks.PermissionRequest[]? | select(.hooks[0] != $perm)] |
-        .hooks.TaskCompleted = [.hooks.TaskCompleted[]? | select(. != $task)]
-    ')
+    # Remove any hooks containing "barnhk" in their path (pattern matching)
+    SETTINGS=$(echo "$SETTINGS" | jq '
+        .hooks.PreToolUse = [.hooks.PreToolUse[]? | select(.hooks[0] | test("barnhk") | not)] |
+        .hooks.PermissionRequest = [.hooks.PermissionRequest[]? | select(.hooks[0] | test("barnhk") | not)] |
+        .hooks.TaskCompleted = [.hooks.TaskCompleted[]? | select(test("barnhk") | not)]
+    ' 2>/dev/null || echo "$SETTINGS")
 
     # Write updated settings
     echo "$SETTINGS" | jq '.' > "$SETTINGS_FILE"
