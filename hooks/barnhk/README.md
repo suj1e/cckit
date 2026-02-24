@@ -30,9 +30,6 @@ Claude Code Hooks 增强工具包，提供危险命令防护、安全命令自�
 ./uninstall.sh
 ```
 
-### 系统要求
-
-- Python 3.10+
 
 ## 通知分组
 
