@@ -25,25 +25,27 @@ chmod +x "$LIB_DIR"/*.sh
 # Ensure settings directory exists
 mkdir -p "$(dirname "$SETTINGS_FILE")"
 
-# === Idempotent: Remove existing barnhk hooks first ===
+# === Read existing settings ===
 if [[ -f "$SETTINGS_FILE" ]]; then
     SETTINGS=$(cat "$SETTINGS_FILE")
-
-    # Remove any hooks containing "barnhk" in their path
-    SETTINGS=$(echo "$SETTINGS" | jq '
-        .hooks.PreToolUse = [.hooks.PreToolUse[]? | select(.hooks[0] | test("barnhk") | not)] |
-        .hooks.PermissionRequest = [.hooks.PermissionRequest[]? | select(.hooks[0] | test("barnhk") | not)] |
-        .hooks.TaskCompleted = [.hooks.TaskCompleted[]? | select(test("barnhk") | not)]
-    ' 2>/dev/null || echo "$SETTINGS")
+else
+    SETTINGS="{}"
 fi
 
+# === Idempotent: Remove existing barnhk hooks first ===
+SETTINGS=$(echo "$SETTINGS" | jq '
+    .hooks.PreToolUse = [.hooks.PreToolUse[]? // empty | select(.hooks[0] | test("barnhk") | not)] |
+    .hooks.PermissionRequest = [.hooks.PermissionRequest[]? // empty | select(.hooks[0] | test("barnhk") | not)] |
+    .hooks.TaskCompleted = [.hooks.TaskCompleted[]? // empty | select(test("barnhk") | not)]
+')
+
 # === Add new hooks ===
-SETTINGS=$(echo "${SETTINGS:-{}}" | jq --arg pre "$LIB_DIR/pre-tool-use.sh" \
+SETTINGS=$(echo "$SETTINGS" | jq --arg pre "$LIB_DIR/pre-tool-use.sh" \
     --arg perm "$LIB_DIR/permission-request.sh" \
     --arg task "$LIB_DIR/task-completed.sh" '
-    .hooks.PreToolUse += [{"matcher": "Bash", "hooks": [$pre]}] |
-    .hooks.PermissionRequest += [{"matcher": "bash", "hooks": [$perm]}] |
-    .hooks.TaskCompleted += [$task]
+    .hooks.PreToolUse = (.hooks.PreToolUse // []) + [{"matcher": "Bash", "hooks": [$pre]}] |
+    .hooks.PermissionRequest = (.hooks.PermissionRequest // []) + [{"matcher": "bash", "hooks": [$perm]}] |
+    .hooks.TaskCompleted = (.hooks.TaskCompleted // []) + [$task]
 ')
 
 # Write updated settings
