@@ -19,6 +19,18 @@ json_value() {
     jq -r "$key // empty" 2>/dev/null
 }
 
+# Truncate string to max length
+# Usage: truncate_string <string> <max_length>
+truncate_string() {
+    local str="$1"
+    local max_len="${2:-100}"
+    if [[ ${#str} -gt $max_len ]]; then
+        echo "${str:0:$max_len}..."
+    else
+        echo "$str"
+    fi
+}
+
 # Send Bark notification (optional, silent failure)
 # Usage: send_bark_notification <group> <title> <body>
 send_bark_notification() {
