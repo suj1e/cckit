@@ -2,6 +2,14 @@
 
 Claude Code Hooks 增强工具包，提供危险命令防护、安全命令自动审批、Bark 推送通知和任务完成验证等功能。
 
+## 平台支持
+
+| 平台 | 支持状态 |
+|------|----------|
+| macOS | ✅ 完全支持 |
+| Linux | ✅ 完全支持 |
+| Windows (WSL) | 🧪 应该可用 |
+
 ## 功能
 
 | 功能 | 说明 |
@@ -21,6 +29,18 @@ Claude Code Hooks 增强工具包，提供危险命令防护、安全命令自�
 | `TeammateIdle` | 队友空闲时 | Bark 通知 |
 
 ## 安装
+
+### 依赖
+
+- `jq` - JSON 处理工具
+- `curl` - 发送 Bark 通知（可选）
+
+安装 jq：
+- **macOS**: `brew install jq`
+- **Debian/Ubuntu**: `sudo apt install jq`
+- **RHEL/CentOS/Fedora**: `sudo yum install jq` 或 `sudo dnf install jq`
+
+### 安装/卸载
 
 ```bash
 # 安装（复制到全局目录 ~/.claude/hooks/barnhk/）

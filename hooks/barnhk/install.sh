@@ -11,10 +11,31 @@ SETTINGS_FILE="$HOME/.claude/settings.json"
 
 echo "Installing barnhk hooks..."
 
+# Detect OS
+OS_TYPE=$(uname -s)
+
 # Check for jq
 if ! command -v jq &>/dev/null; then
     echo "Warning: jq is not installed. JSON parsing may not work."
-    echo "Install jq with: brew install jq"
+    case "$OS_TYPE" in
+        Darwin)
+            echo "Install jq with: brew install jq"
+            ;;
+        Linux)
+            if command -v apt &>/dev/null; then
+                echo "Install jq with: sudo apt install jq"
+            elif command -v yum &>/dev/null; then
+                echo "Install jq with: sudo yum install jq"
+            elif command -v dnf &>/dev/null; then
+                echo "Install jq with: sudo dnf install jq"
+            else
+                echo "Install jq using your package manager"
+            fi
+            ;;
+        *)
+            echo "Install jq using your package manager"
+            ;;
+    esac
 fi
 
 # Make source scripts executable
