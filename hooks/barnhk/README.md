@@ -9,8 +9,6 @@ Claude Code Hooks 增强工具包，提供危险命令防护、安全命令自�
 | 🛡️ **危险命令防护** | 检测并阻断 `rm -rf /`、`sudo`、`curl \| bash` 等危险命令 |
 | ✅ **安全命令自动审批** | `git`、`npm`、`pnpm`、`gradle` 等常用命令自动批准 |
 | 🔔 **Bark 推送通知** | 权限审批、危险命令、任务完成等事件推送 |
-| 📋 **任务完成验证** | 检测完成声明并验证文件是否存在 |
-| 📝 **事件日志记录** | JSONL 格式日志，便于审计追溯 |
 
 ## Hooks 类型
 
@@ -55,5 +53,5 @@ Claude Code Hooks 增强工具包，提供危险命令防护、安全命令自�
 | 等级 | 示例命令 |
 |------|----------|
 | Critical | `rm -rf /`, `dd ... of=/dev/sda`, `mkfs` |
-| High | `sudo`, `curl | bash`, `chmod -R 777` |
+| High | `sudo`, `curl` | `bash`, `chmod -R 777` |
 | Medium | `nc -l`, `kill -9 -1`, `pkill -f` |
