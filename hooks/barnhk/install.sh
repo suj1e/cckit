@@ -1,10 +1,12 @@
 #!/bin/bash
-# install.sh - Install barnhk hooks (idempotent)
+# install.sh - Install barnhk hooks to global directory (idempotent)
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LIB_DIR="$SCRIPT_DIR/lib"
+GLOBAL_DIR="$HOME/.claude/hooks/barnhk"
+GLOBAL_LIB="$GLOBAL_DIR/lib"
 SETTINGS_FILE="$HOME/.claude/settings.json"
 
 echo "Installing barnhk hooks..."
@@ -15,14 +17,25 @@ if ! command -v jq &>/dev/null; then
     echo "Install jq with: brew install jq"
 fi
 
-# Set config permissions
-chmod 600 "$LIB_DIR/barnhk.conf" 2>/dev/null || true
-
-# Make scripts executable
+# Make source scripts executable
 chmod +x "$SCRIPT_DIR"/*.sh
 chmod +x "$LIB_DIR"/*.sh
 
-# Ensure settings directory exists
+# === Create global directory structure ===
+mkdir -p "$GLOBAL_LIB"
+
+# === Copy files to global directory (preserve existing config) ===
+for file in "$LIB_DIR"/*.sh; do
+    cp "$file" "$GLOBAL_LIB/"
+done
+
+# Copy config only if it doesn't exist
+if [[ ! -f "$GLOBAL_LIB/barnhk.conf" ]]; then
+    cp "$LIB_DIR/barnhk.conf" "$GLOBAL_LIB/"
+    chmod 600 "$GLOBAL_LIB/barnhk.conf"
+fi
+
+# === Ensure settings directory exists ===
 mkdir -p "$(dirname "$SETTINGS_FILE")"
 
 # === Read existing settings ===
@@ -39,10 +52,10 @@ SETTINGS=$(echo "$SETTINGS" | jq '
     .hooks.TaskCompleted = [.hooks.TaskCompleted[]? // empty | select(test("barnhk") | not)]
 ')
 
-# === Add new hooks ===
-SETTINGS=$(echo "$SETTINGS" | jq --arg pre "$LIB_DIR/pre-tool-use.sh" \
-    --arg perm "$LIB_DIR/permission-request.sh" \
-    --arg task "$LIB_DIR/task-completed.sh" '
+# === Add new hooks with global paths ===
+SETTINGS=$(echo "$SETTINGS" | jq --arg pre "$GLOBAL_LIB/pre-tool-use.sh" \
+    --arg perm "$GLOBAL_LIB/permission-request.sh" \
+    --arg task "$GLOBAL_LIB/task-completed.sh" '
     .hooks.PreToolUse = (.hooks.PreToolUse // []) + [{"matcher": "Bash", "hooks": [$pre]}] |
     .hooks.PermissionRequest = (.hooks.PermissionRequest // []) + [{"matcher": "bash", "hooks": [$perm]}] |
     .hooks.TaskCompleted = (.hooks.TaskCompleted // []) + [$task]
@@ -53,10 +66,11 @@ echo "$SETTINGS" | jq '.' > "$SETTINGS_FILE"
 
 echo "✓ barnhk hooks installed successfully!"
 echo ""
-echo "Configuration file: $LIB_DIR/barnhk.conf"
+echo "Global installation: $GLOBAL_DIR"
+echo "Configuration file: $GLOBAL_LIB/barnhk.conf"
 echo "Edit it to set your BARK_SERVER_URL for notifications."
 echo ""
 echo "Installed hooks:"
-echo "  - PreToolUse: $LIB_DIR/pre-tool-use.sh"
-echo "  - PermissionRequest: $LIB_DIR/permission-request.sh"
-echo "  - TaskCompleted: $LIB_DIR/task-completed.sh"
+echo "  - PreToolUse: $GLOBAL_LIB/pre-tool-use.sh"
+echo "  - PermissionRequest: $GLOBAL_LIB/permission-request.sh"
+echo "  - TaskCompleted: $GLOBAL_LIB/task-completed.sh"

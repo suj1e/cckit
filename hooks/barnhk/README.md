@@ -21,12 +21,18 @@ Claude Code Hooks 增强工具包，提供危险命令防护、安全命令自�
 ## 安装
 
 ```bash
-# 安装
+# 安装（复制到全局目录 ~/.claude/hooks/barnhk/）
 ./install.sh
 
 # 卸载
 ./uninstall.sh
 ```
+
+安装后文件位置：
+- 脚本：`~/.claude/hooks/barnhk/lib/`
+- 配置：`~/.claude/hooks/barnhk/lib/barnhk.conf`
+
+修改配置直接编辑 `~/.claude/hooks/barnhk/lib/barnhk.conf`，不会影响项目仓库。
 
 
 ## 通知触发场景

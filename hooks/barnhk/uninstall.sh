@@ -3,7 +3,7 @@
 
 set -e
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+GLOBAL_DIR="$HOME/.claude/hooks/barnhk"
 SETTINGS_FILE="$HOME/.claude/settings.json"
 
 echo "Uninstalling barnhk hooks..."
@@ -14,17 +14,20 @@ if [[ -f "$SETTINGS_FILE" ]]; then
 
     # Remove any hooks containing "barnhk" in their path (pattern matching)
     SETTINGS=$(echo "$SETTINGS" | jq '
-        .hooks.PreToolUse = [.hooks.PreToolUse[]? | select(.hooks[0] | test("barnhk") | not)] |
-        .hooks.PermissionRequest = [.hooks.PermissionRequest[]? | select(.hooks[0] | test("barnhk") | not)] |
-        .hooks.TaskCompleted = [.hooks.TaskCompleted[]? | select(test("barnhk") | not)]
-    ' 2>/dev/null || echo "$SETTINGS")
+        .hooks.PreToolUse = [.hooks.PreToolUse[]? // empty | select(.hooks[0] | test("barnhk") | not)] |
+        .hooks.PermissionRequest = [.hooks.PermissionRequest[]? // empty | select(.hooks[0] | test("barnhk") | not)] |
+        .hooks.TaskCompleted = [.hooks.TaskCompleted[]? // empty | select(test("barnhk") | not)]
+    ')
 
     # Write updated settings
     echo "$SETTINGS" | jq '.' > "$SETTINGS_FILE"
-    echo "✓ Removed hooks from $SETTINGS_FILE"
-else
-    echo "Settings file not found: $SETTINGS_FILE"
+    echo "✓ Removed hooks from settings.json"
+fi
+
+# Remove global installation directory
+if [[ -d "$GLOBAL_DIR" ]]; then
+    rm -rf "$GLOBAL_DIR"
+    echo "✓ Removed $GLOBAL_DIR"
 fi
 
 echo "✓ barnhk hooks uninstalled!"
-echo "Note: Config file and scripts are preserved at $SCRIPT_DIR"
