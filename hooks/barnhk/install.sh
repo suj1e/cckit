@@ -104,24 +104,27 @@ SETTINGS=$(echo "$SETTINGS" | jq '
     .hooks.TaskCompleted = [.hooks.TaskCompleted[]? // empty | select(.hooks[]?.command? | test("barnhk") | not)] |
     .hooks.Stop = [.hooks.Stop[]? // empty | select(.hooks[]?.command? | test("barnhk") | not)] |
     .hooks.SessionEnd = [.hooks.SessionEnd[]? // empty | select(.hooks[]?.command? | test("barnhk") | not)] |
-    .hooks.TeammateIdle = [.hooks.TeammateIdle[]? // empty | select(.hooks[]?.command? | test("barnhk") | not)]
+    .hooks.TeammateIdle = [.hooks.TeammateIdle[]? // empty | select(.hooks[]?.command? | test("barnhk") | not)] |
+    .hooks.Notification = [.hooks.Notification[]? // empty | select(.hooks[]?.command? | test("barnhk") | not)]
 ')
 
 # === Add new hooks with correct format ===
 # Note: matcher is a string regex for PreToolUse/PermissionRequest
-# TaskCompleted/Stop/SessionEnd/TeammateIdle do not support matchers
+# TaskCompleted/Stop/SessionEnd/TeammateIdle/Notification do not support matchers
 SETTINGS=$(echo "$SETTINGS" | jq --arg pre "$GLOBAL_LIB/pre-tool-use.sh" \
     --arg perm "$GLOBAL_LIB/permission-request.sh" \
     --arg task "$GLOBAL_LIB/task-completed.sh" \
     --arg stop "$GLOBAL_LIB/stop.sh" \
     --arg session "$GLOBAL_LIB/session-end.sh" \
-    --arg idle "$GLOBAL_LIB/teammate-idle.sh" '
+    --arg idle "$GLOBAL_LIB/teammate-idle.sh" \
+    --arg notif "$GLOBAL_LIB/notification.sh" '
     .hooks.PreToolUse = (.hooks.PreToolUse // []) + [{"matcher": "Bash", "hooks": [{"type": "command", "command": $pre}]}] |
     .hooks.PermissionRequest = (.hooks.PermissionRequest // []) + [{"matcher": "Bash", "hooks": [{"type": "command", "command": $perm}]}] |
     .hooks.TaskCompleted = (.hooks.TaskCompleted // []) + [{"hooks": [{"type": "command", "command": $task}]}] |
     .hooks.Stop = (.hooks.Stop // []) + [{"hooks": [{"type": "command", "command": $stop}]}] |
     .hooks.SessionEnd = (.hooks.SessionEnd // []) + [{"hooks": [{"type": "command", "command": $session}]}] |
-    .hooks.TeammateIdle = (.hooks.TeammateIdle // []) + [{"hooks": [{"type": "command", "command": $idle}]}]
+    .hooks.TeammateIdle = (.hooks.TeammateIdle // []) + [{"hooks": [{"type": "command", "command": $idle}]}] |
+    .hooks.Notification = (.hooks.Notification // []) + [{"hooks": [{"type": "command", "command": $notif}]}]
 ')
 
 # Write updated settings
@@ -140,3 +143,4 @@ echo "  - TaskCompleted: $GLOBAL_LIB/task-completed.sh"
 echo "  - Stop: $GLOBAL_LIB/stop.sh"
 echo "  - SessionEnd: $GLOBAL_LIB/session-end.sh"
 echo "  - TeammateIdle: $GLOBAL_LIB/teammate-idle.sh"
+echo "  - Notification: $GLOBAL_LIB/notification.sh"

@@ -24,6 +24,7 @@ Claude Code Hooks 增强工具包，提供危险命令防护、安全命令自�
 |------|----------|------|
 | `PreToolUse` | 执行工具之前 | 危险命令检测与阻断 |
 | `PermissionRequest` | 请求权限时 | 安全命令自动审批 + 通知 |
+| `Notification` | Claude 发送通知时 | 提问/权限提醒通知 |
 | `TaskCompleted` | 任务完成时 | 通知 |
 | `Stop` | 用户停止会话时 | 通知 |
 | `SessionEnd` | 会话完全结束时 | 通知 |
@@ -108,6 +109,7 @@ FEISHU_WEBHOOK_URL="https://open.feishu.cn/open-apis/bot/v2/hook/xxxxx"
 | `claude-done` | 🔵 蓝色 | 任务完成 |
 | `claude-stop` | 🟠 橙色 | 会话停止 |
 | `claude-idle` | ⚪ 灰色 | 队友空闲 |
+| `claude-question` | 🟣 紫色 | Claude 提问/通知 |
 
 **字段图标：**
 
@@ -177,6 +179,7 @@ FEISHU_WEBHOOK_URL="https://open.feishu.cn/open-apis/bot/v2/hook/xxxxx"
 | 危险命令被阻断 | `claude-danger` | Critical/High 级别命令被 PreToolUse 阻止 |
 | 命令自动批准 | `claude-permit` | 白名单命令被 PermissionRequest 自动批准 |
 | 命令等待审批 | `claude-permit` | 非白名单命令需要用户手动确认 |
+| Claude 提问/通知 | `claude-question` | Claude 需要用户关注（提问、权限提示等） |
 | 任务完成 | `claude-done` | Claude Code 任务执行完毕 |
 | 会话停止 | `claude-stop` | 用户主动停止会话 |
 | 会话结束 | `claude-stop` | 会话完全结束（SessionEnd） |

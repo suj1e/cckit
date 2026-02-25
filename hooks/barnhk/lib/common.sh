@@ -97,6 +97,9 @@ get_discord_color() {
         claude-idle)
             echo "${DISCORD_COLOR_IDLE:-8421504}"
             ;;
+        claude-question)
+            echo "10181046"
+            ;;
         *)
             echo "7506394"
             ;;
@@ -166,6 +169,9 @@ get_feishu_color() {
             ;;
         claude-idle)
             echo "grey"
+            ;;
+        claude-question)
+            echo "purple"
             ;;
         *)
             echo "blue"
