@@ -67,17 +67,24 @@ cd skills/panck && ./install.sh
 
 ### barnhk - Safety & Notification Hooks
 
-Provides dangerous command protection, auto-approval for safe commands, and Bark push notifications.
+Provides dangerous command protection, auto-approval for safe commands, and multi-channel notifications.
 
 **Features:**
 - Blocks dangerous commands (rm -rf /, sudo, curl | bash)
 - Auto-approves safe commands (git, npm, gradle)
-- Sends Bark notifications with detailed context (tool type, command, session ID)
+- Multi-channel notifications: Bark (iOS) + Discord Webhook
 - Cross-platform support (macOS, Linux)
 
 **Installation:**
 ```bash
 cd hooks/barnhk && ./install.sh
+```
+
+**Configuration:**
+Edit `~/.claude/hooks/barnhk/lib/barnhk.conf`:
+```bash
+BARK_SERVER_URL="https://api.day.app/YOUR_KEY"
+DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/..."
 ```
 
 **Debug mode:**
