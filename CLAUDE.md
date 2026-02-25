@@ -72,7 +72,7 @@ Provides dangerous command protection, auto-approval for safe commands, and mult
 **Features:**
 - Blocks dangerous commands (rm -rf /, sudo, curl | bash)
 - Auto-approves safe commands (git, npm, gradle)
-- Multi-channel notifications: Bark (iOS) + Discord Webhook
+- Multi-channel notifications: Bark (iOS) + Discord + 飞书 Webhook
 - Cross-platform support (macOS, Linux)
 
 **Installation:**
@@ -85,6 +85,7 @@ Edit `~/.claude/hooks/barnhk/lib/barnhk.conf`:
 ```bash
 BARK_SERVER_URL="https://api.day.app/YOUR_KEY"
 DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/..."
+FEISHU_WEBHOOK_URL="https://open.feishu.cn/open-apis/bot/v2/hook/..."
 ```
 
 **Debug mode:**

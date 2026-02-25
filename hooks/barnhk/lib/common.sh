@@ -147,6 +147,98 @@ EOF
         "$DISCORD_WEBHOOK_URL" >/dev/null 2>&1 || true
 }
 
+# Get Feishu card template color for notification group
+# Usage: get_feishu_color <group>
+get_feishu_color() {
+    local group="$1"
+    case "$group" in
+        claude-danger)
+            echo "red"
+            ;;
+        claude-permit)
+            echo "green"
+            ;;
+        claude-done)
+            echo "blue"
+            ;;
+        claude-stop)
+            echo "orange"
+            ;;
+        claude-idle)
+            echo "grey"
+            ;;
+        *)
+            echo "blue"
+            ;;
+    esac
+}
+
+# Send Feishu notification via webhook (optional, silent failure)
+# Usage: send_feishu_notification <group> <title> <body>
+send_feishu_notification() {
+    local group="$1"
+    local title="$2"
+    local body="$3"
+
+    # Skip if not configured
+    if [[ -z "$FEISHU_WEBHOOK_URL" ]]; then
+        return 0
+    fi
+
+    # Validate URL format
+    if [[ ! "$FEISHU_WEBHOOK_URL" =~ ^https?:// ]]; then
+        return 0
+    fi
+
+    # Get color for this group
+    local color=$(get_feishu_color "$group")
+
+    # Escape JSON special characters in title and body
+    local escaped_title=$(echo "$title" | jq -Rs '. | gsub("\\n"; " ") | gsub("\""; "\\\"") | .[0:-1]')
+    local escaped_body=$(echo "$body" | jq -Rs '. | gsub("\\n"; "\\n") | gsub("\""; "\\\"") | .[0:-1]')
+
+    # Build Feishu interactive card JSON payload
+    local payload=$(cat <<EOF
+{
+  "msg_type": "interactive",
+  "card": {
+    "header": {
+      "title": {
+        "tag": "plain_text",
+        "content": $escaped_title
+      },
+      "template": "$color"
+    },
+    "elements": [
+      {
+        "tag": "div",
+        "text": {
+          "tag": "plain_text",
+          "content": $escaped_body
+        }
+      },
+      {
+        "tag": "note",
+        "elements": [
+          {
+            "tag": "plain_text",
+            "content": "$group"
+          }
+        ]
+      }
+    ]
+  }
+}
+EOF
+)
+
+    # Send notification (silent failure)
+    curl -s -m 5 -X POST \
+        -H "Content-Type: application/json" \
+        -d "$payload" \
+        "$FEISHU_WEBHOOK_URL" >/dev/null 2>&1 || true
+}
+
 # Send notification to all configured backends
 # Usage: send_notification <group> <title> <body>
 send_notification() {
@@ -159,6 +251,9 @@ send_notification() {
 
     # Send to Discord (webhook)
     send_discord_notification "$group" "$title" "$body"
+
+    # Send to Feishu (webhook)
+    send_feishu_notification "$group" "$title" "$body"
 }
 
 # Check if command matches safe whitelist

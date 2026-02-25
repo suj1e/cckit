@@ -16,7 +16,7 @@ Claude Code Hooks 增强工具包，提供危险命令防护、安全命令自�
 |------|------|
 | 🛡️ **危险命令防护** | 检测并阻断 `rm -rf /`、`sudo`、`curl \| bash` 等危险命令 |
 | ✅ **安全命令自动审批** | `git`、`npm`、`pnpm`、`gradle` 等常用命令自动批准 |
-| 🔔 **多通道通知** | 支持 Bark (iOS) 和 Discord Webhook |
+| 🔔 **多通道通知** | 支持 Bark (iOS)、Discord、飞书 Webhook |
 
 ## Hooks 类型
 
@@ -70,7 +70,7 @@ VERBOSE=true ./install.sh
 
 ## 通知配置
 
-barnhk 支持两种通知通道，可同时配置：
+barnhk 支持三种通知通道，可同时配置：
 
 ### Bark (iOS 推送)
 
@@ -86,7 +86,14 @@ BARK_SERVER_URL="https://api.day.app/YOUR_KEY"
 DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/123456789/abcdefg"
 ```
 
-Discord 支持 Embed 富文本格式，不同类型通知有不同颜色：
+### 飞书 Webhook
+
+```bash
+# 在 barnhk.conf 中设置
+FEISHU_WEBHOOK_URL="https://open.feishu.cn/open-apis/bot/v2/hook/xxxxx"
+```
+
+飞书支持卡片消息格式，不同类型通知有不同颜色：
 
 | 分组 | 颜色 | 说明 |
 |------|------|------|
@@ -95,15 +102,6 @@ Discord 支持 Embed 富文本格式，不同类型通知有不同颜色：
 | `claude-done` | 🔵 蓝色 | 任务完成 |
 | `claude-stop` | 🟠 橙色 | 会话停止 |
 | `claude-idle` | ⚪ 灰色 | 队友空闲 |
-
-可自定义颜色（十进制值）：
-```bash
-DISCORD_COLOR_DANGER="15548997"
-DISCORD_COLOR_PERMIT="5763719"
-DISCORD_COLOR_DONE="3066993"
-DISCORD_COLOR_STOP="15105570"
-DISCORD_COLOR_IDLE="8421504"
-```
 
 ## 通知格式示例
 
