@@ -207,6 +207,42 @@ TOOL_NAME=$(echo "$INPUT" | json_value '.tool_name')
 
 ---
 
+### Notification
+
+当 Claude 需要用户关注时触发（如权限请求、问题等）。
+
+#### 输入 JSON
+
+```json
+{
+  "session_id": "sess_01XYZ789",
+  "transcript_path": "/Users/.../.claude/projects/.../00893aaf-19fa-41d2-8238-13269b9b3ca0.jsonl",
+  "cwd": "/Users/...",
+  "permission_mode": "default",
+  "hook_event_name": "Notification",
+  "message": "Claude needs your permission to use Bash",
+  "title": "Permission needed",
+  "notification_type": "permission_prompt"
+}
+```
+
+#### 字段说明
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `session_id` | string | 会话标识 |
+| `transcript_path` | string | 会话记录文件路径 |
+| `cwd` | string | 当前工作目录 |
+| `permission_mode` | string | 权限模式（如 default, acceptEdits） |
+| `hook_event_name` | string | 固定值 "Notification" |
+| `message` | string | **通知的具体内容**，应显示给用户 |
+| `title` | string | 通知标题 |
+| `notification_type` | string | 通知类型：`permission_prompt`（权限请求）、`question`（问题）等 |
+
+> **重要**: `message` 字段包含用户需要看到的具体内容，如 "Claude needs your permission to use Bash"。不要用通用文案替代。
+
+---
+
 ## 其他 Hook 类型
 
 以下 hook 类型在 Claude Code 中可用，但较少使用：
@@ -217,7 +253,6 @@ TOOL_NAME=$(echo "$INPUT" | json_value '.tool_name')
 | `UserPromptSubmit` | 用户提交提示词时 |
 | `PostToolUse` | 工具执行成功后 |
 | `PostToolUseFailure` | 工具执行失败后 |
-| `Notification` | Claude 发送通知时 |
 | `SubagentStart` | 子 Agent 启动时 |
 | `SubagentStop` | 子 Agent 停止时 |
 | `ConfigChange` | 配置变更时 |

@@ -34,6 +34,7 @@ cckit/
   ```json
   {"hookSpecificOutput":{"hookEventName":"PermissionRequest","decision":{"behavior":"allow"}}}
   ```
+- **Notification 格式**：输入包含 `message`、`title`、`notification_type` 字段，应显示 `message` 内容而非通用文案
 
 ### Plugins 规范
 `standards/plugins/claude-code-plugins.md`
@@ -76,7 +77,7 @@ Provides dangerous command protection, auto-approval for safe commands, and mult
 **Features:**
 - Blocks dangerous commands (rm -rf /, sudo, curl | bash)
 - Auto-approves safe commands (git, npm, gradle)
-- Multi-channel notifications: Bark (iOS) + Discord + 飞书 Webhook
+- Multi-channel notifications with detailed message content: Bark (iOS) + Discord + 飞书 Webhook
 - Cross-platform support (macOS, Linux)
 
 **Installation:**
