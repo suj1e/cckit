@@ -19,15 +19,30 @@ SESSION_ID=$(echo "$INPUT" | json_value '.session_id')
 MESSAGE=$(echo "$INPUT" | json_value '.message')
 NOTIFICATION_TYPE=$(echo "$INPUT" | json_value '.notification_type')
 
-# Build notification body based on notification type
-case "$NOTIFICATION_TYPE" in
-    permission_prompt)
-        NOTIF_BODY="🔐 Permission required"
-        ;;
-    *)
-        NOTIF_BODY="${MESSAGE:-Claude needs your attention}"
-        ;;
-esac
+# Truncate message to 200 characters
+truncate_message() {
+    local msg="$1"
+    local max_len=200
+    if [[ ${#msg} -gt $max_len ]]; then
+        echo "${msg:0:$max_len}..."
+    else
+        echo "$msg"
+    fi
+}
+
+# Get icon prefix based on notification type
+get_icon() {
+    case "$1" in
+        permission_prompt) echo "🔐" ;;
+        question) echo "❓" ;;
+        *) echo "🔔" ;;
+    esac
+}
+
+# Build notification body: icon + truncated message
+ICON=$(get_icon "$NOTIFICATION_TYPE")
+TRUNCATED_MSG=$(truncate_message "${MESSAGE:-Claude needs your attention}")
+NOTIF_BODY="$ICON $TRUNCATED_MSG"
 
 if [[ -n "$SESSION_ID" ]]; then
     NOTIF_BODY="$NOTIF_BODY"$'\n'"Session: $SESSION_ID"
