@@ -30,12 +30,16 @@ TOOL_LABEL="[$(echo "$TOOL_NAME" | tr '[:lower:]' '[:upper:]')]"
 if [[ "$TOOL_NAME" == "Bash" ]] && [[ -n "$COMMAND" ]]; then
     # Check if command is in safe whitelist
     if is_safe_command "$COMMAND"; then
-        # Build auto-approval notification
+        # Debug log
+        echo "[barnhk] Auto-approving: $COMMAND" >&2
+
+        # Output approval JSON FIRST (before any other operations)
+        echo '{"hookSpecificOutput":{"permissionDecision":"allow"}}'
+
+        # Then send notification (non-blocking)
         BODY="$TOOL_LABEL Auto-approved"$'\n'"Cmd: $TRUNCATED_CMD"
         send_bark_notification "claude-permit" "$TITLE_PERMIT" "$BODY"
 
-        # Output approval JSON
-        echo '{"hookSpecificOutput":{"permissionDecision":"allow"}}'
         exit 0
     fi
 fi
