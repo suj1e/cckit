@@ -30,6 +30,10 @@ cckit/
 - JSON 字段名：使用 `tool_name` 和 `tool_input`，不是 `.tool` 或 `.permission`
 - 退出码：阻断时使用 `exit 2`，不是 `exit 1`
 - 输出格式：使用 `hookSpecificOutput` 结构化 JSON 输出
+- **PermissionRequest 格式**：必须使用 `decision.behavior`，而非 PreToolUse 的 `permissionDecision`
+  ```json
+  {"hookSpecificOutput":{"hookEventName":"PermissionRequest","decision":{"behavior":"allow"}}}
+  ```
 
 ### Plugins 规范
 `standards/plugins/claude-code-plugins.md`

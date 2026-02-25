@@ -14,7 +14,7 @@ Claude Code Kit - A collection of Claude Code extensions (skills and hooks).
 
 | Hook | Description |
 |------|-------------|
-| [barnhk](./hooks/barnhk) | Safety and notification hooks with dangerous command protection, auto-approval, and Bark push notifications |
+| [barnhk](./hooks/barnhk) | Safety and notification hooks with dangerous command protection, auto-approval, and multi-channel notifications (Bark/Discord/飞书) |
 
 ## Installation
 
