@@ -14,18 +14,50 @@ Claude Code Kit - A collection of Claude Code extensions (skills and hooks).
 
 | Hook | Description |
 |------|-------------|
-| [barnhk](./hooks/barnhk) | Safety and notification hooks with dangerous command protection, auto-approval, and multi-channel notifications with project info and detailed message content (Bark/Discord/飞书) |
+| [barnhk](./hooks/barnhk) | Safety and notification hooks with dangerous command protection, auto-approval, and multi-channel notifications (Bark/Discord/飞书) |
 
 ## Installation
 
-Each skill/hook has its own installation script:
+cckit uses Claude Code's official marketplace system. Use the unified installer:
 
 ```bash
-# Install panck skill
-cd skills/panck && ./install.sh
+# Install all plugins
+./install.sh
 
-# Install barnhk hooks
-cd hooks/barnhk && ./install.sh
+# Install specific plugin
+./install.sh panck
+./install.sh barnhk
+```
+
+The installer will:
+1. Add cckit as a local marketplace
+2. Install plugins via `claude plugin install`
+3. Automatically register hooks to `settings.json`
+
+## Uninstallation
+
+```bash
+# Uninstall all plugins
+./uninstall.sh
+
+# Uninstall specific plugin
+./uninstall.sh barnhk
+```
+
+## Manual Commands
+
+You can also use Claude Code CLI directly:
+
+```bash
+# Add marketplace
+claude plugin marketplace add /path/to/cckit
+
+# Install
+claude plugin install barnhk@cckit --scope user
+claude plugin install panck@cckit --scope user
+
+# Uninstall
+claude plugin uninstall barnhk@cckit --scope user
 ```
 
 ## License

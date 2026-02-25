@@ -10,13 +10,17 @@ This is a collection of Claude Code extensions - skills and hooks that enhance C
 
 ```
 cckit/
-├── skills/           # Claude Code skills
-│   └── panck/        # Spring Boot microservice scaffold generator
-├── hooks/            # Claude Code hooks
-│   └── barnhk/       # Safety and notification hooks
-└── standards/        # 规范文档
-    ├── hooks/        # Claude Code hooks 规范
-    └── plugins/      # Claude Code plugins 规范 (skills, agents, MCP, LSP)
+├── .claude-plugin/
+│   └── marketplace.json    # Plugin marketplace definition
+├── install.sh              # Unified installer
+├── uninstall.sh            # Unified uninstaller
+├── skills/
+│   └── panck/              # Spring Boot microservice scaffold generator
+├── hooks/
+│   └── barnhk/             # Safety and notification hooks
+└── standards/              # 规范文档
+    ├── hooks/              # Claude Code hooks 规范
+    └── plugins/            # Claude Code plugins 规范
 ```
 
 ## Standards
@@ -53,7 +57,7 @@ Generates production-ready Spring Boot microservice scaffolds with DDD/Clean Arc
 
 **Installation:**
 ```bash
-cd skills/panck && ./install.sh
+./install.sh panck
 ```
 
 **Usage in Claude Code:**
@@ -66,7 +70,7 @@ cd skills/panck && ./install.sh
 - DDD layered architecture with dependency rule: `boot → adapter → core, api`
 - Tech stack: Java 21, Spring Boot 4.0.2, Spring Cloud Alibaba, Nacos, Gradle 9.3.0
 
-**Key templates location:** `skills/panck/panck-plugin/assets/templates/`
+**Key templates location:** `skills/panck/assets/templates/`
 
 ## Hooks
 
@@ -77,32 +81,59 @@ Provides dangerous command protection, auto-approval for safe commands, and mult
 **Features:**
 - Blocks dangerous commands (rm -rf /, sudo, curl | bash)
 - Auto-approves safe commands (git, npm, gradle)
-- Multi-channel notifications with project info and detailed message content: Bark (iOS) + Discord + 飞书 Webhook
+- Multi-channel notifications with project info: Bark (iOS) + Discord + 飞书 Webhook
   - All notifications show project name in title prefix: `[项目名] 标题`
   - Notification content shows actual message with type icons (🔐/❓/🔔)
 - Cross-platform support (macOS, Linux)
 
 **Installation:**
 ```bash
-cd hooks/barnhk && ./install.sh
+./install.sh barnhk
 ```
 
 **Configuration:**
-Edit `~/.claude/hooks/barnhk/lib/barnhk.conf`:
+
+After installation, config file is located at:
+```
+~/.claude/plugins/cache/cckit/barnhk/<version>/lib/barnhk.conf
+```
+
+Edit the config:
 ```bash
 BARK_SERVER_URL="https://api.day.app/YOUR_KEY"
 DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/..."
 FEISHU_WEBHOOK_URL="https://open.feishu.cn/open-apis/bot/v2/hook/..."
 ```
 
-**Debug mode:**
+## Plugin Management
+
+cckit plugins are managed via Claude Code's official marketplace system.
+
+**Install:**
 ```bash
-VERBOSE=true ./install.sh
+./install.sh [plugin-name]
+```
+
+**Uninstall:**
+```bash
+./uninstall.sh [plugin-name]
+```
+
+**Manual commands:**
+```bash
+# Add marketplace
+claude plugin marketplace add /path/to/cckit
+
+# Install
+claude plugin install barnhk@cckit --scope user
+
+# Uninstall
+claude plugin uninstall barnhk@cckit --scope user
 ```
 
 ## OpenSpec
 
-**重要**: 所有组件的 OpenSpec 变更管理统一在 **cckit 根目录的 `openspec/`** 下，子组件（如 barnhk）不再保留独立的 openspec 目录。
+**重要**: 所有组件的 OpenSpec 变更管理统一在 **cckit 根目录的 `openspec/`** 下。
 
 ```
 cckit/openspec/
@@ -120,5 +151,5 @@ cckit/openspec/
 When modifying skills or hooks:
 
 1. **Skills** are defined by a `SKILL.md` file with frontmatter specifying `name` and `description`
-2. **Hooks** are shell scripts configured via Claude Code's settings
-3. Test changes by re-running the respective `install.sh` script
+2. **Hooks** are configured inline in `.claude-plugin/plugin.json` with `${CLAUDE_PLUGIN_ROOT}` for paths
+3. Test changes by reinstalling: `./uninstall.sh <plugin> && ./install.sh <plugin>`

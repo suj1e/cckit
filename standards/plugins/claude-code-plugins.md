@@ -489,3 +489,87 @@ Follow semantic versioning for plugin releases:
 - Update the version in `plugin.json` before distributing changes
 - Document changes in a `CHANGELOG.md` file
 - Use pre-release versions like `2.0.0-beta.1` for testing
+
+---
+
+## cckit Plugins
+
+cckit 包含以下符合官方规范的插件：
+
+### 插件列表
+
+| 插件 | 类型 | 说明 |
+|------|------|------|
+| `panck` | Skill | Spring Boot 微服务脚手架生成器 |
+| `barnhk` | Hooks | 安全防护和多渠道通知 |
+
+### 目录结构
+
+```
+cckit/
+├── install.sh              # 统一安装脚本
+├── uninstall.sh            # 统一卸载脚本
+├── skills/
+│   └── panck/              # Skill 插件
+│       ├── .claude-plugin/
+│       │   └── plugin.json
+│       ├── SKILL.md
+│       ├── references/
+│       └── assets/
+└── hooks/
+    └── barnhk/             # Hooks 插件
+        ├── .claude-plugin/
+        │   └── plugin.json
+        ├── hooks/
+        │   └── hooks.json
+        └── lib/
+```
+
+### 安装/卸载
+
+```bash
+# 安装所有插件
+./install.sh
+
+# 安装指定插件
+./install.sh panck
+./install.sh barnhk
+
+# 卸载
+./uninstall.sh barnhk
+./uninstall.sh          # 卸载所有
+```
+
+### hooks.json 配置示例
+
+barnhk 的 hooks 配置示例：
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/lib/pre-tool-use.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/lib/stop.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**注意**: 使用 `${CLAUDE_PLUGIN_ROOT}` 变量确保路径在任意安装位置都能正确解析。

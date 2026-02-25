@@ -1,0 +1,27 @@
+{
+  "name": "cckit",
+  "description": "Claude Code Kit - A collection of Claude Code extensions",
+  "owner": {
+    "name": "suj1e"
+  },
+  "plugins": [
+    {
+      "name": "panck",
+      "source": "./skills/panck",
+      "description": "Spring Boot microservice scaffold generator with DDD/Clean Architecture patterns",
+      "version": "1.0.0",
+      "author": {
+        "name": "suj1e"
+      }
+    },
+    {
+      "name": "barnhk",
+      "source": "./hooks/barnhk",
+      "description": "Safety and notification hooks with dangerous command protection, auto-approval, and multi-channel notifications",
+      "version": "1.0.0",
+      "author": {
+        "name": "suj1e"
+      }
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "panck",
+  "version": "1.0.0",
+  "description": "Generate Spring Boot microservice scaffolds following DDD/Clean Architecture patterns",
+  "author": {
+    "name": "suj1e"
+  },
+  "license": "MIT",
+  "keywords": ["spring-boot", "microservice", "ddd", "scaffold", "generator"]
+}
