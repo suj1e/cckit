@@ -17,7 +17,8 @@ if [[ -f "$SETTINGS_FILE" ]]; then
         .hooks.TaskCompleted = [.hooks.TaskCompleted[]? // empty | select(.hooks[]?.command? | test("barnhk") | not)] |
         .hooks.Stop = [.hooks.Stop[]? // empty | select(.hooks[]?.command? | test("barnhk") | not)] |
         .hooks.SessionEnd = [.hooks.SessionEnd[]? // empty | select(.hooks[]?.command? | test("barnhk") | not)] |
-        .hooks.TeammateIdle = [.hooks.TeammateIdle[]? // empty | select(.hooks[]?.command? | test("barnhk") | not)]
+        .hooks.TeammateIdle = [.hooks.TeammateIdle[]? // empty | select(.hooks[]?.command? | test("barnhk") | not)] |
+        .hooks.Notification = [.hooks.Notification[]? // empty | select(.hooks[]?.command? | test("barnhk") | not)]
     ')
 
     # Write updated settings

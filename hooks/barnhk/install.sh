@@ -81,11 +81,9 @@ for file in "$LIB_DIR"/*.sh; do
     cp "$file" "$GLOBAL_LIB/"
 done
 
-# Copy config only if it doesn't exist
-if [[ ! -f "$GLOBAL_LIB/barnhk.conf" ]]; then
-    cp "$LIB_DIR/barnhk.conf" "$GLOBAL_LIB/"
-    chmod 600 "$GLOBAL_LIB/barnhk.conf"
-fi
+# Copy config (always update to latest template)
+cp "$LIB_DIR/barnhk.conf" "$GLOBAL_LIB/"
+chmod 600 "$GLOBAL_LIB/barnhk.conf"
 
 # === Ensure settings directory exists ===
 mkdir -p "$(dirname "$SETTINGS_FILE")"
@@ -134,7 +132,9 @@ echo "✓ barnhk hooks installed successfully!"
 echo ""
 echo "Global installation: $GLOBAL_DIR"
 echo "Configuration file: $GLOBAL_LIB/barnhk.conf"
-echo "Edit it to set your BARK_SERVER_URL for notifications."
+echo ""
+echo "⚠️  Config has been updated. Please check your settings:"
+echo "   cat $GLOBAL_LIB/barnhk.conf"
 echo ""
 echo "Installed hooks:"
 echo "  - PreToolUse: $GLOBAL_LIB/pre-tool-use.sh"
