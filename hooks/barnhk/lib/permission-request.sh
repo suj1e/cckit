@@ -53,9 +53,7 @@ if [[ -n "$FILE_PATH" ]]; then
     BODY="$BODY"$'\n'"Path: $FILE_PATH"
 fi
 if [[ -n "$SESSION_ID" ]]; then
-    # Show last 8 chars of session ID for brevity
-    SHORT_SESSION="${SESSION_ID: -8}"
-    BODY="$BODY"$'\n'"Session: $SHORT_SESSION"
+    BODY="$BODY"$'\n'"Session: $SESSION_ID"
 fi
 
 send_notification "claude-permit" "$TITLE_PERMIT" "$BODY"

@@ -173,6 +173,66 @@ get_feishu_color() {
     esac
 }
 
+# Get icon for field name
+# Usage: get_field_icon <field_name>
+get_field_icon() {
+    local field="$1"
+    case "$field" in
+        Cmd) echo "⌨️" ;;
+        Path) echo "📁" ;;
+        Session) echo "🔗" ;;
+        Reason) echo "💡" ;;
+        Tool) echo "🔧" ;;
+        *) echo "📌" ;;
+    esac
+}
+
+# Parse body text into structured fields
+# Input: body text with "Key: Value" format
+# Output: JSON with first_line and fields array
+# Usage: parse_body_fields <body>
+parse_body_fields() {
+    local body="$1"
+    local first_line=""
+    local fields_json="[]"
+
+    # Process each line
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        # Skip empty lines
+        [[ -z "$line" ]] && continue
+
+        # First non-empty line is the status description
+        if [[ -z "$first_line" ]]; then
+            first_line="$line"
+            continue
+        fi
+
+        # Check for "Key: Value" pattern
+        if [[ "$line" =~ ^([^:]+):\ (.+)$ ]]; then
+            local key="${BASH_REMATCH[1]}"
+            local value="${BASH_REMATCH[2]}"
+            local icon=$(get_field_icon "$key")
+            local label="${icon} ${key}"
+
+            # Build field JSON using jq with proper string args
+            local field_json
+            field_json=$(jq -n \
+                --arg label "$label" \
+                --arg value "$value" \
+                '{"tag": "div", "text": {"tag": "lark_md", "content": ("**" + $label + "**  \n" + $value)}}')
+
+            # Append to fields array
+            fields_json=$(echo "$fields_json" | jq --argjson field "$field_json" '. + [$field]')
+        fi
+    done <<< "$body"
+
+    # Return JSON with first_line and fields
+    local escaped_first_line
+    escaped_first_line=$(echo "$first_line" | jq -Rs '. | gsub("\n"; " ") | .[0:-1]')
+
+    echo "{\"first_line\": $escaped_first_line, \"fields\": $fields_json}"
+}
+
 # Send Feishu notification via webhook (optional, silent failure)
 # Usage: send_feishu_notification <group> <title> <body>
 send_feishu_notification() {
@@ -193,44 +253,58 @@ send_feishu_notification() {
     # Get color for this group
     local color=$(get_feishu_color "$group")
 
-    # Escape JSON special characters in title and body
-    local escaped_title=$(echo "$title" | jq -Rs '. | gsub("\\n"; " ") | gsub("\""; "\\\"") | .[0:-1]')
-    local escaped_body=$(echo "$body" | jq -Rs '. | gsub("\\n"; "\\n") | gsub("\""; "\\\"") | .[0:-1]')
+    # Try to parse body into structured fields
+    local parsed
+    parsed=$(parse_body_fields "$body" 2>/dev/null)
 
-    # Build Feishu interactive card JSON payload
-    local payload=$(cat <<EOF
-{
-  "msg_type": "interactive",
-  "card": {
-    "header": {
-      "title": {
-        "tag": "plain_text",
-        "content": $escaped_title
-      },
-      "template": "$color"
-    },
-    "elements": [
-      {
-        "tag": "div",
-        "text": {
-          "tag": "plain_text",
-          "content": $escaped_body
+    local elements_json
+
+    if [[ -n "$parsed" ]] && echo "$parsed" | jq -e '.fields | length > 0' >/dev/null 2>&1; then
+        # Structured format: first line + hr + fields + note
+        local first_line=$(echo "$parsed" | jq -r '.first_line')
+        local fields=$(echo "$parsed" | jq '.fields')
+
+        # Build elements array using jq
+        elements_json=$(jq -n \
+            --arg first_line "📋 $first_line" \
+            --arg group "$group" \
+            --argjson fields "$fields" '
+            [
+                {"tag": "div", "text": {"tag": "plain_text", "content": $first_line}},
+                {"tag": "hr"}
+            ] + $fields + [
+                {"tag": "note", "elements": [{"tag": "plain_text", "content": $group}]}
+            ]
+        ')
+    else
+        # Fallback: simple format
+        elements_json=$(jq -n \
+            --arg body "$body" \
+            --arg group "$group" '
+            [
+                {"tag": "div", "text": {"tag": "plain_text", "content": $body}},
+                {"tag": "note", "elements": [{"tag": "plain_text", "content": $group}]}
+            ]
+        ')
+    fi
+
+    # Build complete payload using jq
+    local payload
+    payload=$(jq -n \
+        --arg title "$title" \
+        --arg color "$color" \
+        --argjson elements "$elements_json" '
+        {
+            "msg_type": "interactive",
+            "card": {
+                "header": {
+                    "title": {"tag": "plain_text", "content": $title},
+                    "template": $color
+                },
+                "elements": $elements
+            }
         }
-      },
-      {
-        "tag": "note",
-        "elements": [
-          {
-            "tag": "plain_text",
-            "content": "$group"
-          }
-        ]
-      }
-    ]
-  }
-}
-EOF
-)
+    ')
 
     # Send notification (silent failure)
     curl -s -m 5 -X POST \
