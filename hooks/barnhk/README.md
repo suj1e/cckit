@@ -68,6 +68,28 @@ VERBOSE=true ./install.sh
 修改配置直接编辑 `~/.claude/hooks/barnhk/lib/barnhk.conf`，不会影响项目仓库。
 
 
+## 通知格式示例
+
+### 自动批准通知
+```
+[BASH] Auto-approved
+Cmd: git status
+```
+
+### 手动审批通知
+```
+[BASH] Manual approval needed
+Cmd: docker run -it ubuntu...
+Session: a1b2c3d4
+```
+
+### 文件操作通知
+```
+[READ] Manual approval needed
+Path: /etc/passwd
+Session: e5f6g7h8
+```
+
 ## 通知触发场景
 
 | 场景 | 分组 | 说明 |

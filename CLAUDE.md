@@ -48,11 +48,17 @@ Provides dangerous command protection, auto-approval for safe commands, and Bark
 **Features:**
 - Blocks dangerous commands (rm -rf /, sudo, curl | bash)
 - Auto-approves safe commands (git, npm, gradle)
-- Sends Bark notifications for permission requests and task completion
+- Sends Bark notifications with detailed context (tool type, command, session ID)
+- Cross-platform support (macOS, Linux)
 
 **Installation:**
 ```bash
 cd hooks/barnhk && ./install.sh
+```
+
+**Debug mode:**
+```bash
+VERBOSE=true ./install.sh
 ```
 
 ## Development
