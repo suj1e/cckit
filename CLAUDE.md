@@ -15,17 +15,30 @@ cckit/
 ├── hooks/            # Claude Code hooks
 │   └── barnhk/       # Safety and notification hooks
 └── standards/        # 规范文档
-    └── hooks/        # Claude Code hooks 规范
+    ├── hooks/        # Claude Code hooks 规范
+    └── plugins/      # Claude Code plugins 规范 (skills, agents, MCP, LSP)
 ```
 
 ## Standards
 
-**IMPORTANT**: 开发 hooks 时必须严格遵守 `standards/hooks/claude-code-hooks.md` 中定义的规范。
+**IMPORTANT**: 开发 Claude Code 扩展时必须严格遵守以下规范文档：
+
+### Hooks 规范
+`standards/hooks/claude-code-hooks.md`
 
 关键规范点：
 - JSON 字段名：使用 `tool_name` 和 `tool_input`，不是 `.tool` 或 `.permission`
 - 退出码：阻断时使用 `exit 2`，不是 `exit 1`
 - 输出格式：使用 `hookSpecificOutput` 结构化 JSON 输出
+
+### Plugins 规范
+`standards/plugins/claude-code-plugins.md`
+
+覆盖内容：
+- Skills、Agents、Hooks、MCP Servers、LSP Servers
+- plugin.json manifest schema
+- 目录结构规范
+- CLI 命令参考
 
 ## Skills
 
