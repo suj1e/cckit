@@ -93,6 +93,21 @@ FEISHU_WEBHOOK_URL="https://open.feishu.cn/open-apis/bot/v2/hook/..."
 VERBOSE=true ./install.sh
 ```
 
+## OpenSpec
+
+**重要**: 所有组件的 OpenSpec 变更管理统一在 **cckit 根目录的 `openspec/`** 下，子组件（如 barnhk）不再保留独立的 openspec 目录。
+
+```
+cckit/openspec/
+├── changes/          # 活跃变更 (使用 /opsx:propose 创建)
+│   └── archive/      # 已归档变更
+└── specs/            # 规范文档
+```
+
+- 使用 `/opsx:propose <description>` 创建新变更
+- 使用 `/opsx:apply` 实现变更任务
+- 使用 `/opsx:archive` 归档完成的变更
+
 ## Development
 
 When modifying skills or hooks:
