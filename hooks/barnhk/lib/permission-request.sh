@@ -31,7 +31,7 @@ if [[ "$TOOL_NAME" == "Bash" ]] && [[ -n "$COMMAND" ]]; then
     # Check if command is in safe whitelist
     if is_safe_command "$COMMAND"; then
         # Build auto-approval notification
-        BODY="$TOOL_LABEL Auto-approved\nCmd: $TRUNCATED_CMD"
+        BODY="$TOOL_LABEL Auto-approved"$'\n'"Cmd: $TRUNCATED_CMD"
         send_bark_notification "claude-permit" "$TITLE_PERMIT" "$BODY"
 
         # Output approval JSON
@@ -43,15 +43,15 @@ fi
 # Build manual approval notification with details
 BODY="$TOOL_LABEL Manual approval needed"
 if [[ -n "$COMMAND" ]]; then
-    BODY="$BODY\nCmd: $TRUNCATED_CMD"
+    BODY="$BODY"$'\n'"Cmd: $TRUNCATED_CMD"
 fi
 if [[ -n "$FILE_PATH" ]]; then
-    BODY="$BODY\nPath: $FILE_PATH"
+    BODY="$BODY"$'\n'"Path: $FILE_PATH"
 fi
 if [[ -n "$SESSION_ID" ]]; then
     # Show last 8 chars of session ID for brevity
     SHORT_SESSION="${SESSION_ID: -8}"
-    BODY="$BODY\nSession: $SHORT_SESSION"
+    BODY="$BODY"$'\n'"Session: $SHORT_SESSION"
 fi
 
 send_bark_notification "claude-permit" "$TITLE_PERMIT" "$BODY"

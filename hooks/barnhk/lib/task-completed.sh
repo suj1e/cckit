@@ -21,7 +21,7 @@ TRANSCRIPT_PATH=$(echo "$INPUT" | json_value '.transcript_path')
 # Build notification body
 BODY="Session: ${SESSION_ID:-unknown}"
 if [[ -n "$TRANSCRIPT_PATH" ]]; then
-    BODY="$BODY\nTranscript saved"
+    BODY="$BODY"$'\n'"Transcript saved"
 fi
 
 # Send completion notification

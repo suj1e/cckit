@@ -21,7 +21,7 @@ STOP_REASON=$(echo "$INPUT" | json_value '.reason')
 # Build notification body
 BODY="Session: ${SESSION_ID:-unknown}"
 if [[ -n "$STOP_REASON" ]]; then
-    BODY="$BODY\nReason: $STOP_REASON"
+    BODY="$BODY"$'\n'"Reason: $STOP_REASON"
 fi
 
 # Send stop notification

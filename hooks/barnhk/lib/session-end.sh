@@ -22,7 +22,7 @@ BODY="[SESSION] Session ended"
 if [[ -n "$SESSION_ID" ]]; then
     # Show last 8 chars of session ID for brevity
     SHORT_SESSION="${SESSION_ID: -8}"
-    BODY="$BODY\nSession: $SHORT_SESSION"
+    BODY="$BODY"$'\n'"Session: $SHORT_SESSION"
 fi
 
 # Send session end notification
