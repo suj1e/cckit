@@ -18,6 +18,13 @@ INPUT=$(cat)
 SESSION_ID=$(echo "$INPUT" | json_value '.session_id')
 MESSAGE=$(echo "$INPUT" | json_value '.message')
 NOTIFICATION_TYPE=$(echo "$INPUT" | json_value '.notification_type')
+CWD=$(echo "$INPUT" | json_value '.cwd')
+
+# Extract project name from cwd
+PROJECT_NAME=""
+if [[ -n "$CWD" ]]; then
+    PROJECT_NAME=$(basename "$CWD")
+fi
 
 # Truncate message to 200 characters
 truncate_message() {
@@ -49,6 +56,6 @@ if [[ -n "$SESSION_ID" ]]; then
 fi
 
 # Send notification
-send_notification "claude-question" "$TITLE_QUESTION" "$NOTIF_BODY"
+send_notification "claude-question" "$TITLE_QUESTION" "$NOTIF_BODY" "$PROJECT_NAME"
 
 exit 0

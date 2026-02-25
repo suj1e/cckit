@@ -16,6 +16,13 @@ INPUT=$(cat)
 
 # Extract session info
 SESSION_ID=$(echo "$INPUT" | json_value '.session_id')
+CWD=$(echo "$INPUT" | json_value '.cwd')
+
+# Extract project name from cwd
+PROJECT_NAME=""
+if [[ -n "$CWD" ]]; then
+    PROJECT_NAME=$(basename "$CWD")
+fi
 
 # Build notification body
 BODY="[SESSION] Session ended"
@@ -24,6 +31,6 @@ if [[ -n "$SESSION_ID" ]]; then
 fi
 
 # Send session end notification
-send_notification "claude-stop" "$TITLE_STOP" "$BODY"
+send_notification "claude-stop" "$TITLE_STOP" "$BODY" "$PROJECT_NAME"
 
 exit 0

@@ -17,6 +17,13 @@ INPUT=$(cat)
 # Extract teammate info
 TEAMMATE_NAME=$(echo "$INPUT" | json_value '.teammate_name')
 TEAMMATE_ID=$(echo "$INPUT" | json_value '.teammate_id')
+CWD=$(echo "$INPUT" | json_value '.cwd')
+
+# Extract project name from cwd
+PROJECT_NAME=""
+if [[ -n "$CWD" ]]; then
+    PROJECT_NAME=$(basename "$CWD")
+fi
 
 # Build notification body
 BODY="Teammate idle"
@@ -27,6 +34,6 @@ elif [[ -n "$TEAMMATE_ID" ]]; then
 fi
 
 # Send idle notification
-send_notification "claude-idle" "$TITLE_IDLE" "$BODY"
+send_notification "claude-idle" "$TITLE_IDLE" "$BODY" "$PROJECT_NAME"
 
 exit 0

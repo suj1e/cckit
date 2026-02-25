@@ -320,11 +320,17 @@ send_feishu_notification() {
 }
 
 # Send notification to all configured backends
-# Usage: send_notification <group> <title> <body>
+# Usage: send_notification <group> <title> <body> [project_name]
 send_notification() {
     local group="$1"
     local title="$2"
     local body="$3"
+    local project_name="${4:-}"
+
+    # Prepend project name to title if provided
+    if [[ -n "$project_name" ]]; then
+        title="[$project_name] $title"
+    fi
 
     # Send to Bark (iOS push)
     send_bark_notification "$group" "$title" "$body"

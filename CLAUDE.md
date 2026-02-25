@@ -77,7 +77,9 @@ Provides dangerous command protection, auto-approval for safe commands, and mult
 **Features:**
 - Blocks dangerous commands (rm -rf /, sudo, curl | bash)
 - Auto-approves safe commands (git, npm, gradle)
-- Multi-channel notifications with detailed message content: Bark (iOS) + Discord + 飞书 Webhook
+- Multi-channel notifications with project info and detailed message content: Bark (iOS) + Discord + 飞书 Webhook
+  - All notifications show project name in title prefix: `[项目名] 标题`
+  - Notification content shows actual message with type icons (🔐/❓/🔔)
 - Cross-platform support (macOS, Linux)
 
 **Installation:**
