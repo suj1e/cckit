@@ -117,7 +117,24 @@ TOOL_NAME=$(echo "$INPUT" | json_value '.tool_name')
 ```json
 {
   "hookSpecificOutput": {
-    "permissionDecision": "allow"
+    "hookEventName": "PermissionRequest",
+    "decision": {
+      "behavior": "allow"
+    }
+  }
+}
+```
+
+#### 输出 JSON（拒绝）
+
+```json
+{
+  "hookSpecificOutput": {
+    "hookEventName": "PermissionRequest",
+    "decision": {
+      "behavior": "deny",
+      "reason": "Dangerous command blocked"
+    }
   }
 }
 ```
@@ -125,6 +142,8 @@ TOOL_NAME=$(echo "$INPUT" | json_value '.tool_name')
 #### 输出 JSON（不自动处理）
 
 不输出任何内容，让用户手动审批。
+
+> **重要**: PermissionRequest 必须使用 `decision.behavior` 格式，与 PreToolUse 的 `permissionDecision` 不同
 
 ---
 
@@ -308,7 +327,7 @@ COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty')
 
 # 自动批准 git 命令
 if [[ "$COMMAND" =~ ^git[[:space:]]+(status|log|diff) ]]; then
-    echo '{"hookSpecificOutput":{"permissionDecision":"allow"}}'
+    echo '{"hookSpecificOutput":{"hookEventName":"PermissionRequest","decision":{"behavior":"allow"}}}'
     exit 0
 fi
 
