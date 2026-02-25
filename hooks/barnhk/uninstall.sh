@@ -16,6 +16,7 @@ if [[ -f "$SETTINGS_FILE" ]]; then
         .hooks.PermissionRequest = [.hooks.PermissionRequest[]? // empty | select(.hooks[]?.command? | test("barnhk") | not)] |
         .hooks.TaskCompleted = [.hooks.TaskCompleted[]? // empty | select(.hooks[]?.command? | test("barnhk") | not)] |
         .hooks.Stop = [.hooks.Stop[]? // empty | select(.hooks[]?.command? | test("barnhk") | not)] |
+        .hooks.SessionEnd = [.hooks.SessionEnd[]? // empty | select(.hooks[]?.command? | test("barnhk") | not)] |
         .hooks.TeammateIdle = [.hooks.TeammateIdle[]? // empty | select(.hooks[]?.command? | test("barnhk") | not)]
     ')
 

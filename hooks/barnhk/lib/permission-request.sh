@@ -15,19 +15,19 @@ load_config
 INPUT=$(cat)
 
 # Extract permission details
-PERMISSION_NAME=$(echo "$INPUT" | json_value '.permission.name')
-COMMAND=$(echo "$INPUT" | json_value '.permission.command')
-FILE_PATH=$(echo "$INPUT" | json_value '.permission.path')
+TOOL_NAME=$(echo "$INPUT" | json_value '.tool_name')
+COMMAND=$(echo "$INPUT" | json_value '.tool_input.command')
+FILE_PATH=$(echo "$INPUT" | json_value '.tool_input.path')
 SESSION_ID=$(echo "$INPUT" | json_value '.session_id')
 
 # Truncate long commands for readability
 TRUNCATED_CMD=$(truncate_string "$COMMAND" 100)
 
 # Build tool type label
-TOOL_LABEL="[$(echo "$PERMISSION_NAME" | tr '[:lower:]' '[:upper:]')]"
+TOOL_LABEL="[$(echo "$TOOL_NAME" | tr '[:lower:]' '[:upper:]')]"
 
 # Check if this is a bash command permission
-if [[ "$PERMISSION_NAME" == "bash" ]] && [[ -n "$COMMAND" ]]; then
+if [[ "$TOOL_NAME" == "Bash" ]] && [[ -n "$COMMAND" ]]; then
     # Check if command is in safe whitelist
     if is_safe_command "$COMMAND"; then
         # Build auto-approval notification
@@ -35,7 +35,7 @@ if [[ "$PERMISSION_NAME" == "bash" ]] && [[ -n "$COMMAND" ]]; then
         send_bark_notification "claude-permit" "$TITLE_PERMIT" "$BODY"
 
         # Output approval JSON
-        echo '{"decision": "allow"}'
+        echo '{"hookSpecificOutput":{"permissionDecision":"allow"}}'
         exit 0
     fi
 fi

@@ -12,9 +12,20 @@ This is a collection of Claude Code extensions - skills and hooks that enhance C
 cckit/
 ├── skills/           # Claude Code skills
 │   └── panck/        # Spring Boot microservice scaffold generator
-└── hooks/            # Claude Code hooks
-    └── barnhk/       # Safety and notification hooks
+├── hooks/            # Claude Code hooks
+│   └── barnhk/       # Safety and notification hooks
+└── standards/        # 规范文档
+    └── hooks/        # Claude Code hooks 规范
 ```
+
+## Standards
+
+**IMPORTANT**: 开发 hooks 时必须严格遵守 `standards/hooks/claude-code-hooks.md` 中定义的规范。
+
+关键规范点：
+- JSON 字段名：使用 `tool_name` 和 `tool_input`，不是 `.tool` 或 `.permission`
+- 退出码：阻断时使用 `exit 2`，不是 `exit 1`
+- 输出格式：使用 `hookSpecificOutput` 结构化 JSON 输出
 
 ## Skills
 
