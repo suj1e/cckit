@@ -14,6 +14,10 @@ load_config
 # Read JSON input
 INPUT=$(cat)
 
+# Debug: log input
+DEBUG_LOG="/tmp/barnhk-permission-debug.log"
+echo "[$(date)] INPUT: $INPUT" >> "$DEBUG_LOG"
+
 # Extract permission details
 TOOL_NAME=$(echo "$INPUT" | json_value '.tool_name')
 COMMAND=$(echo "$INPUT" | json_value '.tool_input.command')
@@ -33,8 +37,10 @@ if [[ "$TOOL_NAME" == "Bash" ]] && [[ -n "$COMMAND" ]]; then
         # Debug log
         echo "[barnhk] Auto-approving: $COMMAND" >&2
 
-        # Output approval JSON FIRST (before any other operations)
-        echo '{"hookSpecificOutput":{"permissionDecision":"allow"}}'
+        # Output approval JSON (correct format for PermissionRequest)
+        OUTPUT='{"hookSpecificOutput":{"hookEventName":"PermissionRequest","decision":{"behavior":"allow"}}}'
+        echo "$OUTPUT"
+        echo "[$(date)] OUTPUT: $OUTPUT" >> "$DEBUG_LOG"
 
         # Then send notification (non-blocking)
         BODY="$TOOL_LABEL Auto-approved"$'\n'"Cmd: $TRUNCATED_CMD"
