@@ -26,6 +26,6 @@ if [[ -n "$SESSION_ID" ]]; then
 fi
 
 # Send session end notification
-send_bark_notification "claude-stop" "$TITLE_STOP" "$BODY"
+send_notification "claude-stop" "$TITLE_STOP" "$BODY"
 
 exit 0

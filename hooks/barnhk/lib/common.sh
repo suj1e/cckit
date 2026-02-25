@@ -77,6 +77,90 @@ send_bark_notification() {
     curl -s -m 3 "$url" >/dev/null 2>&1 || true
 }
 
+# Get Discord embed color for notification group
+# Usage: get_discord_color <group>
+get_discord_color() {
+    local group="$1"
+    case "$group" in
+        claude-danger)
+            echo "${DISCORD_COLOR_DANGER:-15548997}"
+            ;;
+        claude-permit)
+            echo "${DISCORD_COLOR_PERMIT:-5763719}"
+            ;;
+        claude-done)
+            echo "${DISCORD_COLOR_DONE:-3066993}"
+            ;;
+        claude-stop)
+            echo "${DISCORD_COLOR_STOP:-15105570}"
+            ;;
+        claude-idle)
+            echo "${DISCORD_COLOR_IDLE:-8421504}"
+            ;;
+        *)
+            echo "7506394"
+            ;;
+    esac
+}
+
+# Send Discord notification via webhook (optional, silent failure)
+# Usage: send_discord_notification <group> <title> <body>
+send_discord_notification() {
+    local group="$1"
+    local title="$2"
+    local body="$3"
+
+    # Skip if not configured
+    if [[ -z "$DISCORD_WEBHOOK_URL" ]]; then
+        return 0
+    fi
+
+    # Validate URL format
+    if [[ ! "$DISCORD_WEBHOOK_URL" =~ ^https?:// ]]; then
+        return 0
+    fi
+
+    # Get color for this group
+    local color=$(get_discord_color "$group")
+
+    # Escape JSON special characters in title and body
+    local escaped_title=$(echo "$title" | jq -Rs '. | gsub("\\n"; "\\n") | gsub("\""; "\\\"") | gsub("\t"; "\\t") | .[0:-1]')
+    local escaped_body=$(echo "$body" | jq -Rs '. | gsub("\\n"; "\\n") | gsub("\""; "\\\"") | gsub("\t"; "\\t") | .[0:-1]')
+
+    # Build Discord embed JSON payload
+    local payload=$(cat <<EOF
+{
+  "embeds": [{
+    "title": $escaped_title,
+    "description": $escaped_body,
+    "color": $color,
+    "footer": {"text": "$group"}
+  }]
+}
+EOF
+)
+
+    # Send notification (silent failure)
+    curl -s -m 5 -X POST \
+        -H "Content-Type: application/json" \
+        -d "$payload" \
+        "$DISCORD_WEBHOOK_URL" >/dev/null 2>&1 || true
+}
+
+# Send notification to all configured backends
+# Usage: send_notification <group> <title> <body>
+send_notification() {
+    local group="$1"
+    local title="$2"
+    local body="$3"
+
+    # Send to Bark (iOS push)
+    send_bark_notification "$group" "$title" "$body"
+
+    # Send to Discord (webhook)
+    send_discord_notification "$group" "$title" "$body"
+}
+
 # Check if command matches safe whitelist
 # Usage: is_safe_command <command>
 is_safe_command() {

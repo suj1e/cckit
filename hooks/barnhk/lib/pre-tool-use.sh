@@ -28,14 +28,14 @@ case "$DANGER_LEVEL" in
     critical)
         REASON="Critical dangerous command detected: $COMMAND"
         echo "BLOCKED: $REASON" >&2
-        send_bark_notification "claude-danger" "$TITLE_DANGER" "Blocked: $COMMAND"
+        send_notification "claude-danger" "$TITLE_DANGER" "Blocked: $COMMAND"
         echo "{\"hookSpecificOutput\":{\"permissionDecision\":\"deny\",\"denyReason\":\"$REASON\"}}"
         exit 2
         ;;
     high)
         REASON="High-risk command detected: $COMMAND"
         echo "BLOCKED: $REASON" >&2
-        send_bark_notification "claude-danger" "$TITLE_DANGER" "Blocked: $COMMAND"
+        send_notification "claude-danger" "$TITLE_DANGER" "Blocked: $COMMAND"
         echo "{\"hookSpecificOutput\":{\"permissionDecision\":\"deny\",\"denyReason\":\"$REASON\"}}"
         exit 2
         ;;

@@ -25,6 +25,6 @@ if [[ -n "$TRANSCRIPT_PATH" ]]; then
 fi
 
 # Send completion notification
-send_bark_notification "claude-done" "$TITLE_DONE" "$BODY"
+send_notification "claude-done" "$TITLE_DONE" "$BODY"
 
 exit 0

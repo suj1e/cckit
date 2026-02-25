@@ -1,6 +1,6 @@
 # barnhk
 
-Claude Code Hooks 增强工具包，提供危险命令防护、安全命令自动审批、Bark 推送通知和任务完成验证等功能。
+Claude Code Hooks 增强工具包，提供危险命令防护、安全命令自动审批、多通道推送通知等功能。
 
 ## 平台支持
 
@@ -16,18 +16,18 @@ Claude Code Hooks 增强工具包，提供危险命令防护、安全命令自�
 |------|------|
 | 🛡️ **危险命令防护** | 检测并阻断 `rm -rf /`、`sudo`、`curl \| bash` 等危险命令 |
 | ✅ **安全命令自动审批** | `git`、`npm`、`pnpm`、`gradle` 等常用命令自动批准 |
-| 🔔 **Bark 推送通知** | 权限审批、危险命令、任务完成等事件推送 |
+| 🔔 **多通道通知** | 支持 Bark (iOS) 和 Discord Webhook |
 
 ## Hooks 类型
 
 | Hook | 触发时机 | 功能 |
 |------|----------|------|
 | `PreToolUse` | 执行工具之前 | 危险命令检测与阻断 |
-| `PermissionRequest` | 请求权限时 | 安全命令自动审批 + Bark 通知 |
-| `TaskCompleted` | 任务完成时 | Bark 通知 |
-| `Stop` | 用户停止会话时 | Bark 通知 |
-| `SessionEnd` | 会话完全结束时 | Bark 通知 |
-| `TeammateIdle` | 队友空闲时 | Bark 通知 |
+| `PermissionRequest` | 请求权限时 | 安全命令自动审批 + 通知 |
+| `TaskCompleted` | 任务完成时 | 通知 |
+| `Stop` | 用户停止会话时 | 通知 |
+| `SessionEnd` | 会话完全结束时 | 通知 |
+| `TeammateIdle` | 队友空闲时 | 通知 |
 
 ## 安装
 
@@ -35,7 +35,7 @@ Claude Code Hooks 增强工具包，提供危险命令防护、安全命令自�
 
 - `bash` 3.0+ - Shell 解释器
 - `jq` - JSON 处理工具
-- `curl` - 发送 Bark 通知（可选）
+- `curl` - 发送通知（可选）
 
 安装 jq：
 - **macOS**: `brew install jq`
@@ -68,6 +68,42 @@ VERBOSE=true ./install.sh
 
 修改配置直接编辑 `~/.claude/hooks/barnhk/lib/barnhk.conf`，不会影响项目仓库。
 
+## 通知配置
+
+barnhk 支持两种通知通道，可同时配置：
+
+### Bark (iOS 推送)
+
+```bash
+# 在 barnhk.conf 中设置
+BARK_SERVER_URL="https://api.day.app/YOUR_KEY"
+```
+
+### Discord Webhook
+
+```bash
+# 在 barnhk.conf 中设置
+DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/123456789/abcdefg"
+```
+
+Discord 支持 Embed 富文本格式，不同类型通知有不同颜色：
+
+| 分组 | 颜色 | 说明 |
+|------|------|------|
+| `claude-danger` | 🔴 红色 | 危险命令被阻断 |
+| `claude-permit` | 🟢 绿色 | 权限审批 |
+| `claude-done` | 🔵 蓝色 | 任务完成 |
+| `claude-stop` | 🟠 橙色 | 会话停止 |
+| `claude-idle` | ⚪ 灰色 | 队友空闲 |
+
+可自定义颜色（十进制值）：
+```bash
+DISCORD_COLOR_DANGER="15548997"
+DISCORD_COLOR_PERMIT="5763719"
+DISCORD_COLOR_DONE="3066993"
+DISCORD_COLOR_STOP="15105570"
+DISCORD_COLOR_IDLE="8421504"
+```
 
 ## 通知格式示例
 
@@ -103,7 +139,7 @@ Session: e5f6g7h8
 | 会话结束 | `claude-stop` | 会话完全结束（SessionEnd） |
 | 队友空闲 | `claude-idle` | Agent 队友进入空闲状态 |
 
-## 通知分组
+## 通知分组 (Bark)
 
 | 分组 | 触发场景 | 默认声音 |
 |------|----------|----------|
@@ -123,6 +159,11 @@ Session: e5f6g7h8
 - **文件读取**: ls, cat, grep, find, head, tail
 
 可支持配置添加自定义白名单：
+
+```bash
+# 在 barnhk.conf 中
+SAFE_COMMANDS="^make ^docker-compose"
+```
 
 ## 危险命令等级
 

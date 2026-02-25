@@ -38,7 +38,7 @@ if [[ "$TOOL_NAME" == "Bash" ]] && [[ -n "$COMMAND" ]]; then
 
         # Then send notification (non-blocking)
         BODY="$TOOL_LABEL Auto-approved"$'\n'"Cmd: $TRUNCATED_CMD"
-        send_bark_notification "claude-permit" "$TITLE_PERMIT" "$BODY"
+        send_notification "claude-permit" "$TITLE_PERMIT" "$BODY"
 
         exit 0
     fi
@@ -58,5 +58,5 @@ if [[ -n "$SESSION_ID" ]]; then
     BODY="$BODY"$'\n'"Session: $SHORT_SESSION"
 fi
 
-send_bark_notification "claude-permit" "$TITLE_PERMIT" "$BODY"
+send_notification "claude-permit" "$TITLE_PERMIT" "$BODY"
 exit 0

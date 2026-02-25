@@ -27,6 +27,6 @@ elif [[ -n "$TEAMMATE_ID" ]]; then
 fi
 
 # Send idle notification
-send_bark_notification "claude-idle" "$TITLE_IDLE" "$BODY"
+send_notification "claude-idle" "$TITLE_IDLE" "$BODY"
 
 exit 0

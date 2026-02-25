@@ -25,6 +25,6 @@ if [[ -n "$STOP_REASON" ]]; then
 fi
 
 # Send stop notification
-send_bark_notification "claude-stop" "$TITLE_STOP" "$BODY"
+send_notification "claude-stop" "$TITLE_STOP" "$BODY"
 
 exit 0
