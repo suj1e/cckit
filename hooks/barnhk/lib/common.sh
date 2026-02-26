@@ -85,8 +85,11 @@ get_discord_color() {
         claude-danger)
             echo "${DISCORD_COLOR_DANGER:-15548997}"
             ;;
-        claude-permit)
+        claude-permit|claude-auto-permit)
             echo "${DISCORD_COLOR_PERMIT:-5763719}"
+            ;;
+        claude-manual-permit)
+            echo "${DISCORD_COLOR_APPROVAL:-16776960}"
             ;;
         claude-done)
             echo "${DISCORD_COLOR_DONE:-3066993}"
@@ -158,8 +161,11 @@ get_feishu_color() {
         claude-danger)
             echo "red"
             ;;
-        claude-permit)
+        claude-permit|claude-auto-permit)
             echo "green"
+            ;;
+        claude-manual-permit)
+            echo "yellow"
             ;;
         claude-done)
             echo "blue"

@@ -53,7 +53,7 @@ if [[ "$TOOL_NAME" == "Bash" ]] && [[ -n "$COMMAND" ]]; then
 
         # Then send notification (non-blocking)
         BODY="$TOOL_LABEL Auto-approved"$'\n'"Cmd: $TRUNCATED_CMD"
-        send_notification "claude-permit" "$TITLE_PERMIT" "$BODY" "$PROJECT_NAME"
+        send_notification "claude-auto-permit" "$TITLE_PERMIT" "$BODY" "$PROJECT_NAME"
 
         exit 0
     fi
@@ -71,5 +71,5 @@ if [[ -n "$SESSION_ID" ]]; then
     BODY="$BODY"$'\n'"Session: $SESSION_ID"
 fi
 
-send_notification "claude-permit" "$TITLE_PERMIT" "$BODY" "$PROJECT_NAME"
+send_notification "claude-manual-permit" "$TITLE_APPROVAL" "$BODY" "$PROJECT_NAME"
 exit 0
