@@ -57,6 +57,31 @@ if [[ "$TOOL_NAME" == "Bash" ]] && [[ -n "$COMMAND" ]]; then
 
         exit 0
     fi
+
+    # Try cplit remote approval if enabled
+    if is_cplit_enabled; then
+        echo "[barnhk] Requesting cplit approval for: $COMMAND" >&2
+
+        DECISION=$(request_cplit_approval "$COMMAND" "${CWD:-$PWD}")
+
+        if [[ "$DECISION" == "approve" ]]; then
+            # Output approval JSON
+            OUTPUT='{"hookSpecificOutput":{"hookEventName":"PermissionRequest","decision":{"behavior":"allow"}}}'
+            echo "$OUTPUT"
+            echo "[$(date)] OUTPUT: $OUTPUT (cplit approved)" >> "$DEBUG_LOG"
+            exit 0
+
+        elif [[ "$DECISION" == "deny" ]]; then
+            # Output denial JSON
+            OUTPUT='{"hookSpecificOutput":{"hookEventName":"PermissionRequest","decision":{"behavior":"deny"}}}'
+            echo "$OUTPUT"
+            echo "[$(date)] OUTPUT: $OUTPUT (cplit denied)" >> "$DEBUG_LOG"
+            exit 0
+        fi
+
+        # cplit failed or timed out, fall through to local manual approval
+        echo "[barnhk] cplit request failed or timed out, falling back to local" >&2
+    fi
 fi
 
 # Build manual approval notification with details

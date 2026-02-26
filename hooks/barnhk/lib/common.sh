@@ -348,6 +348,56 @@ send_notification() {
     send_feishu_notification "$group" "$title" "$body"
 }
 
+# Check if cplit integration is enabled and configured
+# Usage: is_cplit_enabled
+is_cplit_enabled() {
+    [[ "$CPLIT_ENABLED" == "true" ]] && [[ -n "$CPLIT_URL" ]] && [[ "$CPLIT_URL" =~ ^https?:// ]]
+}
+
+# Request approval from cplit server
+# Returns: "approve", "deny", or empty string on error
+# Usage: request_cplit_approval <command> <cwd>
+request_cplit_approval() {
+    local command="$1"
+    local cwd="$2"
+
+    # Skip if not configured
+    if ! is_cplit_enabled; then
+        echo ""
+        return 1
+    fi
+
+    # Escape command and cwd for JSON using jq
+    local escaped_command
+    local escaped_cwd
+    escaped_command=$(echo "$command" | jq -Rs '.[0:-1]')
+    escaped_cwd=$(echo "$cwd" | jq -Rs '.[0:-1]')
+
+    # Build JSON payload
+    local payload="{\"command\":$escaped_command,\"cwd\":$escaped_cwd}"
+
+    # Call cplit API with timeout (70s to allow for cplit's 60s timeout)
+    local response
+    response=$(curl -s -m 70 -X POST \
+        -H "Content-Type: application/json" \
+        -d "$payload" \
+        "${CPLIT_URL%/}/request-approval" 2>/dev/null)
+
+    # Parse decision from response
+    if [[ -n "$response" ]]; then
+        local decision
+        decision=$(echo "$response" | jq -r '.decision // empty' 2>/dev/null)
+        if [[ "$decision" == "approve" ]] || [[ "$decision" == "deny" ]]; then
+            echo "$decision"
+            return 0
+        fi
+    fi
+
+    # Error or unexpected response
+    echo ""
+    return 1
+}
+
 # Check if command matches safe whitelist
 # Usage: is_safe_command <command>
 is_safe_command() {

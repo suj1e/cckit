@@ -76,11 +76,12 @@ Generates production-ready Spring Boot microservice scaffolds with DDD/Clean Arc
 
 ### barnhk - Safety & Notification Hooks
 
-Provides dangerous command protection, auto-approval for safe commands, and multi-channel notifications.
+Provides dangerous command protection, auto-approval for safe commands, remote approval via cplit, and multi-channel notifications.
 
 **Features:**
 - Blocks dangerous commands (rm -rf /, sudo, curl | bash)
 - Auto-approves safe commands (git, npm, gradle, openspec)
+- **Remote approval via cplit** - approve commands from mobile via Feishu
 - Multi-channel notifications with project info: Bark (iOS) + Discord + 飞书 Webhook
   - All notifications show project name in title prefix: `[项目名] 标题`
   - Distinct notification types with color coding:
@@ -103,10 +104,23 @@ After installation, config file is located at:
 
 Edit the config:
 ```bash
+# Notifications
 BARK_SERVER_URL="https://api.day.app/YOUR_KEY"
 DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/..."
 FEISHU_WEBHOOK_URL="https://open.feishu.cn/open-apis/bot/v2/hook/..."
+
+# Remote approval (optional, default: disabled)
+CPLIT_ENABLED=true
+CPLIT_URL="https://your-cplit-server.com"
 ```
+
+**cplit Remote Approval:**
+
+When `CPLIT_ENABLED=true`, non-whitelisted commands will be sent to the cplit server for remote approval via Feishu interactive cards. Users can approve/deny from their mobile device.
+
+- Requires a running [cplit](https://github.com/suj1e/cplit) server
+- Default timeout: 60 seconds (then auto-approves)
+- Falls back to local manual approval if cplit is unavailable
 
 ## Plugin Management
 
