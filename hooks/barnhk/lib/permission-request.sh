@@ -23,6 +23,15 @@ TOOL_NAME=$(echo "$INPUT" | json_value '.tool_name')
 COMMAND=$(echo "$INPUT" | json_value '.tool_input.command')
 FILE_PATH=$(echo "$INPUT" | json_value '.tool_input.path')
 SESSION_ID=$(echo "$INPUT" | json_value '.session_id')
+CWD=$(echo "$INPUT" | json_value '.cwd')
+
+# Extract project name (from cwd or fallback to $PWD)
+PROJECT_NAME=""
+if [[ -n "$CWD" ]]; then
+    PROJECT_NAME=$(basename "$CWD")
+elif [[ -n "$PWD" ]]; then
+    PROJECT_NAME=$(basename "$PWD")
+fi
 
 # Truncate long commands for readability
 TRUNCATED_CMD=$(truncate_string "$COMMAND" 100)
@@ -44,7 +53,7 @@ if [[ "$TOOL_NAME" == "Bash" ]] && [[ -n "$COMMAND" ]]; then
 
         # Then send notification (non-blocking)
         BODY="$TOOL_LABEL Auto-approved"$'\n'"Cmd: $TRUNCATED_CMD"
-        send_notification "claude-permit" "$TITLE_PERMIT" "$BODY"
+        send_notification "claude-permit" "$TITLE_PERMIT" "$BODY" "$PROJECT_NAME"
 
         exit 0
     fi
@@ -62,5 +71,5 @@ if [[ -n "$SESSION_ID" ]]; then
     BODY="$BODY"$'\n'"Session: $SESSION_ID"
 fi
 
-send_notification "claude-permit" "$TITLE_PERMIT" "$BODY"
+send_notification "claude-permit" "$TITLE_PERMIT" "$BODY" "$PROJECT_NAME"
 exit 0

@@ -17,6 +17,15 @@ INPUT=$(cat)
 # Extract task info
 SESSION_ID=$(echo "$INPUT" | json_value '.session_id')
 TRANSCRIPT_PATH=$(echo "$INPUT" | json_value '.transcript_path')
+CWD=$(echo "$INPUT" | json_value '.cwd')
+
+# Extract project name (from cwd or fallback to $PWD)
+PROJECT_NAME=""
+if [[ -n "$CWD" ]]; then
+    PROJECT_NAME=$(basename "$CWD")
+elif [[ -n "$PWD" ]]; then
+    PROJECT_NAME=$(basename "$PWD")
+fi
 
 # Build notification body
 BODY="Session: ${SESSION_ID:-unknown}"
@@ -25,6 +34,6 @@ if [[ -n "$TRANSCRIPT_PATH" ]]; then
 fi
 
 # Send completion notification
-send_notification "claude-done" "$TITLE_DONE" "$BODY"
+send_notification "claude-done" "$TITLE_DONE" "$BODY" "$PROJECT_NAME"
 
 exit 0

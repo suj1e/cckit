@@ -370,6 +370,11 @@ is_safe_command() {
         return 0
     fi
 
+    # OpenSpec workflow commands
+    if [[ "$cmd" =~ ^openspec[[:space:]]+(list|propose|apply|archive|explore|status|init|new) ]]; then
+        return 0
+    fi
+
     # Custom whitelist from config
     if [[ -n "$SAFE_COMMANDS" ]]; then
         local pattern

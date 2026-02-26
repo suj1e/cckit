@@ -1,16 +1,4 @@
-## ADDED Requirements
-
-### Requirement: Notification title includes project name prefix
-
-All barnhk notifications SHALL display the project name as a prefix in the notification title when project name is available.
-
-#### Scenario: Project name in title
-- **WHEN** `send_notification` is called with project_name "cckit" and title "Claude Stopped"
-- **THEN** the notification title SHALL be "[cckit] Claude Stopped"
-
-#### Scenario: No project name when not provided
-- **WHEN** `send_notification` is called without project_name parameter
-- **THEN** the notification title SHALL NOT include a project name prefix
+## MODIFIED Requirements
 
 ### Requirement: Project name extracted from cwd
 
@@ -24,6 +12,8 @@ Each hook that calls `send_notification` SHALL extract the project name using a 
 - **WHEN** a hook receives input without `cwd` field or with empty `cwd`
 - **AND** the current working directory is `/Users/dev/projects/otherapp`
 - **THEN** the hook SHALL pass "otherapp" as the project_name parameter to `send_notification`
+
+## ADDED Requirements
 
 ### Requirement: All notification types include project name
 
