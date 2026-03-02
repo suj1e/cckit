@@ -209,3 +209,17 @@ When modifying skills or hooks:
 1. **Skills** are defined by a `SKILL.md` file with frontmatter specifying `name` and `description`
 2. **Hooks** are configured inline in `.claude-plugin/plugin.json` with `${CLAUDE_PLUGIN_ROOT}` for paths
 3. Test changes by reinstalling: `./uninstall.sh <plugin> && ./install.sh <plugin>`
+
+## Known Limitations
+
+### AskUserQuestion Hook Support
+
+The `AskUserQuestion` tool does **not** trigger any hooks in Claude Code:
+
+| Hook Type | Triggered by AskUserQuestion |
+|-----------|------------------------------|
+| PreToolUse | ❌ No |
+| Notification (question type) | ❌ No |
+| Notification (idle_prompt type) | ❌ No |
+
+This is a Claude Code limitation. Workaround: Manually check for questions via transcript polling (not implemented).
