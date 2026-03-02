@@ -133,6 +133,25 @@ When `CPLIT_ENABLED=true`, non-whitelisted commands will be sent to the cplit se
 - Default timeout: 60 seconds (then auto-approves)
 - Falls back to local manual approval if cplit is unavailable
 
+**Feishu Card Layout:**
+
+Approval cards use optimized layout for readability:
+```
+┌─────────────────────────────────────────┐
+│ 🔐 Claude 命令审批请求                    │
+├─────────────────────────────────────────┤
+│ ⌨️ 命令                                  │
+│ `rm -rf build`                          │
+├────────────────────┬────────────────────┤
+│ 📁 目录             │ 🔗 请求ID           │
+│ `/gateway-center`  │ `1234`              │
+├────────────────────┴────────────────────┤
+│     [✓ 批准]    [✗ 拒绝]                 │
+└─────────────────────────────────────────┘
+```
+
+Result cards (approved/denied/timeout) also display directory and timestamp.
+
 ## Plugin Management
 
 cckit plugins are managed via Claude Code's official marketplace system.
