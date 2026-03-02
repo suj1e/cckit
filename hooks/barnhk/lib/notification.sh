@@ -77,6 +77,7 @@ if [[ -n "$SESSION_ID" ]]; then
 fi
 
 # Send notification
-send_notification "claude-question" "$TITLE_QUESTION" "$NOTIF_BODY" "$PROJECT_NAME"
+NOTIF_TITLE=$(get_notification_title "$NOTIFICATION_TYPE")
+send_notification "claude-question" "$NOTIF_TITLE" "$NOTIF_BODY" "$PROJECT_NAME"
 
 exit 0

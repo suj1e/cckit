@@ -519,6 +519,24 @@ get_notification_mode() {
     esac
 }
 
+# Get notification title based on notification type
+# Usage: get_notification_title <notification_type>
+# Returns: appropriate title variable value
+get_notification_title() {
+    local notif_type="$1"
+    case "$notif_type" in
+        question)
+            echo "${TITLE_QUESTION:-❓ Claude Question}"
+            ;;
+        idle_prompt)
+            echo "${TITLE_IDLE_PROMPT:-⏳ Claude Waiting}"
+            ;;
+        *)
+            echo "${TITLE_QUESTION:-❓ Claude Question}"
+            ;;
+    esac
+}
+
 # Extract specific content from transcript file
 # Usage: extract_transcript_content <transcript_path> <session_id> [max_length]
 # Returns: extracted text or empty string on failure
