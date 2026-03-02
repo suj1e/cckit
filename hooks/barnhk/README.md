@@ -218,3 +218,35 @@ SAFE_COMMANDS="^make ^docker-compose"
 | Critical | `rm -rf /`, `dd ... of=/dev/sda`, `mkfs` |
 | High | `sudo`, `curl` | `bash`, `chmod -R 777` |
 | Medium | `nc -l`, `kill -9 -1`, `pkill -f` |
+
+## 调试
+
+### Transcript 提取调试
+
+如果 `question` 或 `idle_prompt` 通知显示通用内容而非具体内容，可以查看调试日志：
+
+```bash
+cat /tmp/barnhk-transcript-debug.log
+```
+
+日志内容包括：
+- 传入的 transcript 路径和 session ID
+- 每行匹配结果
+- 提取的文本内容
+
+### 通知类型配置
+
+通知类型支持三种处理模式：
+
+| 模式 | 说明 |
+|------|------|
+| `skip` | 跳过通知，不发送 |
+| `default` | 使用通用消息 |
+| `transcript` | 从 transcript 提取具体内容 |
+
+配置示例：
+```bash
+NOTIFICATION_PERMISSION_PROMPT="skip"    # 跳过，避免与 permission-request.sh 重复
+NOTIFICATION_QUESTION="transcript"        # 提取具体问题内容
+NOTIFICATION_IDLE_PROMPT="transcript"     # 提取具体等待内容
+```

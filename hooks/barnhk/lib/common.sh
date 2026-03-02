@@ -544,15 +544,28 @@ extract_transcript_content() {
     local transcript_path="$1"
     local current_session="$2"
     local max_len="${3:-200}"
+    local debug_file="/tmp/barnhk-transcript-debug.log"
+
+    # Debug logging
+    debug_log() {
+        echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$debug_file" 2>/dev/null || true
+    }
+
+    debug_log "=== extract_transcript_content called ==="
+    debug_log "transcript_path: $transcript_path"
+    debug_log "current_session: $current_session"
+    debug_log "max_len: $max_len"
 
     # Validate transcript file exists
     if [[ ! -f "$transcript_path" ]]; then
+        debug_log "ERROR: transcript file not found"
         return 1
     fi
 
     # Read last 30 lines and search for matching assistant text
     local extracted_text=""
     local line_count=0
+    local matched_lines=0
 
     while IFS= read -r line || [[ -n "$line" ]]; do
         # Skip empty lines
@@ -564,28 +577,57 @@ extract_transcript_content() {
             break
         fi
 
-        # Check if this line belongs to current session
+        # Try both sessionId and session_id field names
         local line_session
-        line_session=$(echo "$line" | jq -r '.sessionId // empty' 2>/dev/null)
+        line_session=$(echo "$line" | jq -r '.sessionId // .session_id // empty' 2>/dev/null)
+
         if [[ "$line_session" != "$current_session" ]]; then
             continue
         fi
 
+        ((matched_lines++))
+        debug_log "Line $line_count: session matched ($line_session)"
+
         # Check if this is an assistant message
         local msg_type
         msg_type=$(echo "$line" | jq -r '.type // empty' 2>/dev/null)
+        debug_log "Line $line_count: type=$msg_type"
+
         if [[ "$msg_type" != "assistant" ]]; then
             continue
         fi
 
-        # Try to extract text content from message.content array
-        local text_content
+        # Try multiple extraction patterns for text content
+        local text_content=""
+
+        # Pattern 1: .message.content[] | select(.type == "text") | .text
         text_content=$(echo "$line" | jq -r '.message.content[] | select(.type == "text") | .text' 2>/dev/null | head -1)
+
+        # Pattern 2: .content[] | select(.type == "text") | .text (if no .message wrapper)
+        if [[ -z "$text_content" ]]; then
+            text_content=$(echo "$line" | jq -r '.content[] | select(.type == "text") | .text' 2>/dev/null | head -1)
+        fi
+
+        # Pattern 3: .message.text (simple text field)
+        if [[ -z "$text_content" ]]; then
+            text_content=$(echo "$line" | jq -r '.message.text // empty' 2>/dev/null)
+        fi
+
+        # Pattern 4: .text (direct text field)
+        if [[ -z "$text_content" ]]; then
+            text_content=$(echo "$line" | jq -r '.text // empty' 2>/dev/null)
+        fi
+
         if [[ -n "$text_content" ]]; then
+            debug_log "Line $line_count: extracted text (${#text_content} chars)"
             extracted_text="$text_content"
             # Don't break - keep looking for more recent messages
+        else
+            debug_log "Line $line_count: no text content found"
         fi
     done < <(tac "$transcript_path" 2>/dev/null)
+
+    debug_log "Processed $line_count lines, $matched_lines session matches"
 
     # Return extracted text (truncated if needed)
     if [[ -n "$extracted_text" ]]; then
@@ -596,8 +638,10 @@ extract_transcript_content() {
         else
             echo "$extracted_text"
         fi
+        debug_log "SUCCESS: returning text (${#extracted_text} chars)"
         return 0
     fi
 
+    debug_log "FAILURE: no text extracted"
     return 1
 }

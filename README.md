@@ -32,7 +32,7 @@ cckit uses Claude Code's official marketplace system. Use the unified installer:
 The installer will:
 1. Add cckit as a local marketplace
 2. Install plugins via `claude plugin install`
-3. Automatically register hooks to `settings.json`
+3. Hooks are automatically loaded via `plugin.json` through `enabledPlugins`
 
 ## Uninstallation
 

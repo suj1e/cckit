@@ -1,12 +1,10 @@
 #!/bin/bash
 # ==============================================================================
 # cckit - Claude Code Kit Uninstaller
-# Uninstalls cckit plugins and removes hooks from settings
+# Uninstalls cckit plugins
 # ==============================================================================
 
 set -e
-
-SETTINGS_FILE="$HOME/.claude/settings.json"
 
 # Colors
 GREEN='\033[0;32m'
@@ -22,35 +20,8 @@ echo -e "${CYAN}                   cckit - Claude Code Kit Uninstaller          
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo
 
-# Remove hooks from settings.json
-remove_hooks() {
-  local name="$1"
-
-  if [[ ! -f "$SETTINGS_FILE" ]]; then
-    return 0
-  fi
-
-  echo -e "${CYAN}→ Removing hooks for ${name}...${NC}"
-
-  local settings
-  settings=$(cat "$SETTINGS_FILE" | jq '
-    .hooks.PreToolUse = [.hooks.PreToolUse[]? // empty | select(.hooks[]?.command? | test("cckit/'"$name"'") | not)] |
-    .hooks.PermissionRequest = [.hooks.PermissionRequest[]? // empty | select(.hooks[]?.command? | test("cckit/'"$name"'") | not)] |
-    .hooks.TaskCompleted = [.hooks.TaskCompleted[]? // empty | select(.hooks[]?.command? | test("cckit/'"$name"'") | not)] |
-    .hooks.Stop = [.hooks.Stop[]? // empty | select(.hooks[]?.command? | test("cckit/'"$name"'") | not)] |
-    .hooks.SessionEnd = [.hooks.SessionEnd[]? // empty | select(.hooks[]?.command? | test("cckit/'"$name"'") | not)] |
-    .hooks.TeammateIdle = [.hooks.TeammateIdle[]? // empty | select(.hooks[]?.command? | test("cckit/'"$name"'") | not)] |
-    .hooks.Notification = [.hooks.Notification[]? // empty | select(.hooks[]?.command? | test("cckit/'"$name"'") | not)]
-  ')
-
-  echo "$settings" | jq '.' > "$SETTINGS_FILE"
-}
-
 uninstall_plugin() {
   local name="$1"
-
-  # Remove hooks first
-  remove_hooks "$name"
 
   echo -e "${CYAN}→ Uninstalling ${name}...${NC}"
   if claude plugin uninstall "${name}@cckit" --scope user 2>/dev/null; then

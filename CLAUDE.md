@@ -100,6 +100,13 @@ Provides dangerous command protection, auto-approval for safe commands, remote a
 ./install.sh barnhk
 ```
 
+**Debug Logging:**
+
+Transcript extraction logs to `/tmp/barnhk-transcript-debug.log` for troubleshooting:
+```bash
+cat /tmp/barnhk-transcript-debug.log
+```
+
 **Configuration:**
 
 After installation, config file is located at:
@@ -155,6 +162,8 @@ Result cards (approved/denied/timeout) also display directory and timestamp.
 ## Plugin Management
 
 cckit plugins are managed via Claude Code's official marketplace system.
+
+**Hook Loading:** Hooks are defined in `.claude-plugin/plugin.json` and loaded automatically via `enabledPlugins`. No manual registration to `settings.json` is needed.
 
 **Install:**
 ```bash
