@@ -19,11 +19,20 @@ SESSION_ID=$(echo "$INPUT" | json_value '.session_id')
 MESSAGE=$(echo "$INPUT" | json_value '.message')
 NOTIFICATION_TYPE=$(echo "$INPUT" | json_value '.notification_type')
 CWD=$(echo "$INPUT" | json_value '.cwd')
+TRANSCRIPT_PATH=$(echo "$INPUT" | json_value '.transcript_path')
 
 # Extract project name from cwd
 PROJECT_NAME=""
 if [[ -n "$CWD" ]]; then
     PROJECT_NAME=$(basename "$CWD")
+fi
+
+# Get handling mode for this notification type
+MODE=$(get_notification_mode "$NOTIFICATION_TYPE")
+
+# Skip if mode is "skip"
+if [[ "$MODE" == "skip" ]]; then
+    exit 0
 fi
 
 # Truncate message to 200 characters
@@ -42,14 +51,26 @@ get_icon() {
     case "$1" in
         permission_prompt) echo "🔐" ;;
         question) echo "❓" ;;
+        idle_prompt) echo "⏳" ;;
         *) echo "🔔" ;;
     esac
 }
 
-# Build notification body: icon + truncated message
+# Determine notification content based on mode
+NOTIF_CONTENT=""
+if [[ "$MODE" == "transcript" ]] && [[ -n "$TRANSCRIPT_PATH" ]] && [[ -n "$SESSION_ID" ]]; then
+    # Try to extract specific content from transcript
+    NOTIF_CONTENT=$(extract_transcript_content "$TRANSCRIPT_PATH" "$SESSION_ID" 200 2>/dev/null) || true
+fi
+
+# Fallback to generic message if extraction failed or mode is "default"
+if [[ -z "$NOTIF_CONTENT" ]]; then
+    NOTIF_CONTENT=$(truncate_message "${MESSAGE:-Claude needs your attention}")
+fi
+
+# Build notification body: icon + content
 ICON=$(get_icon "$NOTIFICATION_TYPE")
-TRUNCATED_MSG=$(truncate_message "${MESSAGE:-Claude needs your attention}")
-NOTIF_BODY="$ICON $TRUNCATED_MSG"
+NOTIF_BODY="$ICON $NOTIF_CONTENT"
 
 if [[ -n "$SESSION_ID" ]]; then
     NOTIF_BODY="$NOTIF_BODY"$'\n'"Session: $SESSION_ID"

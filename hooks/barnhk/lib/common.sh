@@ -497,3 +497,89 @@ check_danger_level() {
 
     echo "safe"
 }
+
+# Get notification handling mode from config
+# Usage: get_notification_mode <notification_type>
+# Returns: skip, default, or transcript
+get_notification_mode() {
+    local notif_type="$1"
+    case "$notif_type" in
+        permission_prompt)
+            echo "${NOTIFICATION_PERMISSION_PROMPT:-skip}"
+            ;;
+        question)
+            echo "${NOTIFICATION_QUESTION:-transcript}"
+            ;;
+        idle_prompt)
+            echo "${NOTIFICATION_IDLE_PROMPT:-transcript}"
+            ;;
+        *)
+            echo "default"
+            ;;
+    esac
+}
+
+# Extract specific content from transcript file
+# Usage: extract_transcript_content <transcript_path> <session_id> [max_length]
+# Returns: extracted text or empty string on failure
+extract_transcript_content() {
+    local transcript_path="$1"
+    local current_session="$2"
+    local max_len="${3:-200}"
+
+    # Validate transcript file exists
+    if [[ ! -f "$transcript_path" ]]; then
+        return 1
+    fi
+
+    # Read last 30 lines and search for matching assistant text
+    local extracted_text=""
+    local line_count=0
+
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        # Skip empty lines
+        [[ -z "$line" ]] && continue
+
+        # Limit to 30 lines for performance
+        ((line_count++))
+        if [[ $line_count -gt 30 ]]; then
+            break
+        fi
+
+        # Check if this line belongs to current session
+        local line_session
+        line_session=$(echo "$line" | jq -r '.sessionId // empty' 2>/dev/null)
+        if [[ "$line_session" != "$current_session" ]]; then
+            continue
+        fi
+
+        # Check if this is an assistant message
+        local msg_type
+        msg_type=$(echo "$line" | jq -r '.type // empty' 2>/dev/null)
+        if [[ "$msg_type" != "assistant" ]]; then
+            continue
+        fi
+
+        # Try to extract text content from message.content array
+        local text_content
+        text_content=$(echo "$line" | jq -r '.message.content[] | select(.type == "text") | .text' 2>/dev/null | head -1)
+        if [[ -n "$text_content" ]]; then
+            extracted_text="$text_content"
+            # Don't break - keep looking for more recent messages
+        fi
+    done < <(tac "$transcript_path" 2>/dev/null)
+
+    # Return extracted text (truncated if needed)
+    if [[ -n "$extracted_text" ]]; then
+        # Remove newlines for notification display
+        extracted_text=$(echo "$extracted_text" | tr '\n' ' ' | sed 's/  */ /g')
+        if [[ ${#extracted_text} -gt $max_len ]]; then
+            echo "${extracted_text:0:$max_len}..."
+        else
+            echo "$extracted_text"
+        fi
+        return 0
+    fi
+
+    return 1
+}
