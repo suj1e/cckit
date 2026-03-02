@@ -84,6 +84,11 @@ Provides dangerous command protection, auto-approval for safe commands, remote a
 - **Remote approval via cplit** - approve commands from mobile via Feishu
 - Multi-channel notifications with project info: Bark (iOS) + Discord + 飞书 Webhook
   - All notifications show project name in title prefix: `[项目名] 标题`
+  - **Type-specific titles**: Different notification types use appropriate titles
+    - ❓ Claude Question - for `question` type (Claude asks something)
+    - ⏳ Claude Waiting - for `idle_prompt` type (Claude waiting for input)
+  - **Transcript content extraction**: Question/idle notifications extract specific content from transcript instead of generic messages
+  - **Configurable handling**: Each notification type can be set to `skip`, `default`, or `transcript` mode
   - Distinct notification types with color coding:
     - 🔔 Claude Permit (green) - auto-approved commands
     - 🔐 Claude Approval (yellow) - manual approval needed
@@ -108,6 +113,12 @@ Edit the config:
 BARK_SERVER_URL="https://api.day.app/YOUR_KEY"
 DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/..."
 FEISHU_WEBHOOK_URL="https://open.feishu.cn/open-apis/bot/v2/hook/..."
+
+# Notification type handling (skip/default/transcript)
+# skip = no notification, default = generic message, transcript = extract from transcript
+NOTIFICATION_PERMISSION_PROMPT="skip"    # Skip to avoid duplicate with permission-request.sh
+NOTIFICATION_QUESTION="transcript"        # Extract specific question content
+NOTIFICATION_IDLE_PROMPT="transcript"     # Extract specific waiting content
 
 # Remote approval (optional, default: disabled)
 CPLIT_ENABLED=true
