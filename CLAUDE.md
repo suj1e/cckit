@@ -80,7 +80,13 @@ Provides dangerous command protection, auto-approval for safe commands, remote a
 
 **Features:**
 - Blocks dangerous commands (rm -rf /, sudo, curl | bash)
-- Auto-approves safe commands (git, npm, gradle, openspec)
+- Auto-approves safe commands:
+  - Git, npm, pnpm, yarn, pip, gradle, mvn, cargo
+  - **All openspec subcommands** (list, propose, apply, archive, instructions, update, etc.)
+  - **File operations**: mkdir, touch, cp, mv
+  - **Docker**: ps, images, logs, inspect, stats, exec, network ls, volume ls
+  - **Docker Compose**: up, down, logs, ps, build, config
+- **Project directory auto-approve** - toggle to auto-approve all commands in project dir (default: on)
 - **Remote approval via cplit** - approve commands from mobile via Feishu
 - Multi-channel notifications with project info: Bark (iOS) + Discord + 飞书 Webhook
   - All notifications show project name in title prefix: `[项目名] 标题`
@@ -126,6 +132,10 @@ FEISHU_WEBHOOK_URL="https://open.feishu.cn/open-apis/bot/v2/hook/..."
 NOTIFICATION_PERMISSION_PROMPT="skip"    # Skip to avoid duplicate with permission-request.sh
 NOTIFICATION_QUESTION="transcript"        # Extract specific question content
 NOTIFICATION_IDLE_PROMPT="transcript"     # Extract specific waiting content
+
+# Project directory auto-approve (default: true)
+# When enabled, all commands in project directory are auto-approved
+AUTO_APPROVE_PROJECT_COMMANDS=true
 
 # Remote approval (optional, default: disabled)
 CPLIT_ENABLED=true
