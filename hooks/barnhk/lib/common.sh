@@ -399,9 +399,17 @@ request_cplit_approval() {
 }
 
 # Check if command matches safe whitelist
-# Usage: is_safe_command <command>
+# Usage: is_safe_command <command> [cwd]
 is_safe_command() {
     local cmd="$1"
+    local cwd="${2:-}"
+
+    # Project directory auto-approve (if enabled)
+    if [[ "$AUTO_APPROVE_PROJECT_COMMANDS" == "true" ]] && [[ -n "$cwd" ]]; then
+        # Auto-approve all commands within project directory
+        # (dangerous commands are still blocked by check_danger_level)
+        return 0
+    fi
 
     # Git commands
     if [[ "$cmd" =~ ^git[[:space:]]+(status|log|diff|add|commit|push|pull|checkout|merge|rebase|branch|fetch|stash|reset|restore|switch|show) ]]; then
@@ -426,8 +434,36 @@ is_safe_command() {
         return 0
     fi
 
-    # OpenSpec workflow commands
-    if [[ "$cmd" =~ ^openspec[[:space:]]+(list|propose|apply|archive|explore|status|init|new) ]]; then
+    # OpenSpec workflow commands (all subcommands)
+    if [[ "$cmd" =~ ^openspec[[:space:]]+ ]]; then
+        return 0
+    fi
+
+    # Directory operations
+    if [[ "$cmd" =~ ^mkdir[[:space:]]+ ]]; then
+        return 0
+    fi
+
+    # File operations
+    if [[ "$cmd" =~ ^(touch|cp|mv)[[:space:]]+ ]]; then
+        return 0
+    fi
+
+    # Docker read-only and common dev commands
+    if [[ "$cmd" =~ ^docker[[:space:]]+(ps|ls|images|logs|inspect|stats|top|port|exec)[[:space:]]+ ]]; then
+        return 0
+    fi
+    # Docker resource list commands
+    if [[ "$cmd" =~ ^docker[[:space:]]+(network|volume)[[:space:]]+ls ]]; then
+        return 0
+    fi
+
+    # Docker compose commands
+    if [[ "$cmd" =~ ^docker-compose[[:space:]]+(up|down|logs|ps|build|config)[[:space:]]+ ]]; then
+        return 0
+    fi
+    # Also support docker compose (v2 syntax)
+    if [[ "$cmd" =~ ^docker[[:space:]]+compose[[:space:]]+(up|down|logs|ps|build|config)[[:space:]]+ ]]; then
         return 0
     fi
 

@@ -41,8 +41,8 @@ TOOL_LABEL="[$(echo "$TOOL_NAME" | tr '[:lower:]' '[:upper:]')]"
 
 # Check if this is a bash command permission
 if [[ "$TOOL_NAME" == "Bash" ]] && [[ -n "$COMMAND" ]]; then
-    # Check if command is in safe whitelist
-    if is_safe_command "$COMMAND"; then
+    # Check if command is in safe whitelist (pass CWD for project directory check)
+    if is_safe_command "$COMMAND" "$CWD"; then
         # Debug log
         echo "[barnhk] Auto-approving: $COMMAND" >&2
 

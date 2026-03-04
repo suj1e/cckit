@@ -199,17 +199,34 @@ FEISHU_WEBHOOK_URL="https://open.feishu.cn/open-apis/bot/v2/hook/xxxxx"
 
 以下命令类别会自动批准：
 
-- **Git**: status, log, diff, add, commit, push, pull, checkout, merge, rebase
+- **Git**: status, log, diff, add, commit, push, pull, checkout, merge, rebase, branch, fetch, stash, reset, restore, switch, show
 - **包管理器**: npm, pnpm, yarn, pip
 - **构建工具**: gradle, mvn, cargo
-- **文件读取**: ls, cat, grep, find, head, tail
+- **文件读取**: ls, cat, grep, find, head, tail, wc, sort, uniq, cut, awk, sed
+- **OpenSpec**: 所有 openspec 子命令（list, propose, apply, archive, explore, status, init, new, instructions, update, validate 等）
+- **目录操作**: mkdir
+- **文件操作**: touch, cp, mv
+- **Docker**: ps, ls, images, logs, inspect, stats, top, port, exec, network ls, volume ls
+- **Docker Compose**: up, down, logs, ps, build, config (包括 docker compose v2 语法)
 
 可支持配置添加自定义白名单：
 
 ```bash
 # 在 barnhk.conf 中
-SAFE_COMMANDS="^make ^docker-compose"
+SAFE_COMMANDS="^make ^echo"
 ```
+
+## 项目目录自动批准
+
+barnhk 支持自动批准项目目录下的所有命令。默认启用此功能。
+
+```bash
+# 在 barnhk.conf 中
+AUTO_APPROVE_PROJECT_COMMANDS=true   # 启用（默认）
+AUTO_APPROVE_PROJECT_COMMANDS=false  # 禁用
+```
+
+**注意**: 即使启用此功能，危险命令（如 `rm -rf /`、`sudo` 等）仍会被阻止。
 
 ## 危险命令等级
 
@@ -249,4 +266,28 @@ cat /tmp/barnhk-transcript-debug.log
 NOTIFICATION_PERMISSION_PROMPT="skip"    # 跳过，避免与 permission-request.sh 重复
 NOTIFICATION_QUESTION="transcript"        # 提取具体问题内容
 NOTIFICATION_IDLE_PROMPT="transcript"     # 提取具体等待内容
+```
+
+## 配置文件完整示例
+
+```bash
+# === 通知通道 ===
+BARK_SERVER_URL="https://api.day.app/YOUR_KEY"
+DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/..."
+FEISHU_WEBHOOK_URL="https://open.feishu.cn/open-apis/bot/v2/hook/..."
+
+# === 通知类型处理 ===
+NOTIFICATION_PERMISSION_PROMPT="skip"
+NOTIFICATION_QUESTION="transcript"
+NOTIFICATION_IDLE_PROMPT="transcript"
+
+# === 安全命令 ===
+SAFE_COMMANDS=""
+
+# === 项目目录自动批准 ===
+AUTO_APPROVE_PROJECT_COMMANDS=true
+
+# === 远程审批 (cplit) ===
+CPLIT_ENABLED=false
+CPLIT_URL=""
 ```
