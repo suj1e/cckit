@@ -39,6 +39,47 @@ TRUNCATED_CMD=$(truncate_string "$COMMAND" 100)
 # Build tool type label
 TOOL_LABEL="[$(echo "$TOOL_NAME" | tr '[:lower:]' '[:upper:]')]"
 
+# Auto-approve Edit/Write for files within project directory
+if [[ "$TOOL_NAME" == "Edit" ]] || [[ "$TOOL_NAME" == "Write" ]]; then
+    FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // .tool_input.path // empty' 2>/dev/null)
+    if [[ -n "$FILE_PATH" ]] && [[ -n "$CWD" ]]; then
+        if [[ "$FILE_PATH" == "$CWD"* ]]; then
+            echo "[barnhk] Auto-approving: $TOOL_NAME $FILE_PATH" >&2
+            OUTPUT='{"hookSpecificOutput":{"hookEventName":"PermissionRequest","decision":{"behavior":"allow"}}}'
+            echo "$OUTPUT"
+            exit 0
+        fi
+    fi
+fi
+
+# Auto-approve Edit/Write for files within project directory
+if [[ "$TOOL_NAME" == "Edit" ]] || [[ "$TOOL_NAME" == "Write" ]]; then
+    FILE_PATH=$(echo "$INPUT" | json_value '.tool_input.file_path // .tool_input.path')
+    if [[ -n "$FILE_PATH" ]] && [[ -n "$CWD" ]]; then
+        if [[ "$FILE_PATH" == "$CWD"* ]]; then
+            echo "[barnhk] Auto-approving: $TOOL_NAME $FILE_PATH" >&2
+            OUTPUT='{"hookSpecificOutput":{"hookEventName":"PermissionRequest","decision":{"behavior":"allow"}}}'
+            echo "$OUTPUT"
+            exit 0
+        fi
+    fi
+fi
+
+# Auto-approve Edit/Write for files within project directory
+if [[ "$TOOL_NAME" == "Edit" ]] || [[ "$TOOL_NAME" == "Write" ]]; then
+    FILE_PATH=$(echo "$INPUT" | json_value '.tool_input.file_path // .tool_input.path')
+
+    if [[ -n "$FILE_PATH" ]] && [[ -n "$CWD" ]]; then
+        # Check if file is within project directory
+        if [[ "$FILE_PATH" == "$CWD"* ]]; then
+            echo "[barnhk] Auto-approving: $TOOL_NAME $FILE_PATH" >&2
+            OUTPUT='{"hookSpecificOutput":{"hookEventName":"PermissionRequest","decision":{"behavior":"allow"}}}'
+            echo "$OUTPUT"
+            exit 0
+        fi
+    fi
+fi
+
 # Check if this is a bash command permission
 if [[ "$TOOL_NAME" == "Bash" ]] && [[ -n "$COMMAND" ]]; then
     # Check if command is in safe whitelist (pass CWD for project directory check)
