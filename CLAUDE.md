@@ -240,17 +240,6 @@ cckit/openspec/
 - 使用 `/opsx:apply` 实现变更任务
 - 使用 `/opsx:archive` 归档完成的变更
 
-## Workflow
-
-### Before git push
-
-When user asks to push or commit changes:
-
-1. **Check if docs need updates** - Review README.md and CLAUDE.md for any significant changes that should be documented
-2. **Update docs if needed** - Reflect significant changes in documentation (features, configuration, etc.)
-3. **Stage and commit docs** - `git add README.md CLAUDE.md && git commit -m "docs: update documentation"`
-4. **Then push** - Proceed with the original push command
-
 ## Development
 
 When modifying skills or hooks:
