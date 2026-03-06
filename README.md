@@ -10,7 +10,6 @@ Claude Code Kit - A collection of Claude Code extensions (skills and hooks).
 |-------|-------------|
 | [panck](./skills/panck) | Spring Boot microservice scaffold generator with DDD/Clean Architecture patterns |
 | [upd](./skills/upd) | Update project documentation based on recent changes with auto commit and push |
-| [upd](./skills/upd) | Update project documentation based on recent changes with auto commit and push |
 
 ### Hooks
 
