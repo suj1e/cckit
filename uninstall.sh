@@ -13,7 +13,7 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 # Available plugins
-PLUGINS="panck barnhk"
+PLUGINS="panck barnhk upd"
 
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${CYAN}                   cckit - Claude Code Kit Uninstaller              ${NC}"
@@ -35,12 +35,12 @@ uninstall_plugin() {
 if [[ $# -gt 0 ]]; then
   for plugin_name in "$@"; do
     case "$plugin_name" in
-      panck|barnhk)
+      panck|barnhk|upd)
         uninstall_plugin "$plugin_name"
         ;;
       *)
         echo "✗ Unknown plugin: $plugin_name"
-        echo "Available plugins: panck, barnhk"
+        echo "Available plugins: panck, barnhk, upd"
         exit 1
         ;;
     esac

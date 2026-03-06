@@ -22,6 +22,15 @@
       "author": {
         "name": "suj1e"
       }
+    },
+    {
+      "name": "upd",
+      "source": "./skills/upd",
+      "description": "Update project documentation based on recent changes with auto commit and push",
+      "version": "1.0.0",
+      "author": {
+        "name": "suj1e"
+      }
     }
   ]
 }

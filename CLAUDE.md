@@ -15,7 +15,8 @@ cckit/
 ├── install.sh              # Unified installer
 ├── uninstall.sh            # Unified uninstaller
 ├── skills/
-│   └── panck/              # Spring Boot microservice scaffold generator
+│   ├── panck/              # Spring Boot microservice scaffold generator
+│   └── upd/                # Update project documentation
 ├── hooks/
 │   └── barnhk/             # Safety and notification hooks
 └── standards/              # 规范文档
@@ -71,6 +72,33 @@ Generates production-ready Spring Boot microservice scaffolds with DDD/Clean Arc
 - Tech stack: Java 21, Spring Boot 4.0.2, Spring Cloud Alibaba, Nacos, Gradle 9.3.0
 
 **Key templates location:** `skills/panck/assets/templates/`
+
+### upd - Update Project Documentation
+
+Updates README.md and CLAUDE.md based on recent code changes, then commits and pushes.
+
+**Installation:**
+```bash
+./install.sh upd
+```
+
+**Usage in Claude Code:**
+```
+/upd
+```
+
+Or say: "update docs", "更新文档"
+
+**Configuration:**
+- `UPD_TARGET_ALL_MD=false` (default) - Only update README.md and CLAUDE.md
+- `UPD_TARGET_ALL_MD=true` - Update all .md files in project
+
+**Workflow:**
+1. Detect changes via git status/log/diff
+2. Identify target documents (README.md, CLAUDE.md)
+3. Analyze impact and update documentation
+4. Commit with message "docs: update documentation"
+5. Push to remote
 
 ## Hooks
 

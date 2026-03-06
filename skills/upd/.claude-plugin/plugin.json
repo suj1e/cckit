@@ -1,0 +1,10 @@
+{
+  "name": "upd",
+  "version": "1.0.0",
+  "description": "Update project documentation based on recent changes with auto commit and push",
+  "author": {
+    "name": "suj1e"
+  },
+  "license": "MIT",
+  "keywords": ["documentation", "update", "git", "commit", "push"]
+}
