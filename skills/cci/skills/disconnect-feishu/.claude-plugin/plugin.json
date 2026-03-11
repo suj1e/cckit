@@ -1,0 +1,10 @@
+{
+  "name": "disconnect-feishu",
+  "version": "1.0.0",
+  "description": "Disconnect from Feishu bridge, kill running bridge processes and clean up resources. Trigger with /disconnect-feishu or phrases like \"disconnect feishu\", \"stop feishu bridge\".",
+  "author": {
+    "name": "CCKIT Team"
+  },
+  "license": "MIT",
+  "keywords": ["feishu", "bridge", "disconnect", "shutdown"]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "cci",
+  "version": "1.0.0",
+  "description": "CCI tools for Feishu bridge integration",
+  "author": {
+    "name": "suj1e"
+  },
+  "license": "MIT",
+  "keywords": ["cci", "feishu", "bridge", "claude"]
+}

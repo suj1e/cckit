@@ -1,0 +1,10 @@
+{
+  "name": "connect-feishu",
+  "version": "1.0.0",
+  "description": "Connect to Feishu bridge for Claude Code integration. Manages Feishu bridge process lifecycle.",
+  "author": {
+    "name": "CCKIT Team"
+  },
+  "license": "MIT",
+  "keywords": ["feishu", "bridge", "connect", "integration"]
+}
