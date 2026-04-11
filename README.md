@@ -9,13 +9,12 @@ Claude Code Kit - A collection of Claude Code extensions (skills and hooks).
 | Skill | Description |
 |-------|-------------|
 | [panck](./skills/panck) | Spring Boot microservice scaffold generator with DDD/Clean Architecture patterns |
-| [upd](./skills/upd) | Update project documentation based on recent changes with auto commit and push |
 
 ### Hooks
 
 | Hook | Description |
 |------|-------------|
-| [barnhk](./hooks/barnhk) | Safety and notification hooks with dangerous command protection, auto-approval (all openspec, docker, file ops), project directory auto-approve toggle, remote approval via cplit, and multi-channel notifications |
+| [barnhk](./hooks/barnhk) | Safety and notification hooks with dangerous command protection, auto-approval (docker, file ops), project directory auto-approve toggle, remote approval via cplit, and multi-channel notifications |
 
 ## Installation
 
@@ -28,7 +27,6 @@ cckit uses Claude Code's official marketplace system. Use the unified installer:
 # Install specific plugin
 ./install.sh panck
 ./install.sh barnhk
-./install.sh upd
 ```
 
 The installer will:

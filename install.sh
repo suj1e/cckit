@@ -14,7 +14,7 @@ CYAN='\033[0;36m'
 NC='\033[0m'
 
 # Available plugins
-PLUGINS="panck barnhk upd cci"
+PLUGINS="panck barnhk cci"
 
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${CYAN}                    cckit - Claude Code Kit Installer               ${NC}"
@@ -43,12 +43,12 @@ ensure_marketplace
 if [[ $# -gt 0 ]]; then
   for plugin_name in "$@"; do
     case "$plugin_name" in
-      panck|barnhk|upd|cci)
+      panck|barnhk|cci)
         install_plugin "$plugin_name"
         ;;
       *)
         echo "✗ Unknown plugin: $plugin_name"
-        echo "Available plugins: panck, barnhk, upd, connect-feishu, disconnect-feishu"
+        echo "Available plugins: panck, barnhk, cci"
         exit 1
         ;;
     esac
@@ -66,7 +66,6 @@ echo
 echo "Installed plugins:"
 echo "  - panck:             /panck <service-name>"
 echo "  - barnhk:            Safety & notification hooks"
-echo "  - upd:               /upd (update project documentation)"
 echo "  - cci:               /connect-feishu, /disconnect-feishu (Feishu bridge integration)"
 echo
 echo "To uninstall, run: ./uninstall.sh [plugin-name]"

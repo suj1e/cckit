@@ -203,7 +203,6 @@ FEISHU_WEBHOOK_URL="https://open.feishu.cn/open-apis/bot/v2/hook/xxxxx"
 - **包管理器**: npm, pnpm, yarn, pip
 - **构建工具**: gradle, mvn, cargo
 - **文件读取**: ls, cat, grep, find, head, tail, wc, sort, uniq, cut, awk, sed
-- **OpenSpec**: 所有 openspec 子命令（list, propose, apply, archive, explore, status, init, new, instructions, update, validate 等）
 - **目录操作**: mkdir
 - **文件操作**: touch, cp, mv
 - **Docker**: ps, ls, images, logs, inspect, stats, top, port, exec, network ls, volume ls
