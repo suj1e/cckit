@@ -15,8 +15,8 @@ load_config
 INPUT=$(cat)
 
 # Extract teammate info
-TEAMMATE_NAME=$(echo "$INPUT" | json_value '.teammate_name')
-TEAMMATE_ID=$(echo "$INPUT" | json_value '.teammate_id')
+TEAMMATE_NAME=$(echo "$INPUT" | json_value '.agent_name')
+TEAMMATE_ID=$(echo "$INPUT" | json_value '.agent_id')
 CWD=$(echo "$INPUT" | json_value '.cwd')
 
 # Extract project name from cwd

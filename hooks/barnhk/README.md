@@ -285,8 +285,4 @@ SAFE_COMMANDS=""
 
 # === 项目目录自动批准 ===
 AUTO_APPROVE_PROJECT_COMMANDS=true
-
-# === 远程审批 (cplit) ===
-CPLIT_ENABLED=false
-CPLIT_URL=""
 ```

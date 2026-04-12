@@ -74,7 +74,7 @@ Generates production-ready Spring Boot microservice scaffolds with DDD/Clean Arc
 
 ### barnhk - Safety & Notification Hooks
 
-Provides dangerous command protection, auto-approval for safe commands, remote approval via cplit, and multi-channel notifications.
+Provides dangerous command protection, auto-approval for safe commands, and multi-channel notifications.
 
 **Features:**
 - Blocks dangerous commands (rm -rf /, sudo, curl | bash)
@@ -84,7 +84,7 @@ Provides dangerous command protection, auto-approval for safe commands, remote a
   - **Docker**: ps, images, logs, inspect, stats, exec, network ls, volume ls
   - **Docker Compose**: up, down, logs, ps, build, config
 - **Project directory auto-approve** - toggle to auto-approve all commands in project dir (default: on)
-- **Remote approval via cplit** - approve commands from mobile via Feishu
+- **Edit/Write auto-approve** - automatically approves Edit/Write operations for files within project directory
 - Multi-channel notifications with project info: Bark (iOS) + Discord + 飞书 Webhook
   - All notifications show project name in title prefix: `[项目名] 标题`
   - **Type-specific titles**: Different notification types use appropriate titles
@@ -134,18 +134,10 @@ NOTIFICATION_IDLE_PROMPT="transcript"     # Extract specific waiting content
 # When enabled, all commands in project directory are auto-approved
 AUTO_APPROVE_PROJECT_COMMANDS=true
 
-# Remote approval (optional, default: disabled)
-CPLIT_ENABLED=true
-CPLIT_URL="https://your-cplit-server.com"
+# Debug logging (default: false)
+# When enabled, logs hook input/output to /tmp/barnhk-permission-debug.log
+DEBUG_ENABLED=false
 ```
-
-**cplit Remote Approval:**
-
-When `CPLIT_ENABLED=true`, non-whitelisted commands will be sent to the cplit server for remote approval via Feishu interactive cards. Users can approve/deny from their mobile device.
-
-- Requires a running [cplit](https://github.com/suj1e/cplit) server
-- Default timeout: 60 seconds (then auto-approves)
-- Falls back to local manual approval if cplit is unavailable
 
 **Feishu Card Layout:**
 
@@ -200,7 +192,9 @@ When modifying skills or hooks:
 
 1. **Skills** are defined by a `SKILL.md` file with frontmatter specifying `name` and `description`
 2. **Hooks** are configured inline in `.claude-plugin/plugin.json` with `${CLAUDE_PLUGIN_ROOT}` for paths
-3. Test changes by reinstalling: `./uninstall.sh <plugin> && ./install.sh <plugin>`
+3. **TeammateIdle** input fields are `agent_name` and `agent_id` (not `teammate_*`)
+4. **PermissionRequest** uses `decision.behavior` format; **PreToolUse** uses `permissionDecision` format
+5. Test changes by reinstalling: `./uninstall.sh <plugin> && ./install.sh <plugin>`
 
 ## Known Limitations
 

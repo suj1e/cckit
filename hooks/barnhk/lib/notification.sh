@@ -35,27 +35,6 @@ if [[ "$MODE" == "skip" ]]; then
     exit 0
 fi
 
-# Truncate message to 200 characters
-truncate_message() {
-    local msg="$1"
-    local max_len=200
-    if [[ ${#msg} -gt $max_len ]]; then
-        echo "${msg:0:$max_len}..."
-    else
-        echo "$msg"
-    fi
-}
-
-# Get icon prefix based on notification type
-get_icon() {
-    case "$1" in
-        permission_prompt) echo "🔐" ;;
-        question) echo "❓" ;;
-        idle_prompt) echo "⏳" ;;
-        *) echo "🔔" ;;
-    esac
-}
-
 # Determine notification content based on mode
 NOTIF_CONTENT=""
 if [[ "$MODE" == "transcript" ]] && [[ -n "$TRANSCRIPT_PATH" ]] && [[ -n "$SESSION_ID" ]]; then
@@ -65,7 +44,7 @@ fi
 
 # Fallback to generic message if extraction failed or mode is "default"
 if [[ -z "$NOTIF_CONTENT" ]]; then
-    NOTIF_CONTENT=$(truncate_message "${MESSAGE:-Claude needs your attention}")
+    NOTIF_CONTENT=$(truncate_string "${MESSAGE:-Claude needs your attention}" 200)
 fi
 
 # Build notification body: icon + content

@@ -14,9 +14,11 @@ load_config
 # Read JSON input
 INPUT=$(cat)
 
-# Debug: log input
+# Debug: log input (only when enabled)
 DEBUG_LOG="/tmp/barnhk-permission-debug.log"
-echo "[$(date)] INPUT: $INPUT" >> "$DEBUG_LOG"
+if [[ "${DEBUG_ENABLED:-false}" == "true" ]]; then
+    echo "[$(date)] INPUT: $INPUT" >> "$DEBUG_LOG"
+fi
 
 # Extract permission details
 TOOL_NAME=$(echo "$INPUT" | json_value '.tool_name')
@@ -41,36 +43,8 @@ TOOL_LABEL="[$(echo "$TOOL_NAME" | tr '[:lower:]' '[:upper:]')]"
 
 # Auto-approve Edit/Write for files within project directory
 if [[ "$TOOL_NAME" == "Edit" ]] || [[ "$TOOL_NAME" == "Write" ]]; then
-    FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // .tool_input.path // empty' 2>/dev/null)
-    if [[ -n "$FILE_PATH" ]] && [[ -n "$CWD" ]]; then
-        if [[ "$FILE_PATH" == "$CWD"* ]]; then
-            echo "[barnhk] Auto-approving: $TOOL_NAME $FILE_PATH" >&2
-            OUTPUT='{"hookSpecificOutput":{"hookEventName":"PermissionRequest","decision":{"behavior":"allow"}}}'
-            echo "$OUTPUT"
-            exit 0
-        fi
-    fi
-fi
-
-# Auto-approve Edit/Write for files within project directory
-if [[ "$TOOL_NAME" == "Edit" ]] || [[ "$TOOL_NAME" == "Write" ]]; then
     FILE_PATH=$(echo "$INPUT" | json_value '.tool_input.file_path // .tool_input.path')
     if [[ -n "$FILE_PATH" ]] && [[ -n "$CWD" ]]; then
-        if [[ "$FILE_PATH" == "$CWD"* ]]; then
-            echo "[barnhk] Auto-approving: $TOOL_NAME $FILE_PATH" >&2
-            OUTPUT='{"hookSpecificOutput":{"hookEventName":"PermissionRequest","decision":{"behavior":"allow"}}}'
-            echo "$OUTPUT"
-            exit 0
-        fi
-    fi
-fi
-
-# Auto-approve Edit/Write for files within project directory
-if [[ "$TOOL_NAME" == "Edit" ]] || [[ "$TOOL_NAME" == "Write" ]]; then
-    FILE_PATH=$(echo "$INPUT" | json_value '.tool_input.file_path // .tool_input.path')
-
-    if [[ -n "$FILE_PATH" ]] && [[ -n "$CWD" ]]; then
-        # Check if file is within project directory
         if [[ "$FILE_PATH" == "$CWD"* ]]; then
             echo "[barnhk] Auto-approving: $TOOL_NAME $FILE_PATH" >&2
             OUTPUT='{"hookSpecificOutput":{"hookEventName":"PermissionRequest","decision":{"behavior":"allow"}}}'
@@ -90,38 +64,13 @@ if [[ "$TOOL_NAME" == "Bash" ]] && [[ -n "$COMMAND" ]]; then
         # Output approval JSON (correct format for PermissionRequest)
         OUTPUT='{"hookSpecificOutput":{"hookEventName":"PermissionRequest","decision":{"behavior":"allow"}}}'
         echo "$OUTPUT"
-        echo "[$(date)] OUTPUT: $OUTPUT" >> "$DEBUG_LOG"
+        [[ "${DEBUG_ENABLED:-false}" == "true" ]] && echo "[$(date)] OUTPUT: $OUTPUT" >> "$DEBUG_LOG"
 
         # Then send notification (non-blocking)
         BODY="$TOOL_LABEL Auto-approved"$'\n'"Cmd: $TRUNCATED_CMD"
         send_notification "claude-auto-permit" "$TITLE_PERMIT" "$BODY" "$PROJECT_NAME"
 
         exit 0
-    fi
-
-    # Try cplit remote approval if enabled
-    if is_cplit_enabled; then
-        echo "[barnhk] Requesting cplit approval for: $COMMAND" >&2
-
-        DECISION=$(request_cplit_approval "$COMMAND" "${CWD:-$PWD}")
-
-        if [[ "$DECISION" == "approve" ]]; then
-            # Output approval JSON
-            OUTPUT='{"hookSpecificOutput":{"hookEventName":"PermissionRequest","decision":{"behavior":"allow"}}}'
-            echo "$OUTPUT"
-            echo "[$(date)] OUTPUT: $OUTPUT (cplit approved)" >> "$DEBUG_LOG"
-            exit 0
-
-        elif [[ "$DECISION" == "deny" ]]; then
-            # Output denial JSON
-            OUTPUT='{"hookSpecificOutput":{"hookEventName":"PermissionRequest","decision":{"behavior":"deny"}}}'
-            echo "$OUTPUT"
-            echo "[$(date)] OUTPUT: $OUTPUT (cplit denied)" >> "$DEBUG_LOG"
-            exit 0
-        fi
-
-        # cplit failed or timed out, fall through to local manual approval
-        echo "[barnhk] cplit request failed or timed out, falling back to local" >&2
     fi
 fi
 

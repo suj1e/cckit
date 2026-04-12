@@ -38,14 +38,14 @@ case "$DANGER_LEVEL" in
         REASON="Critical dangerous command detected: $COMMAND"
         echo "BLOCKED: $REASON" >&2
         send_notification "claude-danger" "$TITLE_DANGER" "Blocked: $COMMAND" "$PROJECT_NAME"
-        echo "{\"hookSpecificOutput\":{\"permissionDecision\":\"deny\",\"denyReason\":\"$REASON\"}}"
+        jq -n --arg reason "$REASON" '{hookSpecificOutput: {permissionDecision: "deny", denyReason: $reason}}'
         exit 2
         ;;
     high)
         REASON="High-risk command detected: $COMMAND"
         echo "BLOCKED: $REASON" >&2
         send_notification "claude-danger" "$TITLE_DANGER" "Blocked: $COMMAND" "$PROJECT_NAME"
-        echo "{\"hookSpecificOutput\":{\"permissionDecision\":\"deny\",\"denyReason\":\"$REASON\"}}"
+        jq -n --arg reason "$REASON" '{hookSpecificOutput: {permissionDecision: "deny", denyReason: $reason}}'
         exit 2
         ;;
     medium|safe)
