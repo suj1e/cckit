@@ -11,10 +11,11 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 # Colors
 GREEN='\033[0;32m'
 CYAN='\033[0;36m'
+RED='\033[0;31m'
 NC='\033[0m'
 
 # Available plugins
-PLUGINS="panck barnhk cci"
+PLUGINS="panck barnhk"
 
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${CYAN}                    cckit - Claude Code Kit Installer               ${NC}"
@@ -23,17 +24,26 @@ echo
 
 # Ensure marketplace is added
 ensure_marketplace() {
-  if ! cat ~/.claude/plugins/known_marketplaces.json 2>/dev/null | jq -e '.cckit' > /dev/null 2>&1; then
-    echo -e "${CYAN}→ Adding cckit marketplace...${NC}"
-    claude plugin marketplace add "$SCRIPT_DIR"
+  if jq -e '.cckit' ~/.claude/plugins/known_marketplaces.json >/dev/null 2>&1; then
+    return 0
+  fi
+
+  echo -e "${CYAN}→ Adding cckit marketplace...${NC}"
+  if ! claude plugin marketplace add "$SCRIPT_DIR"; then
+    echo -e "${RED}✗ Failed to add cckit marketplace. Check if .claude-plugin/marketplace.json exists.${NC}"
+    exit 1
   fi
 }
 
 install_plugin() {
   local name="$1"
   echo -e "${CYAN}→ Installing ${name}...${NC}"
-  claude plugin install "${name}@cckit" --scope user
-  echo -e "${GREEN}✓ ${name} installed${NC}"
+  if claude plugin install "${name}@cckit" --scope user; then
+    echo -e "${GREEN}✓ ${name} installed${NC}"
+  else
+    echo -e "${RED}✗ Failed to install ${name}${NC}"
+    return 1
+  fi
 }
 
 # Ensure marketplace exists
@@ -43,12 +53,12 @@ ensure_marketplace
 if [[ $# -gt 0 ]]; then
   for plugin_name in "$@"; do
     case "$plugin_name" in
-      panck|barnhk|cci)
+      panck|barnhk)
         install_plugin "$plugin_name"
         ;;
       *)
-        echo "✗ Unknown plugin: $plugin_name"
-        echo "Available plugins: panck, barnhk, cci"
+        echo -e "${RED}✗ Unknown plugin: $plugin_name${NC}"
+        echo "Available plugins: panck, barnhk"
         exit 1
         ;;
     esac
@@ -66,6 +76,5 @@ echo
 echo "Installed plugins:"
 echo "  - panck:             /panck <service-name>"
 echo "  - barnhk:            Safety & notification hooks"
-echo "  - cci:               /connect-feishu, /disconnect-feishu (Feishu bridge integration)"
 echo
 echo "To uninstall, run: ./uninstall.sh [plugin-name]"
