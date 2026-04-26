@@ -2,10 +2,10 @@
 
 ## Service Naming Convention
 
-- Service name: `{domain}-center` (e.g., `user-center`, `order-center`)
-- Domain segment: strip `-center` suffix
+- Service name: any kebab-case (e.g., `user-center`, `order-service`, `gateway-server`)
+- Domain segment: strip the last `-` separated part (e.g., `user-center` → `user`, `order-service` → `order`, `gateway` → `gateway`)
 - Package: `com.flooc.{segment}`
-- Class prefix: `{Segment}Center` (PascalCase)
+- Class prefix: PascalCase of full service name with `-` removed (e.g., `user-center` → `UserCenter`, `order-service` → `OrderService`)
 - API module package: `com.flooc.{segment}.api`
 - App module package: `com.flooc.{segment}.app` (note the `.app` layer)
 - Boot module package: `com.flooc.{segment}`

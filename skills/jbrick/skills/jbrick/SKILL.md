@@ -1,6 +1,6 @@
 ---
 name: jbrick
-description: Generate Spring Boot microservice scaffolds following flooc 3-module architecture. Trigger with /jbrick or phrases like "create new center service", "generate scaffold", "创建服务", "生成脚手架".
+description: Generate Spring Boot microservice scaffolds following flooc 3-module architecture. Trigger with /jbrick or phrases like "create new service", "generate scaffold", "创建服务", "生成脚手架".
 ---
 
 # jbrick — Microservice Scaffold Generator
@@ -15,22 +15,20 @@ Generate production-ready Spring Boot microservice scaffolds with 3-module archi
 
 Or use natural language:
 - "创建一个用户服务 user-center"
-- "generate order-center service"
+- "generate order-service"
 
 ## Interactive Workflow
 
 ### Step 1: Collect Service Name
 
-Ask the user for a service name via `AskUserQuestion`. The naming convention uses `{domain}-center` suffix (e.g., `user-center`, `order-center`, `notification-center`).
-
-If the name does not end with `-center`, append it automatically.
+Ask the user for a service name via `AskUserQuestion`. Accept any kebab-case name (e.g., `user-center`, `order-service`, `gateway-server`, `notification-center`).
 
 Derivation rules:
-- Strip `-center` suffix to get the **domain segment**
-- Package: `com.flooc.{segment}` (e.g., `user-center` → `com.flooc.user`)
-- Class prefix: PascalCase of `{Segment}Center` (e.g., `user-center` → `UserCenter`)
-- DB name: `{service-name}` with `-` → `_` (e.g., `user-center` → `user_center`)
-- DB test name: `{db_name}_test` (e.g., `user_center_test`)
+- **Domain segment**: strip the last `-` separated part to get the domain (e.g., `user-center` → `user`, `order-service` → `order`, `gateway` → `gateway`)
+- **Package**: `com.flooc.{segment}` (e.g., `user-center` → `com.flooc.user`)
+- **Class prefix**: PascalCase of the full service name with `-` removed (e.g., `user-center` → `UserCenter`, `order-service` → `OrderService`)
+- **DB name**: `{service-name}` with `-` → `_` (e.g., `user-center` → `user_center`)
+- **DB test name**: `{db_name}_test` (e.g., `user_center_test`)
 
 ### Step 2: Service Description (Optional)
 
