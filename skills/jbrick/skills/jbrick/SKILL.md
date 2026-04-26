@@ -56,8 +56,6 @@ Present as grouped checkboxes with defaults marked:
 - [x] JPA (Database entities) — Default
 - [x] Flyway (Database migration) — Default
 - [x] MapStruct (Object mapping) — Default
-
-**Security**
 - [ ] Redisson (Distributed locks, advanced Redis)
 
 **Messaging**
