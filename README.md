@@ -8,7 +8,7 @@ Claude Code Kit - A collection of Claude Code extensions (skills and hooks).
 
 | Skill | Description |
 |-------|-------------|
-| [panck](./skills/panck) | Spring Boot microservice scaffold generator with DDD/Clean Architecture patterns |
+| [jbrick](./skills/jbrick) | Spring Boot microservice scaffold generator with 3-module Repository pattern architecture |
 
 ### Hooks
 
@@ -25,7 +25,7 @@ cckit uses Claude Code's official marketplace system. Use the unified installer:
 ./install.sh
 
 # Install specific plugin
-./install.sh panck
+./install.sh jbrick
 ./install.sh barnhk
 ```
 
@@ -54,7 +54,7 @@ claude plugin marketplace add /path/to/cckit
 
 # Install
 claude plugin install barnhk@cckit --scope user
-claude plugin install panck@cckit --scope user
+claude plugin install jbrick@cckit --scope user
 
 # Uninstall
 claude plugin uninstall barnhk@cckit --scope user

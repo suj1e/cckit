@@ -1,0 +1,22 @@
+server:
+  port: {{APP_PORT}}
+
+spring:
+  output:
+    ansi:
+      enabled: always
+  application:
+    name: {{SERVICE_NAME}}
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      username: ${NACOS_USERNAME:nacos}
+      password: ${NACOS_PASSWORD:nacos}
+      discovery:
+        server-addr: ${NACOS_ADDR:localhost:8848}
+      config:
+        server-addr: ${NACOS_ADDR:localhost:8848}
+        file-extension: yml
+
+{{SERVICE_CONFIG}}

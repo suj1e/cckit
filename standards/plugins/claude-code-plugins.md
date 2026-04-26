@@ -500,7 +500,7 @@ cckit 包含以下符合官方规范的插件：
 
 | 插件 | 类型 | 说明 |
 |------|------|------|
-| `panck` | Skill | Spring Boot 微服务脚手架生成器 |
+| `jbrick` | Skill | Spring Boot 微服务脚手架生成器（3 模块 Repository 架构） |
 | `barnhk` | Hooks | 安全防护和多渠道通知 |
 
 ### 目录结构
@@ -510,12 +510,14 @@ cckit/
 ├── install.sh              # 统一安装脚本
 ├── uninstall.sh            # 统一卸载脚本
 ├── skills/
-│   └── panck/              # Skill 插件
+│   └── jbrick/             # Skill 插件
 │       ├── .claude-plugin/
 │       │   └── plugin.json
-│       ├── SKILL.md
-│       ├── references/
-│       └── assets/
+│       ├── skills/jbrick/
+│       │   ├── SKILL.md
+│       │   ├── references/
+│       │   └── assets/
+│       └── README.md
 └── hooks/
     └── barnhk/             # Hooks 插件
         ├── .claude-plugin/
@@ -532,7 +534,7 @@ cckit/
 ./install.sh
 
 # 安装指定插件
-./install.sh panck
+./install.sh jbrick
 ./install.sh barnhk
 
 # 卸载

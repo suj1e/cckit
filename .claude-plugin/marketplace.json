@@ -6,13 +6,13 @@
   },
   "plugins": [
     {
-      "name": "panck",
-      "description": "Generate Spring Boot microservice scaffolds following DDD/Clean Architecture patterns",
+      "name": "jbrick",
+      "description": "Generate Spring Boot microservice scaffolds following flooc 3-module architecture with Repository pattern",
       "version": "1.0.0",
       "author": {
         "name": "suj1e"
       },
-      "source": "./skills/panck"
+      "source": "./skills/jbrick"
     },
     {
       "name": "barnhk",

@@ -13,7 +13,7 @@ cckit/
 ├── install.sh              # Unified installer
 ├── uninstall.sh            # Unified uninstaller
 ├── skills/
-│   └── panck/              # Spring Boot microservice scaffold generator
+│   └── jbrick/             # Spring Boot microservice scaffold generator (Repository 3-module)
 ├── hooks/
 │   └── barnhk/             # Safety and notification hooks
 └── standards/              # 规范文档
@@ -49,26 +49,27 @@ cckit/
 
 ## Skills
 
-### panck - Service Scaffold Generator
+### jbrick - Flooc Service Scaffold Generator
 
-Generates production-ready Spring Boot microservice scaffolds with DDD/Clean Architecture patterns.
+Generates production-ready Spring Boot microservice scaffolds with 3-module Repository pattern architecture.
 
 **Installation:**
 ```bash
-./install.sh panck
+./install.sh jbrick
 ```
 
 **Usage in Claude Code:**
 ```
-/panck usersrv
+/jbrick user-center
 ```
 
 **Generated Service Architecture:**
-- 4-module Gradle structure: `*-api`, `*-core`, `*-adapter`, `*-boot`
-- DDD layered architecture with dependency rule: `boot → adapter → core, api`
-- Tech stack: Java 21, Spring Boot 4.0.2, Spring Cloud Alibaba, Nacos, Gradle 9.3.0
+- 3-module Gradle structure: `*-api`, `*-app`, `*-boot`
+- Repository pattern: domain interface → impl → JPA
+- Package base: `com.flooc.{segment}` with `.app` layer in app module
+- Tech stack: Java 21, Spring Boot 4.0.5, Spring Cloud 2025.1.0, Gradle 9.4.1, Nacos
 
-**Key templates location:** `skills/panck/assets/templates/`
+**Key templates location:** `skills/jbrick/assets/templates/`
 
 ## Hooks
 

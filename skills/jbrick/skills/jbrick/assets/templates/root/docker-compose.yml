@@ -1,0 +1,8 @@
+services:
+  {{SERVICE_NAME}}:
+    build: .
+    container_name: {{SERVICE_NAME}}
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-dev}
+    ports:
+      - "{{APP_PORT}}:{{APP_PORT}}"

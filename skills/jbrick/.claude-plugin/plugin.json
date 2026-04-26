@@ -1,0 +1,10 @@
+{
+  "name": "jbrick",
+  "version": "1.0.0",
+  "description": "Generate Spring Boot microservice scaffolds following flooc 3-module architecture with Repository pattern",
+  "author": {
+    "name": "suj1e"
+  },
+  "license": "MIT",
+  "keywords": ["spring-boot", "microservice", "repository-pattern", "scaffold", "generator"]
+}
