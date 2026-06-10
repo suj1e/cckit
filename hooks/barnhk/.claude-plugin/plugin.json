@@ -14,7 +14,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/lib/pre-tool-use.sh"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/lib/pre-tool-use.sh"
           }
         ]
       }
@@ -24,7 +24,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/lib/permission-request.sh"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/lib/permission-request.sh"
           }
         ]
       }
@@ -34,7 +34,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/lib/task-completed.sh"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/lib/task-completed.sh"
           }
         ]
       }
@@ -44,7 +44,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/lib/stop.sh"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/lib/stop.sh"
           }
         ]
       }
@@ -54,7 +54,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/lib/session-end.sh"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/lib/session-end.sh"
           }
         ]
       }
@@ -64,7 +64,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/lib/teammate-idle.sh"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/lib/teammate-idle.sh"
           }
         ]
       }
@@ -74,7 +74,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/lib/notification.sh"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/lib/notification.sh"
           }
         ]
       }

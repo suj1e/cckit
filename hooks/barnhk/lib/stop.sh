@@ -14,9 +14,9 @@ load_config
 # Read JSON input
 INPUT=$(cat)
 
-# Extract stop info
+# Extract stop info (current spec fields)
 SESSION_ID=$(echo "$INPUT" | json_value '.session_id')
-STOP_REASON=$(echo "$INPUT" | json_value '.reason')
+LAST_MESSAGE=$(echo "$INPUT" | json_value '.last_assistant_message')
 CWD=$(echo "$INPUT" | json_value '.cwd')
 
 # Extract project name from cwd
@@ -27,8 +27,9 @@ fi
 
 # Build notification body
 BODY="Session: ${SESSION_ID:-unknown}"
-if [[ -n "$STOP_REASON" ]]; then
-    BODY="$BODY"$'\n'"Reason: $STOP_REASON"
+if [[ -n "$LAST_MESSAGE" ]]; then
+    TRUNCATED_MSG=$(truncate_string "$LAST_MESSAGE" 200)
+    BODY="$BODY"$'\n'"Message: $TRUNCATED_MSG"
 fi
 
 # Send stop notification

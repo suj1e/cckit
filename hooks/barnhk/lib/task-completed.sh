@@ -14,9 +14,12 @@ load_config
 # Read JSON input
 INPUT=$(cat)
 
-# Extract task info
-SESSION_ID=$(echo "$INPUT" | json_value '.session_id')
-TRANSCRIPT_PATH=$(echo "$INPUT" | json_value '.transcript_path')
+# Extract task info (current spec fields)
+TASK_ID=$(echo "$INPUT" | json_value '.task_id')
+TASK_SUBJECT=$(echo "$INPUT" | json_value '.task_subject')
+TASK_DESCRIPTION=$(echo "$INPUT" | json_value '.task_description')
+TEAMMATE_NAME=$(echo "$INPUT" | json_value '.teammate_name')
+TEAM_NAME=$(echo "$INPUT" | json_value '.team_name')
 CWD=$(echo "$INPUT" | json_value '.cwd')
 
 # Extract project name (from cwd or fallback to $PWD)
@@ -28,9 +31,18 @@ elif [[ -n "$PWD" ]]; then
 fi
 
 # Build notification body
-BODY="Session: ${SESSION_ID:-unknown}"
-if [[ -n "$TRANSCRIPT_PATH" ]]; then
-    BODY="$BODY"$'\n'"Transcript saved"
+BODY="Task completed"
+if [[ -n "$TASK_SUBJECT" ]]; then
+    BODY="$BODY"$'\n'"Subject: $TASK_SUBJECT"
+fi
+if [[ -n "$TASK_ID" ]]; then
+    BODY="$BODY"$'\n'"Task ID: $TASK_ID"
+fi
+if [[ -n "$TEAMMATE_NAME" ]]; then
+    BODY="$BODY"$'\n'"By: $TEAMMATE_NAME"
+fi
+if [[ -n "$TEAM_NAME" ]]; then
+    BODY="$BODY"$'\n'"Team: $TEAM_NAME"
 fi
 
 # Send completion notification

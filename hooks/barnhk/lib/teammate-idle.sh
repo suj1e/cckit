@@ -14,9 +14,9 @@ load_config
 # Read JSON input
 INPUT=$(cat)
 
-# Extract teammate info
-TEAMMATE_NAME=$(echo "$INPUT" | json_value '.agent_name')
-TEAMMATE_ID=$(echo "$INPUT" | json_value '.agent_id')
+# Extract teammate info (current spec fields)
+TEAMMATE_NAME=$(echo "$INPUT" | json_value '.teammate_name')
+TEAM_NAME=$(echo "$INPUT" | json_value '.team_name')
 CWD=$(echo "$INPUT" | json_value '.cwd')
 
 # Extract project name from cwd
@@ -29,8 +29,9 @@ fi
 BODY="Teammate idle"
 if [[ -n "$TEAMMATE_NAME" ]]; then
     BODY="Teammate: $TEAMMATE_NAME"
-elif [[ -n "$TEAMMATE_ID" ]]; then
-    BODY="Teammate ID: $TEAMMATE_ID"
+fi
+if [[ -n "$TEAM_NAME" ]]; then
+    BODY="$BODY"$'\n'"Team: $TEAM_NAME"
 fi
 
 # Send idle notification
