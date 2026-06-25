@@ -1,5 +1,9 @@
+#!/usr/bin/env bash
+# Bash wrapper: delegates to .sh version
+exec bash "$(dirname "$0")/$(basename "$0" .ps1).sh" "$@"
+exit
 # ==============================================================================
-# session-end.ps1 - SessionEnd hook for session end notifications
+# session-end.ps1 - SessionEnd hook for session end notifications (PowerShell reference)
 # Receives JSON via stdin
 # ==============================================================================
 

@@ -1,5 +1,9 @@
+#!/usr/bin/env bash
+# Bash wrapper: delegates to .sh version
+exec bash "$(dirname "$0")/$(basename "$0" .ps1).sh" "$@"
+exit
 # ==============================================================================
-# teammate-idle.ps1 - TeammateIdle hook for teammate idle notifications
+# teammate-idle.ps1 - TeammateIdle hook for teammate idle notifications (PowerShell reference)
 # Receives JSON via stdin
 # ==============================================================================
 

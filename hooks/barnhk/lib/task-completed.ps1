@@ -1,5 +1,9 @@
+#!/usr/bin/env bash
+# Bash wrapper: delegates to .sh version
+exec bash "$(dirname "$0")/$(basename "$0" .ps1).sh" "$@"
+exit
 # ==============================================================================
-# task-completed.ps1 - TaskCompleted hook for completion notifications
+# task-completed.ps1 - TaskCompleted hook for completion notifications (PowerShell reference)
 # Receives JSON via stdin
 # ==============================================================================
 

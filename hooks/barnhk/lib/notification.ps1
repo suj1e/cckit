@@ -1,5 +1,9 @@
+#!/usr/bin/env bash
+# Bash wrapper: delegates to .sh version
+exec bash "$(dirname "$0")/$(basename "$0" .ps1).sh" "$@"
+exit
 # ==============================================================================
-# notification.ps1 - Notification hook for Claude notifications
+# notification.ps1 - Notification hook for Claude notifications (PowerShell reference)
 # Receives JSON via stdin
 # ==============================================================================
 

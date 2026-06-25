@@ -1,5 +1,9 @@
+#!/usr/bin/env bash
+# Bash wrapper: delegates to .sh version
+exec bash "$(dirname "$0")/$(basename "$0" .ps1).sh" "$@"
+exit
 # ==============================================================================
-# permission-request.ps1 - PermissionRequest hook for auto-approval
+# permission-request.ps1 - PermissionRequest hook for auto-approval (PowerShell reference)
 # Receives JSON via stdin, outputs JSON to auto-approve
 # ==============================================================================
 

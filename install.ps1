@@ -95,39 +95,6 @@ function Register-Marketplace {
     }
 }
 
-# Temporarily patch plugin.json for Windows (.ps1 extension)
-# Returns the backup path for later restoration
-function Set-PluginJsonWindows {
-    $pluginDir = "$ScriptDir\hooks\barnhk\.claude-plugin"
-    $pluginJson = "$pluginDir\plugin.json"
-    $backupJson = "$pluginDir\plugin.json.bak"
-
-    if (-not (Test-Path $pluginJson)) {
-        Write-Error "plugin.json not found at $pluginJson"
-        exit 1
-    }
-
-    Write-Info "Patching plugin.json for Windows (.ps1 hooks)..."
-    Copy-Item $pluginJson $backupJson -Force
-
-    $content = Get-Content $pluginJson -Raw
-    $content = $content -replace '\.sh"', '.ps1"'
-    Set-Content $pluginJson $content -NoNewline
-
-    return $backupJson
-}
-
-# Restore original plugin.json
-function Restore-PluginJson {
-    param([string]$BackupPath)
-
-    $pluginJson = [System.IO.Path]::ChangeExtension($BackupPath, ".json")
-    if (Test-Path $BackupPath) {
-        Move-Item $BackupPath $pluginJson -Force
-        Write-Info "Restored original plugin.json"
-    }
-}
-
 # Install a single plugin
 function Install-Plugin {
     param([string]$Name)
@@ -159,36 +126,28 @@ Test-ClaudeCLI
 # Register marketplace
 Register-Marketplace
 
-# Patch plugin.json for Windows
-$backup = Set-PluginJsonWindows
-
-try {
-    # Install plugins
-    if ($PluginName) {
-        # Install specific plugin
-        if ($PluginName -in $Plugins) {
-            $ok = Install-Plugin $PluginName
-            if (-not $ok) { exit 1 }
-        } else {
-            Write-Error "Unknown plugin: $PluginName"
-            Write-Host "Available plugins: $($Plugins -join ', ')" -ForegroundColor Gray
-            exit 1
-        }
+# Install plugins
+if ($PluginName) {
+    # Install specific plugin
+    if ($PluginName -in $Plugins) {
+        $ok = Install-Plugin $PluginName
+        if (-not $ok) { exit 1 }
     } else {
-        # Install all plugins
-        $failed = 0
-        foreach ($p in $Plugins) {
-            if (-not (Install-Plugin $p)) {
-                $failed++
-            }
-        }
-        if ($failed -gt 0) {
-            Write-Warn "$failed plugin(s) failed to install"
+        Write-Error "Unknown plugin: $PluginName"
+        Write-Host "Available plugins: $($Plugins -join ', ')" -ForegroundColor Gray
+        exit 1
+    }
+} else {
+    # Install all plugins
+    $failed = 0
+    foreach ($p in $Plugins) {
+        if (-not (Install-Plugin $p)) {
+            $failed++
         }
     }
-} finally {
-    # Always restore original plugin.json
-    Restore-PluginJson -BackupPath $backup
+    if ($failed -gt 0) {
+        Write-Warn "$failed plugin(s) failed to install"
+    }
 }
 
 Write-Host ""
