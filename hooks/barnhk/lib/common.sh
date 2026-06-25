@@ -411,7 +411,7 @@ is_safe_command() {
     fi
 
     # Docker read-only and common dev commands
-    if [[ "$cmd" =~ ^docker[[:space:]]+(ps|ls|images|logs|inspect|stats|top|port|exec)[[:space:]]+ ]]; then
+    if [[ "$cmd" =~ ^docker[[:space:]]+(ps|ls|images|logs|inspect|stats|top|port|exec)([[:space:]]|$) ]]; then
         return 0
     fi
     # Docker resource list commands

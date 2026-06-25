@@ -1,0 +1,59 @@
+# ==============================================================================
+# barnhk Configuration (PowerShell Data File)
+# Edit this file to customize hook behavior
+# ==============================================================================
+
+@{
+    # === Bark (iOS Push Notifications) ===
+    # Set this to enable push notifications to your iOS device
+    # Example: https://api.day.app/YOUR_KEY
+    BARK_SERVER_URL = ""
+
+    # === Discord Webhook ===
+    # Set this to enable Discord channel notifications
+    # Example: https://discord.com/api/webhooks/123456789/abcdefg
+    DISCORD_WEBHOOK_URL = ""
+
+    # Discord embed colors (decimal values)
+    DISCORD_COLOR_DANGER = "15548997"
+    DISCORD_COLOR_PERMIT = "5763719"
+    DISCORD_COLOR_DONE = "3066993"
+    DISCORD_COLOR_STOP = "15105570"
+    DISCORD_COLOR_IDLE = "8421504"
+
+    # === Feishu Webhook ===
+    # Set this to enable Feishu group notifications
+    # Example: https://open.feishu.cn/open-apis/bot/v2/hook/xxxxx
+    FEISHU_WEBHOOK_URL = ""
+
+    # === Safe Commands ===
+    # Custom safe commands (array of regex patterns)
+    # Commands matching these patterns will be auto-approved
+    SAFE_COMMANDS = @()
+
+    # === Project Directory Auto-Approve ===
+    # Auto-approve all commands within project directory (default: true)
+    # When enabled, commands executed in the project directory are auto-approved
+    # Note: Dangerous commands (rm -rf /, sudo, etc.) are still blocked
+    AUTO_APPROVE_PROJECT_COMMANDS = $true
+
+    # === Notification Titles ===
+    TITLE_DANGER = "⚠️ Claude Danger"
+    TITLE_PERMIT = "🔔 Claude Permit"
+    TITLE_APPROVAL = "🔐 Claude Approval"
+    TITLE_DONE = "✅ Claude Done"
+    TITLE_STOP = "🛑 Claude Stop"
+    TITLE_IDLE = "💤 Teammate Idle"
+    TITLE_QUESTION = "❓ Claude Question"
+    TITLE_IDLE_PROMPT = "⏳ Claude Waiting"
+
+    # === Notification Type Handling ===
+    # Options: skip (no notification), default (generic message), transcript (extract from transcript)
+    NOTIFICATION_PERMISSION_PROMPT = "skip"
+    NOTIFICATION_QUESTION = "transcript"
+    NOTIFICATION_IDLE_PROMPT = "transcript"
+
+    # === Debug ===
+    # Enable debug logging (default: false)
+    DEBUG_ENABLED = $false
+}

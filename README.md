@@ -20,6 +20,8 @@ Claude Code Kit - A collection of Claude Code extensions (skills and hooks).
 
 cckit uses Claude Code's official marketplace system. Use the unified installer:
 
+### Unix (macOS / Linux)
+
 ```bash
 # Install all plugins
 ./install.sh
@@ -29,6 +31,18 @@ cckit uses Claude Code's official marketplace system. Use the unified installer:
 ./install.sh barnhk
 ```
 
+### Windows
+
+Double-click `install.bat` or run in PowerShell:
+
+```powershell
+# Install all plugins
+.\install.ps1
+
+# Install specific plugin
+.\install.ps1 barnhk
+```
+
 The installer will:
 1. Add cckit as a local marketplace
 2. Install plugins via `claude plugin install`
@@ -36,12 +50,21 @@ The installer will:
 
 ## Uninstallation
 
+### Unix (macOS / Linux)
+
 ```bash
 # Uninstall all plugins
 ./uninstall.sh
 
 # Uninstall specific plugin
 ./uninstall.sh barnhk
+```
+
+### Windows
+
+```powershell
+.\uninstall.ps1
+.\uninstall.ps1 barnhk
 ```
 
 ## Manual Commands

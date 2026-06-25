@@ -196,6 +196,7 @@ When modifying skills or hooks:
 3. **TeammateIdle** input fields are `agent_name` and `agent_id` (not `teammate_*`)
 4. **PermissionRequest** uses `decision.behavior` format; **PreToolUse** uses `permissionDecision` format
 5. Test changes by reinstalling: `./uninstall.sh <plugin> && ./install.sh <plugin>`
+6. **Cross-platform development**: When modifying barnhk hooks, update BOTH the bash (`.sh`) and PowerShell (`.ps1`) versions. PowerShell hooks use zero external dependencies (`jq` → `ConvertFrom-Json`, `curl` → `Invoke-WebRequest`, `tac` → `[array]::Reverse()`). Windows temp paths use `$env:TEMP` instead of `/tmp`. PowerShell hooks target v5.1+ (Windows 10 built-in).
 
 ## Known Limitations
 
