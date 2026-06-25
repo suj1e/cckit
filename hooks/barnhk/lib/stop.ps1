@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
-# Bash wrapper: delegates to .sh version
-exec bash "$(dirname "$0")/$(basename "$0" .ps1).sh" "$@"
-exit
+# stop.ps1 - delegates to .sh
+bash "$(dirname "$0")/stop.sh"
+exit $?
 # ==============================================================================
-# stop.ps1 - Stop hook for session stop notifications (PowerShell reference)
-# Receives JSON via stdin
-# ==============================================================================
+# (original PowerShell reference implementation preserved below)
 
 $ErrorActionPreference = "Stop"
 

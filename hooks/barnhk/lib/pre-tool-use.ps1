@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Bash wrapper: delegates to .sh version
-exec bash "$(dirname "$0")/$(basename "$0" .ps1).sh" "$@"
-exit
+# pre-tool-use.ps1 - delegates to .sh
+bash "$(dirname "$0")/pre-tool-use.sh"
+exit $?
 # ==============================================================================
-# pre-tool-use.ps1 - PreToolUse hook for dangerous command detection (PowerShell reference)
+# (original PowerShell reference below)
 # Receives JSON via stdin, exits 0 to allow, exit 2 to block
 # ==============================================================================
 
