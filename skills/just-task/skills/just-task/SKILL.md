@@ -6,7 +6,7 @@ description: |
   - 用户说 just xxx、跑一下 xxx、执行 just、/just-task
   - 用户说"启动/运行/重启/打包/测试/停止/看日志/状态/依赖树"
   - 任何涉及 justfile 的操作
-  只在当前目录或其父目录存在 justfile 时触发。
+  只在当前目录或其子目录存在 justfile 时触发。
 ---
 
 # Just Task Runner
@@ -15,9 +15,17 @@ description: |
 
 ## 核心流程
 
-### 1. 定位项目
+### 1. 发现 justfile
 
-从当前工作目录开始逐级向上查找 `justfile`，找到的第一个所在目录即为项目根。如果找不到，告诉用户。
+在当前目录及其**直接子目录**（一层）下查找 `justfile`：
+
+```bash
+ls -d ./justfile ./**/justfile 2>/dev/null | head -20
+```
+
+- **只有 1 个** → 直接用它
+- **多个** → 列出让用户选（如"服务端 还是 客户端？"）
+- **0 个** → 告诉用户未找到 justfile
 
 ### 2. 读取可用命令
 
@@ -90,15 +98,12 @@ cd <project-root> && just <command>
 ```bash
 jps -l | Select-String "<main-class>" | ForEach-Object { $pid = ($_ -split '\s+')[0]; taskkill /f /pid $pid 2>$null }
 ```
+
 如果 justfile 有 `restart` 命令，直接用。
 
 ## 多任务管理
 
-可以同时跑多个服务：
-- 服务端 `just run` → task_A
-- 客户端 `just run` → task_B
-
-用户说"看客户端输出"→ 读 task_B 输出；"停掉服务端"→ kill task_A。
+可以同时跑多个服务。用户说"看 XX 输出"→ 读对应 task 输出；"停掉 XX"→ kill 对应 task。
 
 ## 注意事项
 
