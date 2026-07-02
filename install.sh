@@ -15,7 +15,7 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 # Available plugins
-PLUGINS="jbrick barnhk"
+PLUGINS="jbrick barnhk just-task"
 
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${CYAN}                    cckit - Claude Code Kit Installer               ${NC}"
@@ -53,12 +53,12 @@ ensure_marketplace
 if [[ $# -gt 0 ]]; then
   for plugin_name in "$@"; do
     case "$plugin_name" in
-      jbrick|barnhk)
+      jbrick|barnhk|just-task)
         install_plugin "$plugin_name"
         ;;
       *)
         echo -e "${RED}✗ Unknown plugin: $plugin_name${NC}"
-        echo "Available plugins: jbrick, barnhk"
+        echo "Available plugins: jbrick, barnhk, just-task"
         exit 1
         ;;
     esac
@@ -76,5 +76,6 @@ echo
 echo "Installed plugins:"
 echo "  - jbrick:            /jbrick <service-name>"
 echo "  - barnhk:            Safety & notification hooks"
+echo "  - just-task:         /just-task run|restart|build|test|stop"
 echo
 echo "To uninstall, run: ./uninstall.sh [plugin-name]"

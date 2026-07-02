@@ -22,6 +22,15 @@
         "name": "suj1e"
       },
       "source": "./hooks/barnhk"
+    },
+    {
+      "name": "just-task",
+      "description": "在当前项目后台运行 just 命令，长驻后台、短命直接返回，支持多任务管理",
+      "version": "1.0.0",
+      "author": {
+        "name": "suj1e"
+      },
+      "source": "./skills/just-task"
     }
   ]
 }
