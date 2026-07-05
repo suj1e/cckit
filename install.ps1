@@ -106,12 +106,30 @@ function Install-Plugin {
             throw "Failed: $result"
         }
         Write-Success "$Name installed"
+
+        # Platform adaptation: source plugin.json uses .sh (canonical).
+        # On Windows, normalize .sh → .ps1 in the installed cache copy.
+        Adapt-Platform $Name
     } catch {
         Write-Error "Failed to install $Name"
         Write-Host "  $result" -ForegroundColor Gray
         return $false
     }
     return $true
+}
+
+# Convert hook script paths in installed plugin.json to match Windows.
+# Source-of-truth plugin.json in the repo uses .sh; on Windows we need .ps1.
+function Adapt-Platform {
+    param([string]$Name)
+    $pluginJson = Get-ChildItem "$env:USERPROFILE\.claude\plugins\cache\cckit\$Name\*\.claude-plugin\plugin.json" -ErrorAction SilentlyContinue | Select-Object -First 1
+    if (-not $pluginJson) { return }
+    $content = Get-Content $pluginJson.FullName -Raw
+    if ($content -match '\.sh') {
+        $content = $content -replace '\.sh', '.ps1'
+        Set-Content $pluginJson.FullName $content
+        Write-Success "  -> Platform adaptation: .sh -> .ps1"
+    }
 }
 
 # ==============================================================================

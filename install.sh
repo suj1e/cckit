@@ -40,9 +40,29 @@ install_plugin() {
   echo -e "${CYAN}→ Installing ${name}...${NC}"
   if claude plugin install "${name}@cckit" --scope user; then
     echo -e "${GREEN}✓ ${name} installed${NC}"
+
+    # Platform adaptation: source plugin.json uses .sh (canonical).
+    # Installed copy should already be .sh on Unix, but normalize defensively
+    # in case the cache retains a stale .ps1 from a previous install.
+    adapt_platform "$name"
   else
     echo -e "${RED}✗ Failed to install ${name}${NC}"
     return 1
+  fi
+}
+
+# Convert hook script paths in installed plugin.json to match the current OS.
+# Source-of-truth plugin.json in the repo uses .sh; on Windows, .sh → .ps1.
+adapt_platform() {
+  local name="$1"
+  local plugin_json
+  plugin_json="$HOME/.claude/plugins/cache/cckit/${name}/"*/.claude-plugin/plugin.json
+  if [[ ! -f "$plugin_json" ]]; then
+    return 0
+  fi
+  if grep -q '\.ps1' "$plugin_json" 2>/dev/null; then
+    sed -i '' 's/\.ps1/.sh/g' "$plugin_json"
+    echo -e "${GREEN}  → Platform adaptation: .ps1 → .sh${NC}"
   fi
 }
 

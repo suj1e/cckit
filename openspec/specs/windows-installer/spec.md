@@ -41,6 +41,21 @@ The PowerShell uninstaller SHALL remove specified plugins via `claude plugin uni
 - **WHEN** user runs `./uninstall.ps1` with no arguments
 - **THEN** both `jbrick@cckit` and `barnhk@cckit` are uninstalled
 
+### Requirement: Installer adapts hook script extensions per platform
+The PowerShell installer SHALL post-process each installed plugin's `plugin.json` to convert canonical `.sh` script paths to `.ps1` for Windows compatibility. The Unix installer SHALL similarly normalize any stale `.ps1` paths to `.sh`. This adaptation SHALL apply to all plugins generically (not hardcoded per plugin name), so future plugins with hook commands require no installer changes.
+
+#### Scenario: Windows adapts .sh to .ps1 for all plugins
+- **WHEN** `install.ps1` installs any plugin whose `plugin.json` contains `.sh` hook commands
+- **THEN** the installed cache copy has all `.sh` replaced with `.ps1`
+
+#### Scenario: Unix adapts .ps1 to .sh for all plugins
+- **WHEN** `install.sh` installs any plugin whose `plugin.json` contains `.ps1` hook commands (e.g., stale cache from prior Windows install)
+- **THEN** the installed cache copy has all `.ps1` replaced with `.sh`
+
+#### Scenario: Plugins without hooks are unaffected
+- **WHEN** `install.sh` or `install.ps1` installs a plugin with no `hooks` section (e.g., `jbrick`, `just-task`)
+- **THEN** the adaptation step finds no `.sh`/`.ps1` references and silently succeeds
+
 ### Requirement: Installer uses colored console output
 The installer SHALL display colored output (green for success, cyan for progress, red for errors) using PowerShell's `Write-Host` with `-ForegroundColor`.
 

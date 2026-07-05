@@ -65,16 +65,16 @@ All hook `command` fields in `plugin.json` SHALL wrap `${CLAUDE_PLUGIN_ROOT}` in
 - **THEN** each command string uses the format `"${CLAUDE_PLUGIN_ROOT}"/lib/xxx.sh` with quoted placeholder
 
 ### Requirement: plugin.json hook commands support cross-platform execution
-All hook `command` fields in `plugin.json` SHALL use the platform-appropriate script extension. On Unix the commands SHALL reference `.sh` scripts; on Windows the commands SHALL reference `.ps1` scripts. The installer SHALL write the correct path during installation.
+All hook `command` fields in the source `plugin.json` SHALL use `.sh` as the canonical extension. The Unix installer (`install.sh`) SHALL verify or normalize to `.sh`; the Windows installer (`install.ps1`) SHALL convert `.sh` to `.ps1` in the installed cache copy. This ensures the same source `plugin.json` works on both platforms.
 
-#### Scenario: Unix installation writes .sh commands
+#### Scenario: Source plugin.json uses .sh
+- **WHEN** a developer reads `hooks/barnhk/.claude-plugin/plugin.json` in the repository
+- **THEN** all hook command paths end with `.sh` (the canonical/default format)
+
+#### Scenario: Unix installation preserves .sh
 - **WHEN** `install.sh` runs on macOS or Linux
-- **THEN** plugin.json hook commands use `"${CLAUDE_PLUGIN_ROOT}"/lib/xxx.sh` format
+- **THEN** the installed `plugin.json` retains `.sh` paths; no conversion needed (defensive normalization applied if stale `.ps1` found)
 
-#### Scenario: Windows installation writes .ps1 commands
+#### Scenario: Windows installation converts .sh to .ps1
 - **WHEN** `install.ps1` runs on Windows
-- **THEN** plugin.json hook commands use `"${CLAUDE_PLUGIN_ROOT}"/lib/xxx.ps1` format
-
-#### Scenario: Path quoting for spaces
-- **WHEN** `${CLAUDE_PLUGIN_ROOT}` contains spaces
-- **THEN** the command string uses the quoted format `"${CLAUDE_PLUGIN_ROOT}"/lib/xxx.ps1` (or `.sh`) to handle spaces
+- **THEN** the installed `plugin.json` has all `.sh` paths replaced with `.ps1`
