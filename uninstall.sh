@@ -13,7 +13,7 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 # Available plugins
-PLUGINS="jbrick barnhk just-task"
+PLUGINS="jbrick barnhk just-task review-merge-sync"
 
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${CYAN}                   cckit - Claude Code Kit Uninstaller              ${NC}"
@@ -35,12 +35,12 @@ uninstall_plugin() {
 if [[ $# -gt 0 ]]; then
   for plugin_name in "$@"; do
     case "$plugin_name" in
-      jbrick|barnhk|just-task)
+      jbrick|barnhk|just-task|review-merge-sync)
         uninstall_plugin "$plugin_name"
         ;;
       *)
         echo "✗ Unknown plugin: $plugin_name"
-        echo "Available plugins: jbrick, barnhk, just-task"
+        echo "Available plugins: jbrick, barnhk, just-task, review-merge-sync"
         exit 1
         ;;
     esac

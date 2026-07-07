@@ -31,6 +31,15 @@
         "name": "suj1e"
       },
       "source": "./skills/just-task"
+    },
+    {
+      "name": "review-merge-sync",
+      "description": "Review a branch with code-review skill, merge to target if approved, push, and optionally sync worktree",
+      "version": "1.0.0",
+      "author": {
+        "name": "suj1e"
+      },
+      "source": "./skills/review-merge-sync"
     }
   ]
 }

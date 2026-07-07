@@ -1,0 +1,10 @@
+{
+  "name": "review-merge-sync",
+  "version": "1.0.0",
+  "description": "Review a branch with code-review skill, merge to target if approved, push, and optionally sync the corresponding worktree",
+  "author": {
+    "name": "suj1e"
+  },
+  "license": "MIT",
+  "keywords": ["review", "merge", "sync", "worktree", "code-review"]
+}

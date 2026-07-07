@@ -10,7 +10,7 @@ param(
 $ErrorActionPreference = "Stop"
 
 # Available plugins
-$Plugins = @("jbrick", "barnhk", "just-task")
+$Plugins = @("jbrick", "barnhk", "just-task", "review-merge-sync")
 
 # ==============================================================================
 # Helper Functions

@@ -13,7 +13,7 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $MarketplaceJson = "$env:USERPROFILE\.claude\plugins\known_marketplaces.json"
 
 # Available plugins
-$Plugins = @("jbrick", "barnhk", "just-task")
+$Plugins = @("jbrick", "barnhk", "just-task", "review-merge-sync")
 
 # ==============================================================================
 # Helper Functions
@@ -175,6 +175,7 @@ Write-Host "Installed plugins:" -ForegroundColor White
 Write-Host "  - jbrick:   /jbrick <service-name>" -ForegroundColor Gray
 Write-Host "  - barnhk:   Safety & notification hooks" -ForegroundColor Gray
 Write-Host "  - just-task:  /just-task run|restart|build|test|stop" -ForegroundColor Gray
+Write-Host "  - review-merge-sync:  /review-merge-sync <branch> [target]" -ForegroundColor Gray
 Write-Host ""
 Write-Host "To uninstall, run: .\uninstall.ps1 [plugin-name]" -ForegroundColor Gray
 exit 0
