@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/suj1e/cckit/compare/v1.1.0...v1.2.0) (2026-07-12)
+
+
+### Features
+
+* refactor barnhk — dispatch_hook, remove powershell, add tests ([3a7b2b0](https://github.com/suj1e/cckit/commit/3a7b2b07b13dbf6a2b1acaf8fa685e4196ee489b))
+
 ## [1.1.0](https://github.com/suj1e/cckit/compare/v1.0.2...v1.1.0) (2026-07-12)
 
 
