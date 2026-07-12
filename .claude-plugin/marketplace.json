@@ -6,15 +6,6 @@
   },
   "plugins": [
     {
-      "name": "jbrick",
-      "description": "Generate Spring Boot microservice scaffolds following flooc 3-module architecture with Repository pattern",
-      "version": "1.0.0",
-      "author": {
-        "name": "suj1e"
-      },
-      "source": "./skills/jbrick"
-    },
-    {
       "name": "barnhk",
       "description": "Safety and notification hooks with dangerous command protection, auto-approval, and multi-channel notifications",
       "version": "1.0.0",
@@ -22,15 +13,6 @@
         "name": "suj1e"
       },
       "source": "./hooks/barnhk"
-    },
-    {
-      "name": "just-task",
-      "description": "在当前项目后台运行 just 命令，长驻后台、短命直接返回，支持多任务管理",
-      "version": "1.0.0",
-      "author": {
-        "name": "suj1e"
-      },
-      "source": "./skills/just-task"
     },
     {
       "name": "review-merge-sync",

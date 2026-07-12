@@ -14,7 +14,7 @@ const MARKETPLACE_NAME = 'cckit';
 const MARKETPLACE_JSON = path.join(PKG_ROOT, '.claude-plugin', 'marketplace.json');
 const KNOWN_MARKETPLACES = path.join(os.homedir(), '.claude', 'plugins', 'known_marketplaces.json');
 
-const ALL_PLUGINS = ['jbrick', 'barnhk', 'just-task', 'review-merge-sync'];
+const ALL_PLUGINS = ['barnhk', 'review-merge-sync'];
 
 const GREEN = '\x1b[32m';
 const RED = '\x1b[31m';
@@ -166,9 +166,7 @@ function cmdInstall(args) {
   if (success > 0 && fail === 0) {
     log('');
     log('Installed plugins:');
-    log('  /jbrick              Spring Boot microservice scaffold generator');
     log('  barnhk hooks          Safety & notification hooks');
-    log('  /just-task            Background just command runner');
     log('  /review-merge-sync    Code review → merge → sync workflow');
     log('');
     log('Uninstall: npx @suj1e/cckit uninstall [name]');

@@ -37,8 +37,6 @@ cckit info <name>       # 查看插件详情
 
 | 插件 | 用途 |
 |------|------|
-| **jbrick** | Spring Boot 微服务脚手架生成器，3-module Repository 架构 |
-| **just-task** | 后台 just 命令执行器，支持长驻（run/build/test）和短命令 |
 | **review-merge-sync** | 代码审查 → 合并 → 推送 → 同步 worktree 工作流 |
 
 ### Hooks

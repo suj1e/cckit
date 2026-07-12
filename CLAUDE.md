@@ -15,8 +15,6 @@ cckit/
 ├── .claude-plugin/
 │   └── marketplace.json       # Marketplace definition (4 plugins)
 ├── skills/
-│   ├── jbrick/                # Spring Boot scaffold generator
-│   ├── just-task/             # Background just command runner
 │   └── review-merge-sync/     # Code review → merge → sync
 ├── hooks/
 │   └── barnhk/                # Safety & notification hooks
@@ -90,20 +88,6 @@ CI workflow: `.github/workflows/publish.yml`
 覆盖 Skills、Agents、Hooks、MCP/LSP Servers、plugin.json schema、目录结构、CLI 命令。
 
 ## Skills
-
-### jbrick
-
-Spring Boot 微服务脚手架，3-module Repository 架构 (`*-api`, `*-app`, `*-boot`)。
-
-- Java 21, Spring Boot 4.0.5, Spring Cloud 2025.1.0, Gradle 9.4.1, Nacos
-- 用法: `/jbrick user-center`
-- 模板: `skills/jbrick/assets/templates/`
-
-### just-task
-
-后台 just 命令执行器，在当前目录及其子目录搜索 justfile。
-
-- 用法: `/just-task run|restart|build|test|stop|log|st|deps|clean`
 
 ### review-merge-sync
 

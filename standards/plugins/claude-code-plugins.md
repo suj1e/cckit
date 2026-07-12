@@ -500,46 +500,14 @@ cckit 包含以下符合官方规范的插件：
 
 | 插件 | 类型 | 说明 |
 |------|------|------|
-| `jbrick` | Skill | Spring Boot 微服务脚手架生成器（3 模块 Repository 架构） |
 | `barnhk` | Hooks | 安全防护和多渠道通知 |
+| `review-merge-sync` | Skill | 代码审查 → 合并 → 同步工作流 |
 
-### 目录结构
-
-```
-cckit/
-├── install.sh              # 统一安装脚本
-├── uninstall.sh            # 统一卸载脚本
-├── skills/
-│   └── jbrick/             # Skill 插件
-│       ├── .claude-plugin/
-│       │   └── plugin.json
-│       ├── skills/jbrick/
-│       │   ├── SKILL.md
-│       │   ├── references/
-│       │   └── assets/
-│       └── README.md
-└── hooks/
-    └── barnhk/             # Hooks 插件
-        ├── .claude-plugin/
-        │   └── plugin.json
-        ├── hooks/
-        │   └── hooks.json
-        └── lib/
-```
-
-### 安装/卸载
+### 安装
 
 ```bash
-# 安装所有插件
-./install.sh
-
-# 安装指定插件
-./install.sh jbrick
-./install.sh barnhk
-
-# 卸载
-./uninstall.sh barnhk
-./uninstall.sh          # 卸载所有
+npx @suj1e/cckit                    # 安装所有
+npx @suj1e/cckit install barnhk     # 安装指定
 ```
 
 ### hooks.json 配置示例

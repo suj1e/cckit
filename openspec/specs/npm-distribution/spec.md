@@ -20,7 +20,7 @@ Users SHALL be able to install all cckit plugins with a single `npx` command, wi
 #### Scenario: Install all plugins with npx
 - **WHEN** a user runs `npx @suj1e/cckit`
 - **THEN** the CLI MUST register the package directory as a Claude Code marketplace
-- **AND** install all four plugins (jbrick, barnhk, just-task, review-merge-sync) via `claude plugin install`
+- **AND** install the two plugins (barnhk, review-merge-sync) via `claude plugin install`
 - **AND** display installation results (success/failure per plugin)
 
 ### Requirement: Global install and cckit command
@@ -47,13 +47,13 @@ The CLI SHALL support `install [name]` to install all plugins or a specific name
 The CLI SHALL support `uninstall [name]` to uninstall all cckit plugins or a specific named plugin.
 
 #### Scenario: Uninstall specific plugin
-- **WHEN** a user runs `cckit uninstall just-task`
-- **THEN** the just-task plugin MUST be uninstalled via `claude plugin uninstall just-task@cckit`
+- **WHEN** a user runs `cckit uninstall review-merge-sync`
+- **THEN** the review-merge-sync plugin MUST be uninstalled via `claude plugin uninstall review-merge-sync@cckit`
 - **AND** other plugins MUST remain installed
 
 #### Scenario: Uninstall all plugins
 - **WHEN** a user runs `cckit uninstall` without a name
-- **THEN** all four cckit plugins MUST be uninstalled
+- **THEN** both cckit plugins MUST be uninstalled
 
 ### Requirement: CLI list subcommand
 The CLI SHALL support `list` to display installed cckit plugins and their status.
