@@ -99,7 +99,14 @@ CI workflow: `.github/workflows/publish.yml`
 
 ### barnhk
 
-安全防护 + 多通道通知插件，钩住 7 个事件：PreToolUse、PermissionRequest、TaskCompleted、Stop、SessionEnd、TeammateIdle、Notification。
+安全防护 + 多通道通知插件，钩住 7 个事件。纯 bash，`dispatch_hook` 模式。
+
+```bash
+# 运行测试
+bash hooks/barnhk/tests/test-safety.sh
+bash hooks/barnhk/tests/test-notify.sh
+bash hooks/barnhk/tests/test-hooks.sh
+```
 
 **功能**：
 - 拦截危险命令（rm -rf /, sudo, curl | bash, dd, mkfs, chmod 777 /）
@@ -108,7 +115,7 @@ CI workflow: `.github/workflows/publish.yml`
 - Edit/Write 文件操作自动批准
 - 三通道通知：Bark (iOS) + Discord + 飞书 Webhook
 - 每个通知类型可配置 `skip` / `default` / `transcript` 模式
-- 跨平台：bash (`.sh`) + PowerShell (`.ps1`) 双版本
+- 纯 bash，跨平台（Windows 通过 Git Bash）
 
 **配置路径**（安装后）: `~/.claude/plugins/cache/cckit/barnhk/<version>/lib/barnhk.conf`
 
@@ -118,8 +125,8 @@ CI workflow: `.github/workflows/publish.yml`
 2. **Hooks**: `.claude-plugin/plugin.json` 内联定义，`${CLAUDE_PLUGIN_ROOT}` 引用路径
 3. **TeammateIdle** 输入字段: `agent_name` / `agent_id`（不是 `teammate_*`）
 4. **PermissionRequest** → `decision.behavior`；**PreToolUse** → `permissionDecision`
-5. 测试: `node bin/cli.js install <plugin> && node bin/cli.js uninstall <plugin>`
-6. **跨平台**: 修改 barnhk 时，bash (`.sh`) 和 PowerShell (`.ps1`) 都要更新。PowerShell 零外部依赖（`jq` → `ConvertFrom-Json`, `curl` → `Invoke-WebRequest`, `tac` → `[array]::Reverse()`），Windows temp 路径用 `$env:TEMP`，目标 v5.1+
+5. 测试: `node bin/cli.js install barnhk && node bin/cli.js uninstall barnhk`；单测: `bash hooks/barnhk/tests/test-*.sh`
+6. **barnhk 重构**: 使用 `dispatch_hook` 模式（入口 5 行），逻辑在 `lib/hooks.sh`。拆分后的模块：`common.sh`（入口）、`hooks.sh`、`notify.sh`、`safety.sh`、`transcript.sh`
 
 ## Known Limitations
 

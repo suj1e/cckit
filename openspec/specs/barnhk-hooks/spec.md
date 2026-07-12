@@ -64,17 +64,24 @@ All hook `command` fields in `plugin.json` SHALL wrap `${CLAUDE_PLUGIN_ROOT}` in
 - **WHEN** Claude Code loads the plugin and resolves hook commands
 - **THEN** each command string uses the format `"${CLAUDE_PLUGIN_ROOT}"/lib/xxx.sh` with quoted placeholder
 
-### Requirement: plugin.json hook commands support cross-platform execution
-All hook `command` fields in the source `plugin.json` SHALL use `.sh` as the canonical extension. The Unix installer (`install.sh`) SHALL verify or normalize to `.sh`; the Windows installer (`install.ps1`) SHALL convert `.sh` to `.ps1` in the installed cache copy. This ensures the same source `plugin.json` works on both platforms.
+### Requirement: dispatch_hook pattern
+Each hook entry script SHALL use a `dispatch_hook "<name>"` pattern where `dispatch_hook` handles `load_config`, stdin reading, `PROJECT_NAME` extraction, and dispatching to `hook_<name>` functions in `hooks.sh`.
 
-#### Scenario: Source plugin.json uses .sh
-- **WHEN** a developer reads `hooks/barnhk/.claude-plugin/plugin.json` in the repository
-- **THEN** all hook command paths end with `.sh` (the canonical/default format)
+#### Scenario: Hook entry script
+- **WHEN** a hook event fires
+- **THEN** the entry script sources `common.sh` and calls `dispatch_hook "<event-name>"`
+- **AND** the entry script is no more than 6 lines
 
-#### Scenario: Unix installation preserves .sh
-- **WHEN** `install.sh` runs on macOS or Linux
-- **THEN** the installed `plugin.json` retains `.sh` paths; no conversion needed (defensive normalization applied if stale `.ps1` found)
+### Requirement: common.sh is split into single-responsibility modules
+The common.sh functionality SHALL be split into separate files by responsibility: `hooks.sh` (hook logic), `notify.sh` (notification backends), `safety.sh` (command safety checks), `transcript.sh` (transcript extraction). `common.sh` SHALL serve as the entry point that sources all sub-modules.
 
-#### Scenario: Windows installation converts .sh to .ps1
-- **WHEN** `install.ps1` runs on Windows
-- **THEN** the installed `plugin.json` has all `.sh` paths replaced with `.ps1`
+#### Scenario: Module separation
+- **WHEN** a developer needs to modify notification logic
+- **THEN** they only need to edit `notify.sh` without touching safety checks or hook logic
+
+### Requirement: barnhk is bash-only
+The barnhk plugin SHALL contain only bash (`.sh`) scripts. All PowerShell (`.ps1`, `.psm1`, `.psd1`) files SHALL be removed. The `plugin.json` SHALL continue referencing `.sh` paths.
+
+#### Scenario: Plugin installation on any platform
+- **WHEN** barnhk is installed on any OS
+- **THEN** only `.sh` hook scripts exist for execution
