@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.2](https://github.com/suj1e/cckit/compare/v1.2.1...v1.2.2) (2026-07-12)
+
+
+### Features
+
+* remove barnhk notifications, align with official hooks best practices ([67f8329](https://github.com/suj1e/cckit/commit/67f832983d351f0d71a903c0fbc985a0c67805b4))
+
 ### [1.2.1](https://github.com/suj1e/cckit/compare/v1.2.0...v1.2.1) (2026-07-12)
 
 

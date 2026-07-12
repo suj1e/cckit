@@ -1,6 +1,6 @@
 {
   "name": "@suj1e/cckit",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Claude Code Kit — plugins collection (skills & hooks)",
   "bin": {
     "cckit": "bin/cli.js"
