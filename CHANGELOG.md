@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/suj1e/cckit/compare/v1.2.0...v1.2.1) (2026-07-12)
+
+
+### Features
+
+* switch barnhk notify to EchoBell, fix env config path and marketplace registration ([9a96696](https://github.com/suj1e/cckit/commit/9a966966f7dcd406fe8aea5326203fe9732fbee4))
+
 ## [1.2.0](https://github.com/suj1e/cckit/compare/v1.1.0...v1.2.0) (2026-07-12)
 
 
