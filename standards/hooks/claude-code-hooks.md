@@ -9,7 +9,6 @@
 Hooks 允许你在特定事件发生时执行自定义脚本，用于：
 - 自动审批安全操作
 - 阻止危险命令
-- 发送通知
 - 记录操作日志
 
 ## 通用规范
@@ -72,7 +71,7 @@ TOOL_NAME=$(echo "$INPUT" | json_value '.tool_name')
 {
   "hookSpecificOutput": {
     "permissionDecision": "deny",
-    "denyReason": "Critical dangerous command detected: rm -rf /"
+    "permissionDecisionReason": "Critical dangerous command detected: rm -rf /"
   }
 }
 ```
@@ -91,7 +90,7 @@ TOOL_NAME=$(echo "$INPUT" | json_value '.tool_name')
 | 字段 | 类型 | 说明 |
 |------|------|------|
 | `hookSpecificOutput.permissionDecision` | string | 决策：`"allow"` 或 `"deny"` |
-| `hookSpecificOutput.denyReason` | string | 阻断原因（deny 时必填） |
+| `hookSpecificOutput.permissionDecisionReason` | string | 阻断原因（deny 时必填） |
 
 ---
 
@@ -241,6 +240,8 @@ TOOL_NAME=$(echo "$INPUT" | json_value '.tool_name')
 
 > **重要**: `message` 字段包含用户需要看到的具体内容，如 "Claude needs your permission to use Bash"。不要用通用文案替代。
 
+> **注意**: Notification hook 是纯副作用事件（不可阻断）。不要在 hook 中执行网络 I/O（如 curl 推送通知），这会导致 hook 阻塞并可能引发进程泄漏。如需外部通知，使用独立守护进程消费文件队列或日志。
+
 ---
 
 ## 其他 Hook 类型
@@ -315,6 +316,8 @@ Hooks 在 `settings.json` 中配置：
 4. **错误处理**: 脚本应该有良好的错误处理，避免意外崩溃
 5. **日志记录**: 将调试信息输出到 stderr，不要影响 stdout 的 JSON 输出
 6. **幂等性**: Hook 应该是幂等的，多次执行不会产生副作用
+7. **零副作用**: Hook 中不要执行网络 I/O 或长时间运行的操作。网络调用应通过独立守护进程处理
+8. **设置超时**: 每个 hook handler 应设置 `"timeout": 10`（秒），防止异常阻塞
 
 ---
 
@@ -326,9 +329,6 @@ Hooks 在 `settings.json` 中配置：
 #!/usr/bin/env bash
 # pre-tool-use.sh - 危险命令检测
 
-set -e
-
-# 读取输入
 INPUT=$(cat)
 TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // empty')
 COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty')
@@ -340,7 +340,7 @@ fi
 
 # 检测危险命令
 if [[ "$COMMAND" =~ rm[[:space:]]+-rf[[:space:]]+(/|/\*) ]]; then
-    echo '{"hookSpecificOutput":{"permissionDecision":"deny","denyReason":"Critical: rm -rf / is blocked"}}'
+    echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"Critical: rm -rf / is blocked"}}'
     exit 2
 fi
 
@@ -353,8 +353,6 @@ exit 0
 ```bash
 #!/usr/bin/env bash
 # permission-request.sh - 自动审批安全命令
-
-set -e
 
 INPUT=$(cat)
 TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // empty')

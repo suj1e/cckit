@@ -112,12 +112,16 @@ function cmdInstall(args) {
     exit('Claude Code is not installed. Please install it first: https://claude.ai/code');
   }
 
+  // Check for --local flag (dev testing)
+  const isLocal = args.includes('--local');
+  const pluginArgs = args.filter(a => a !== '--local');
+
   // Validate marketplace.json exists
   if (!fs.existsSync(MARKETPLACE_JSON)) {
     exit(`Marketplace definition not found: ${MARKETPLACE_JSON}`);
   }
 
-  const plugins = resolvePlugins(args);
+  const plugins = resolvePlugins(pluginArgs);
   if (plugins.length === 0) {
     exit('No valid plugins to install.');
   }
@@ -127,11 +131,15 @@ function cmdInstall(args) {
   log(`${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}`);
   log('');
 
-  // Step 1: Register/update marketplace (always sync to current package location)
-  log(`${CYAN}→ Registering cckit marketplace...${NC}`);
+  // Step 1: Register/update marketplace
+  // Default: GitHub source (same experience for everyone)
+  // --local: local directory (dev testing of unreleased changes)
+  const marketSource = isLocal ? PKG_ROOT : 'https://github.com/suj1e/cckit';
+  const sourceLabel = isLocal ? 'directory' : 'github';
+  log(`${CYAN}→ Registering cckit marketplace (${sourceLabel})...${NC}`);
   try {
-    run(`claude plugin marketplace add "${PKG_ROOT}"`, { stdio: 'pipe' });
-    log(`${GREEN}✓${NC} Marketplace registered`);
+    run(`claude plugin marketplace add "${marketSource}"`, { stdio: 'pipe' });
+    log(`${GREEN}✓${NC} Marketplace registered (${sourceLabel})`);
   } catch (err) {
     exit(`Failed to register marketplace: ${err.message}`);
   }

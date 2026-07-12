@@ -3,7 +3,7 @@
   "version": "1.2.1",
   "description": "Claude Code Kit — plugins collection (skills & hooks)",
   "bin": {
-    "cckit": "./bin/cli.js"
+    "cckit": "bin/cli.js"
   },
   "files": [
     "bin/",

@@ -80,8 +80,21 @@ The common.sh functionality SHALL be split into separate files by responsibility
 - **THEN** they only need to edit `notify.sh` without touching safety checks or hook logic
 
 ### Requirement: barnhk is bash-only
-The barnhk plugin SHALL contain only bash (`.sh`) scripts. All PowerShell (`.ps1`, `.psm1`, `.psd1`) files SHALL be removed. The `plugin.json` SHALL continue referencing `.sh` paths.
+The barnhk plugin SHALL contain only bash (`.sh`) scripts. All PowerShell (`.ps1`, `.psm1`, `.psd1`) files SHALL be removed. The `plugin.json` SHALL continue referencing `.sh` paths. The configuration file SHALL use `.env` format (`barnhk.env`) with `KEY=VALUE` syntax.
 
 #### Scenario: Plugin installation on any platform
 - **WHEN** barnhk is installed on any OS
 - **THEN** only `.sh` hook scripts exist for execution
+- **AND** the configuration uses standard `.env` format
+
+### Requirement: EchoBell webhook notification
+The notification module SHALL send notifications via EchoBell webhook. The `send_notification` function SHALL POST JSON to `https://hook.echobell.one/t/{token}` with `title`, `body`, and `group` as custom variables.
+
+#### Scenario: Notification dispatch
+- **WHEN** `send_notification` is called with group, title, body, and project_name
+- **THEN** the function POSTs a JSON payload to the EchoBell webhook URL
+- **AND** the project name is prepended to the title
+
+#### Scenario: Token not configured
+- **WHEN** `ECHOBELL_TOKEN` is empty
+- **THEN** the function silently returns without making a request

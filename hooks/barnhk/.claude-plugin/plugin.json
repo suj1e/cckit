@@ -1,12 +1,12 @@
 {
   "name": "barnhk",
   "version": "1.0.0",
-  "description": "Safety and notification hooks with dangerous command protection, auto-approval, and multi-channel notifications",
+  "description": "Safety hooks with dangerous command protection and auto-approval",
   "author": {
     "name": "suj1e"
   },
   "license": "MIT",
-  "keywords": ["hooks", "safety", "notification", "bark", "discord", "feishu"],
+  "keywords": ["hooks", "safety", "auto-approve"],
   "hooks": {
     "PreToolUse": [
       {
@@ -14,7 +14,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/lib/pre-tool-use.sh"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/lib/pre-tool-use.sh",
+            "timeout": 10
           }
         ]
       }
@@ -24,7 +25,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/lib/permission-request.sh"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/lib/permission-request.sh",
+            "timeout": 10
           }
         ]
       }
@@ -34,7 +36,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/lib/task-completed.sh"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/lib/task-completed.sh",
+            "timeout": 10
           }
         ]
       }
@@ -44,7 +47,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/lib/stop.sh"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/lib/stop.sh",
+            "timeout": 10
           }
         ]
       }
@@ -54,7 +58,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/lib/session-end.sh"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/lib/session-end.sh",
+            "timeout": 10
           }
         ]
       }
@@ -64,17 +69,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/lib/teammate-idle.sh"
-          }
-        ]
-      }
-    ],
-    "Notification": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/lib/notification.sh"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/lib/teammate-idle.sh",
+            "timeout": 10
           }
         ]
       }

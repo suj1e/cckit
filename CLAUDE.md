@@ -38,9 +38,9 @@ cckit update                        # update plugins
 ### For Development (test unreleased changes)
 
 ```bash
-node bin/cli.js install <name>      # install from local repo
-node bin/cli.js uninstall <name>    # uninstall
-node bin/cli.js list                # list
+node bin/cli.js install --local    # install from local repo (directory source)
+node bin/cli.js uninstall <name>   # uninstall
+node bin/cli.js list               # list
 ```
 
 ### Manual (claude CLI)

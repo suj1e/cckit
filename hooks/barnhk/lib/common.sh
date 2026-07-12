@@ -7,8 +7,6 @@ BARNHK_ENV="$BARNHK_DIR/barnhk.env"
 # ── Source sub-modules ────────────────────────────────────────────────────────
 
 source "$BARNHK_DIR/safety.sh"
-source "$BARNHK_DIR/notify.sh"
-source "$BARNHK_DIR/transcript.sh"
 source "$BARNHK_DIR/hooks.sh"
 
 # ── Configuration ─────────────────────────────────────────────────────────────
@@ -49,34 +47,6 @@ truncate_string() {
     fi
 }
 
-get_icon() {
-    case "$1" in
-        permission_prompt) echo "🔐" ;;
-        question)          echo "❓" ;;
-        idle_prompt)       echo "⏳" ;;
-        *)                 echo "🔔" ;;
-    esac
-}
-
-get_notification_mode() {
-    local notif_type="$1"
-    case "$notif_type" in
-        permission_prompt) echo "${NOTIFICATION_PERMISSION_PROMPT:-skip}" ;;
-        question)          echo "${NOTIFICATION_QUESTION:-transcript}" ;;
-        idle_prompt)       echo "${NOTIFICATION_IDLE_PROMPT:-transcript}" ;;
-        *)                 echo "default" ;;
-    esac
-}
-
-get_notification_title() {
-    local notif_type="$1"
-    case "$notif_type" in
-        question)    echo "${TITLE_QUESTION:-❓ Claude Question}" ;;
-        idle_prompt) echo "${TITLE_IDLE_PROMPT:-⏳ Claude Waiting}" ;;
-        *)           echo "${TITLE_QUESTION:-❓ Claude Question}" ;;
-    esac
-}
-
 # ── Hook dispatcher ───────────────────────────────────────────────────────────
 
 dispatch_hook() {
@@ -102,7 +72,6 @@ dispatch_hook() {
         stop)               hook_stop ;;
         session-end)        hook_session_end ;;
         teammate-idle)      hook_teammate_idle ;;
-        notification)       hook_notification ;;
         *)                  echo "Unknown hook: $hook_name" >&2; exit 1 ;;
     esac
 }
