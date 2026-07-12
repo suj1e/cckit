@@ -55,18 +55,19 @@ claude plugin uninstall barnhk@cckit --scope user
 
 ## Release
 
-发版已完全自动化：
+发版全自动，零手工：
 
 1. 打开 [Actions](https://github.com/suj1e/cckit/actions) → Publish to npm → Run workflow
 2. 选择 `patch` / `minor` / `major`
-3. CI 自动 bump 版本 → 打 tag → 推送 → 发布到 npm
+3. CI 自动完成：
+   - 从 git log 生成/更新 `CHANGELOG.md`
+   - bump `package.json` 版本
+   - commit + 打 tag + push
+   - tag 触发 → `npm publish` → 自动创建 GitHub Release
 
-也可以本地手动：
-```bash
-npm version patch && git push --follow-tags
-```
+提交时用 conventional commits (`feat:`, `fix:`, `chore:`)，changelog 按类型自动分组。
 
-CI workflow: `.github/workflows/publish.yml` — `workflow_dispatch` 触发 bump + tag push，`v*` tag 触发 npm publish。
+CI workflow: `.github/workflows/publish.yml`
 
 ## Standards
 
