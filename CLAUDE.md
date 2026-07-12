@@ -55,12 +55,18 @@ claude plugin uninstall barnhk@cckit --scope user
 
 ## Release
 
+发版已完全自动化：
+
+1. 打开 [Actions](https://github.com/suj1e/cckit/actions) → Publish to npm → Run workflow
+2. 选择 `patch` / `minor` / `major`
+3. CI 自动 bump 版本 → 打 tag → 推送 → 发布到 npm
+
+也可以本地手动：
 ```bash
-npm version patch                    # bump + tag
-git push --follow-tags               # CI auto-publishes to npm
+npm version patch && git push --follow-tags
 ```
 
-CI workflow: `.github/workflows/publish.yml` — triggers on `v*` tag, runs `npm install && npm publish --access public`.
+CI workflow: `.github/workflows/publish.yml` — `workflow_dispatch` 触发 bump + tag push，`v*` tag 触发 npm publish。
 
 ## Standards
 
