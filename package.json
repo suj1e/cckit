@@ -1,0 +1,27 @@
+{
+  "name": "@suj1e/cckit",
+  "version": "1.0.0",
+  "description": "Claude Code Kit — plugins collection (skills & hooks)",
+  "bin": {
+    "cckit": "./bin/cli.js"
+  },
+  "files": [
+    "bin/",
+    ".claude-plugin/",
+    "skills/",
+    "hooks/",
+    "standards/",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "claude-code",
+    "claude",
+    "plugin",
+    "skill",
+    "hook",
+    "cckit"
+  ],
+  "license": "MIT",
+  "repository": "github:suj1e/cckit"
+}

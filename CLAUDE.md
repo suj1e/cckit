@@ -55,7 +55,7 @@ Generates production-ready Spring Boot microservice scaffolds with 3-module Repo
 
 **Installation:**
 ```bash
-./install.sh jbrick
+npx @suj1e/cckit install jbrick
 ```
 
 **Usage in Claude Code:**
@@ -101,7 +101,7 @@ Provides dangerous command protection, auto-approval for safe commands, and mult
 
 **Installation:**
 ```bash
-./install.sh barnhk
+npx @suj1e/cckit install barnhk
 ```
 
 **Debug Logging:**
@@ -167,12 +167,26 @@ cckit plugins are managed via Claude Code's official marketplace system.
 
 **Install:**
 ```bash
-./install.sh [plugin-name]
+npx @suj1e/cckit                                # install all plugins
+npx @suj1e/cckit install [plugin-name]           # install specific
+npm install -g @suj1e/cckit && cckit install       # global install
 ```
 
 **Uninstall:**
 ```bash
-./uninstall.sh [plugin-name]
+npx @suj1e/cckit uninstall [plugin-name]
+```
+
+**Update:**
+```bash
+npx @suj1e/cckit update        # update plugins
+npm update -g @suj1e/cckit     # update CLI itself
+```
+
+**Manage:**
+```bash
+cckit list                 # show installed plugins
+cckit info <name>          # show plugin details
 ```
 
 **Manual commands:**
@@ -195,7 +209,8 @@ When modifying skills or hooks:
 2. **Hooks** are configured inline in `.claude-plugin/plugin.json` with `${CLAUDE_PLUGIN_ROOT}` for paths
 3. **TeammateIdle** input fields are `agent_name` and `agent_id` (not `teammate_*`)
 4. **PermissionRequest** uses `decision.behavior` format; **PreToolUse** uses `permissionDecision` format
-5. Test changes by reinstalling: `./uninstall.sh <plugin> && ./install.sh <plugin>`
+5. Test changes by reinstalling: `npm update -g @suj1e/cckit && cckit update`
+6. **Release**: `npm version patch/minor/major` → `git push --follow-tags` → CI auto-publishes
 6. **Cross-platform development**: When modifying barnhk hooks, update BOTH the bash (`.sh`) and PowerShell (`.ps1`) versions. PowerShell hooks use zero external dependencies (`jq` → `ConvertFrom-Json`, `curl` → `Invoke-WebRequest`, `tac` → `[array]::Reverse()`). Windows temp paths use `$env:TEMP` instead of `/tmp`. PowerShell hooks target v5.1+ (Windows 10 built-in).
 
 ## Known Limitations

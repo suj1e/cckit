@@ -1,6 +1,39 @@
 # cckit
 
-Claude Code Kit - A collection of Claude Code extensions (skills and hooks).
+Claude Code Kit — A collection of Claude Code extensions (skills and hooks).
+
+## Quick Install
+
+```bash
+npx @suj1e/cckit
+```
+
+This installs all four plugins in one command. No clone, no script.
+
+Or install a specific plugin:
+
+```bash
+npx @suj1e/cckit install barnhk
+```
+
+## CLI Commands
+
+| Command | Description |
+|---------|-------------|
+| `npx @suj1e/cckit` | Install all plugins |
+| `npx @suj1e/cckit install [name]` | Install all or specific plugin |
+| `npx @suj1e/cckit uninstall [name]` | Uninstall all or specific plugin |
+| `npx @suj1e/cckit list` | Show installed plugins and status |
+| `npx @suj1e/cckit update [name]` | Update plugins |
+| `npx @suj1e/cckit info <name>` | Show plugin metadata |
+
+Global install (use `cckit` directly):
+
+```bash
+npm install -g @suj1e/cckit
+cckit install barnhk
+cckit list
+```
 
 ## Contents
 
@@ -9,63 +42,14 @@ Claude Code Kit - A collection of Claude Code extensions (skills and hooks).
 | Skill | Description |
 |-------|-------------|
 | [jbrick](./skills/jbrick) | Spring Boot microservice scaffold generator with 3-module Repository pattern architecture |
+| [just-task](./skills/just-task) | Background just command runner for long-running tasks |
+| [review-merge-sync](./skills/review-merge-sync) | Code review → merge → sync workflow |
 
 ### Hooks
 
 | Hook | Description |
 |------|-------------|
-| [barnhk](./hooks/barnhk) | Safety and notification hooks with dangerous command protection, auto-approval (docker, file ops), project directory auto-approve toggle, and multi-channel notifications |
-
-## Installation
-
-cckit uses Claude Code's official marketplace system. Use the unified installer:
-
-### Unix (macOS / Linux)
-
-```bash
-# Install all plugins
-./install.sh
-
-# Install specific plugin
-./install.sh jbrick
-./install.sh barnhk
-```
-
-### Windows
-
-Double-click `install.bat` or run in PowerShell:
-
-```powershell
-# Install all plugins
-.\install.ps1
-
-# Install specific plugin
-.\install.ps1 barnhk
-```
-
-The installer will:
-1. Add cckit as a local marketplace
-2. Install plugins via `claude plugin install`
-3. Hooks are automatically loaded via `plugin.json` through `enabledPlugins`
-
-## Uninstallation
-
-### Unix (macOS / Linux)
-
-```bash
-# Uninstall all plugins
-./uninstall.sh
-
-# Uninstall specific plugin
-./uninstall.sh barnhk
-```
-
-### Windows
-
-```powershell
-.\uninstall.ps1
-.\uninstall.ps1 barnhk
-```
+| [barnhk](./hooks/barnhk) | Safety and notification hooks with dangerous command protection, auto-approval (docker, file ops), project directory auto-approve toggle, and multi-channel notifications (Bark, Discord, 飞书) |
 
 ## Manual Commands
 
@@ -77,7 +61,6 @@ claude plugin marketplace add /path/to/cckit
 
 # Install
 claude plugin install barnhk@cckit --scope user
-claude plugin install jbrick@cckit --scope user
 
 # Uninstall
 claude plugin uninstall barnhk@cckit --scope user
