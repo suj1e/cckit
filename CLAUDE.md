@@ -35,7 +35,7 @@ cckit info <name>                   # plugin details
 cckit update                        # update plugins
 ```
 
-### For Development (local)
+### For Development (test unreleased changes)
 
 ```bash
 node bin/cli.js install <name>      # install from local repo
@@ -117,7 +117,7 @@ bash hooks/barnhk/tests/test-hooks.sh
 - 每个通知类型可配置 `skip` / `default` / `transcript` 模式
 - 纯 bash，跨平台（Windows 通过 Git Bash）
 
-**配置路径**（安装后）: `~/.claude/plugins/cache/cckit/barnhk/<version>/lib/barnhk.conf`
+**配置路径**（安装后）: `~/.claude/plugins/cache/cckit/barnhk/<version>/lib/barnhk.env`
 
 ## Development
 

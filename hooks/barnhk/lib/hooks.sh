@@ -21,7 +21,7 @@ hook_pre_tool_use() {
             [[ "$DANGER_LEVEL" == "critical" ]] && REASON="Critical dangerous command detected: $COMMAND"
             [[ "$DANGER_LEVEL" == "high" ]] && REASON="High-risk command detected: $COMMAND"
             echo "BLOCKED: $REASON" >&2
-            send_notification "claude-danger" "$TITLE_DANGER" "Blocked: $COMMAND" "$PROJECT_NAME"
+            send_notification "$TITLE_DANGER" "Blocked: $COMMAND" "$PROJECT_NAME"
             jq -n --arg reason "$REASON" '{hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",permissionDecisionReason:$reason}}'
             exit 2
             ;;
@@ -64,7 +64,7 @@ hook_permission_request() {
         echo "$OUTPUT"
         [[ "${DEBUG_ENABLED:-false}" == "true" ]] && echo "[$(date)] OUTPUT: $OUTPUT" >> "/tmp/barnhk-permission-debug.log"
         local BODY="$TOOL_LABEL Auto-approved"$'\n'"Cmd: $TRUNCATED_CMD"
-        send_notification "claude-auto-permit" "$TITLE_PERMIT" "$BODY" "$PROJECT_NAME"
+        send_notification "$TITLE_PERMIT" "$BODY" "$PROJECT_NAME"
         exit 0
     fi
 
@@ -74,7 +74,7 @@ hook_permission_request() {
     [[ -n "$FILE_PATH" ]] && BODY="$BODY"$'\n'"Path: $FILE_PATH"
     [[ -n "$SESSION_ID" ]] && BODY="$BODY"$'\n'"Session: $SESSION_ID"
 
-    send_notification "claude-manual-permit" "$TITLE_APPROVAL" "$BODY" "$PROJECT_NAME"
+    send_notification "$TITLE_APPROVAL" "$BODY" "$PROJECT_NAME"
     exit 0
 }
 
@@ -90,7 +90,7 @@ hook_task_completed() {
     [[ -n "$TEAMMATE_NAME" ]] && BODY="$BODY"$'\n'"By: $TEAMMATE_NAME"
     [[ -n "$TEAM_NAME" ]] && BODY="$BODY"$'\n'"Team: $TEAM_NAME"
 
-    send_notification "claude-done" "$TITLE_DONE" "$BODY" "$PROJECT_NAME"
+    send_notification "$TITLE_DONE" "$BODY" "$PROJECT_NAME"
     exit 0
 }
 
@@ -104,7 +104,7 @@ hook_stop() {
         BODY="$BODY"$'\n'"Message: $TRUNCATED_MSG"
     fi
 
-    send_notification "claude-stop" "$TITLE_STOP" "$BODY" "$PROJECT_NAME"
+    send_notification "$TITLE_STOP" "$BODY" "$PROJECT_NAME"
     exit 0
 }
 
@@ -116,7 +116,7 @@ hook_session_end() {
     [[ -n "$SESSION_ID" ]] && BODY="$BODY"$'\n'"Session: $SESSION_ID"
     [[ -n "$END_REASON" ]] && BODY="$BODY"$'\n'"Reason: $END_REASON"
 
-    send_notification "claude-stop" "$TITLE_STOP" "$BODY" "$PROJECT_NAME"
+    send_notification "$TITLE_STOP" "$BODY" "$PROJECT_NAME"
     exit 0
 }
 
@@ -128,7 +128,7 @@ hook_teammate_idle() {
     [[ -n "$TEAMMATE_NAME" ]] && BODY="Teammate: $TEAMMATE_NAME"
     [[ -n "$TEAM_NAME" ]] && BODY="$BODY"$'\n'"Team: $TEAM_NAME"
 
-    send_notification "claude-idle" "$TITLE_IDLE" "$BODY" "$PROJECT_NAME"
+    send_notification "$TITLE_IDLE" "$BODY" "$PROJECT_NAME"
     exit 0
 }
 
@@ -155,6 +155,6 @@ hook_notification() {
     [[ -n "$SESSION_ID" ]] && NOTIF_BODY="$NOTIF_BODY"$'\n'"Session: $SESSION_ID"
 
     local NOTIF_TITLE=$(get_notification_title "$NOTIFICATION_TYPE")
-    send_notification "claude-question" "$NOTIF_TITLE" "$NOTIF_BODY" "$PROJECT_NAME"
+    send_notification "$NOTIF_TITLE" "$NOTIF_BODY" "$PROJECT_NAME"
     exit 0
 }

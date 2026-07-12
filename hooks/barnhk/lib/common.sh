@@ -2,7 +2,7 @@
 # common.sh — Entry point for barnhk hooks
 
 BARNHK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BARNHK_CONF="$BARNHK_DIR/barnhk.conf"
+BARNHK_ENV="$BARNHK_DIR/barnhk.env"
 
 # ── Source sub-modules ────────────────────────────────────────────────────────
 
@@ -13,9 +13,23 @@ source "$BARNHK_DIR/hooks.sh"
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 
+# Stable user config path (survives plugin updates and works with any install method)
+USER_BARNHK_ENV="${HOME}/.claude/cckit/barnhk.env"
+
 load_config() {
-    if [[ -f "$BARNHK_CONF" ]]; then
-        source "$BARNHK_CONF"
+    # 1. Prefer user's stable config (survives updates and npm installs)
+    if [[ -f "$USER_BARNHK_ENV" ]]; then
+        source "$USER_BARNHK_ENV"
+        return 0
+    fi
+
+    # 2. Fall back to bundled template
+    if [[ -f "$BARNHK_ENV" ]]; then
+        # Auto-copy template to stable location on first run
+        mkdir -p "$(dirname "$USER_BARNHK_ENV")"
+        cp "$BARNHK_ENV" "$USER_BARNHK_ENV"
+        source "$USER_BARNHK_ENV"
+        return 0
     fi
 }
 

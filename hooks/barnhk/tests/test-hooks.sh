@@ -29,10 +29,8 @@ assert_code() {
 }
 
 # Set up minimal config
-BARK_SERVER_URL=""
-DISCORD_WEBHOOK_URL=""
-FEISHU_WEBHOOK_URL=""
-export BARK_SERVER_URL DISCORD_WEBHOOK_URL FEISHU_WEBHOOK_URL
+ECHOBELL_TOKEN=""
+export ECHOBELL_TOKEN
 
 echo "=== hook_pre_tool_use ==="
 

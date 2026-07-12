@@ -18,24 +18,22 @@ npx @suj1e/cckit install barnhk
 
 - **危险命令拦截**: `rm -rf /`、`sudo`、`curl | bash`、`dd`、`mkfs`、`chmod 777 /`
 - **安全命令自动批准**: Git、npm、pnpm、yarn、pip、gradle、mvn、cargo、Docker、文件操作
-- **多通道通知**: Bark (iOS) + Discord + 飞书
+- **EchoBell 通知**: 一个 HTTP POST 推送到 EchoBell iOS app
 - **项目目录自动批准**: 项目目录下所有命令自动放行（危险命令除外）
 - **Edit/Write 自动批准**: 项目目录内的文件编辑自动通过
 
 ## 配置
 
-安装后编辑 `~/.claude/plugins/cache/cckit/barnhk/<version>/lib/barnhk.conf`：
+安装后编辑 `~/.claude/cckit/barnhk.env`（首次运行自动创建，更新不受影响）：
 
 ```bash
-# 通知通道
-BARK_SERVER_URL="https://api.day.app/YOUR_KEY"
-DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/..."
-FEISHU_WEBHOOK_URL="https://open.feishu.cn/open-apis/bot/v2/hook/..."
+# EchoBell webhook token（从 EchoBell iOS app → Channels → Webhook 获取）
+ECHOBELL_TOKEN=your-echobell-token
 
 # 通知类型处理 (skip / default / transcript)
-NOTIFICATION_PERMISSION_PROMPT="skip"
-NOTIFICATION_QUESTION="transcript"
-NOTIFICATION_IDLE_PROMPT="transcript"
+NOTIFICATION_PERMISSION_PROMPT=skip
+NOTIFICATION_QUESTION=transcript
+NOTIFICATION_IDLE_PROMPT=transcript
 
 # 项目目录自动批准
 AUTO_APPROVE_PROJECT_COMMANDS=true
@@ -59,10 +57,10 @@ AUTO_APPROVE_PROJECT_COMMANDS=true
 lib/
 ├── common.sh         # 入口 + dispatch_hook + 工具函数
 ├── hooks.sh          # 7 个 hook 逻辑函数
-├── notify.sh         # Bark + Discord + 飞书通知后端
+├── notify.sh         # EchoBell 通知后端
 ├── safety.sh         # 命令安全检查
 ├── transcript.sh     # 会话内容提取
-├── barnhk.conf       # 配置文件
+├── barnhk.env        # 配置文件（.env 格式）
 ├── *.sh              # 7 个入口脚本（5 行 dispatch）
 └── tests/
     ├── test-safety.sh

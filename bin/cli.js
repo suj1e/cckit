@@ -127,17 +127,13 @@ function cmdInstall(args) {
   log(`${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}`);
   log('');
 
-  // Step 1: Register marketplace
-  if (!isMarketplaceRegistered()) {
-    log(`${CYAN}→ Registering cckit marketplace...${NC}`);
-    try {
-      run(`claude plugin marketplace add "${PKG_ROOT}"`, { stdio: 'pipe' });
-      log(`${GREEN}✓${NC} Marketplace registered`);
-    } catch (err) {
-      exit(`Failed to register marketplace: ${err.message}`);
-    }
-  } else {
-    log(`${GREEN}✓${NC} Marketplace already registered`);
+  // Step 1: Register/update marketplace (always sync to current package location)
+  log(`${CYAN}→ Registering cckit marketplace...${NC}`);
+  try {
+    run(`claude plugin marketplace add "${PKG_ROOT}"`, { stdio: 'pipe' });
+    log(`${GREEN}✓${NC} Marketplace registered`);
+  } catch (err) {
+    exit(`Failed to register marketplace: ${err.message}`);
   }
   log('');
 
