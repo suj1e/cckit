@@ -23,5 +23,8 @@
     "cckit"
   ],
   "license": "MIT",
-  "repository": "github:suj1e/cckit"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/suj1e/cckit.git"
+  }
 }

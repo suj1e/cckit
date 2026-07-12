@@ -4,225 +4,132 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Purpose
 
-This is a collection of Claude Code extensions - skills and hooks that enhance Claude Code's capabilities.
+cckit is a collection of Claude Code extensions — skills and hooks — distributed as the npm package `@suj1e/cckit`.
 
 ## Structure
 
 ```
 cckit/
-├── install.sh              # Unified installer
-├── uninstall.sh            # Unified uninstaller
+├── package.json               # npm package metadata
+├── bin/cli.js                 # CLI: install/uninstall/list/update/info
+├── .claude-plugin/
+│   └── marketplace.json       # Marketplace definition (4 plugins)
 ├── skills/
-│   └── jbrick/             # Spring Boot microservice scaffold generator (Repository 3-module)
+│   ├── jbrick/                # Spring Boot scaffold generator
+│   ├── just-task/             # Background just command runner
+│   └── review-merge-sync/     # Code review → merge → sync
 ├── hooks/
-│   └── barnhk/             # Safety and notification hooks
-└── standards/              # 规范文档
-    ├── hooks/              # Claude Code hooks 规范
-    └── plugins/            # Claude Code plugins 规范
+│   └── barnhk/                # Safety & notification hooks
+├── standards/                 # Hooks & plugins 规范文档
+└── .github/workflows/         # CI/CD (npm publish on tag)
 ```
-
-## Standards
-
-**IMPORTANT**: 开发 Claude Code 扩展时必须严格遵守以下规范文档：
-
-### Hooks 规范
-`standards/hooks/claude-code-hooks.md`
-
-关键规范点：
-- JSON 字段名：使用 `tool_name` 和 `tool_input`，不是 `.tool` 或 `.permission`
-- 退出码：阻断时使用 `exit 2`，不是 `exit 1`
-- 输出格式：使用 `hookSpecificOutput` 结构化 JSON 输出
-- **PermissionRequest 格式**：必须使用 `decision.behavior`，而非 PreToolUse 的 `permissionDecision`
-  ```json
-  {"hookSpecificOutput":{"hookEventName":"PermissionRequest","decision":{"behavior":"allow"}}}
-  ```
-- **Notification 格式**：输入包含 `message`、`title`、`notification_type` 字段，应显示 `message` 内容而非通用文案
-
-### Plugins 规范
-`standards/plugins/claude-code-plugins.md`
-
-覆盖内容：
-- Skills、Agents、Hooks、MCP Servers、LSP Servers
-- plugin.json manifest schema
-- 目录结构规范
-- CLI 命令参考
-
-## Skills
-
-### jbrick - Flooc Service Scaffold Generator
-
-Generates production-ready Spring Boot microservice scaffolds with 3-module Repository pattern architecture.
-
-**Installation:**
-```bash
-npx @suj1e/cckit install jbrick
-```
-
-**Usage in Claude Code:**
-```
-/jbrick user-center
-```
-
-**Generated Service Architecture:**
-- 3-module Gradle structure: `*-api`, `*-app`, `*-boot`
-- Repository pattern: domain interface → impl → JPA
-- Package base: `com.flooc.{segment}` with `.app` layer in app module
-- Tech stack: Java 21, Spring Boot 4.0.5, Spring Cloud 2025.1.0, Gradle 9.4.1, Nacos
-
-**Key templates location:** `skills/jbrick/assets/templates/`
-
-## Hooks
-
-### barnhk - Safety & Notification Hooks
-
-Provides dangerous command protection, auto-approval for safe commands, and multi-channel notifications.
-
-**Features:**
-- Blocks dangerous commands (rm -rf /, sudo, curl | bash)
-- Auto-approves safe commands:
-  - Git, npm, pnpm, yarn, pip, gradle, mvn, cargo
-  - **File operations**: mkdir, touch, cp, mv
-  - **Docker**: ps, images, logs, inspect, stats, exec, network ls, volume ls
-  - **Docker Compose**: up, down, logs, ps, build, config
-- **Project directory auto-approve** - toggle to auto-approve all commands in project dir (default: on)
-- **Edit/Write auto-approve** - automatically approves Edit/Write operations for files within project directory
-- Multi-channel notifications with project info: Bark (iOS) + Discord + 飞书 Webhook
-  - All notifications show project name in title prefix: `[项目名] 标题`
-  - **Type-specific titles**: Different notification types use appropriate titles
-    - ❓ Claude Question - for `question` type (Claude asks something)
-    - ⏳ Claude Waiting - for `idle_prompt` type (Claude waiting for input)
-  - **Transcript content extraction**: Question/idle notifications extract specific content from transcript instead of generic messages
-  - **Configurable handling**: Each notification type can be set to `skip`, `default`, or `transcript` mode
-  - Distinct notification types with color coding:
-    - 🔔 Claude Permit (green) - auto-approved commands
-    - 🔐 Claude Approval (yellow) - manual approval needed
-  - Supports all notification types: danger, permit, approval, done, stop, idle, question
-- Cross-platform support (macOS, Linux)
-
-**Installation:**
-```bash
-npx @suj1e/cckit install barnhk
-```
-
-**Debug Logging:**
-
-Transcript extraction logs to `/tmp/barnhk-transcript-debug.log` for troubleshooting:
-```bash
-cat /tmp/barnhk-transcript-debug.log
-```
-
-**Configuration:**
-
-After installation, config file is located at:
-```
-~/.claude/plugins/cache/cckit/barnhk/<version>/lib/barnhk.conf
-```
-
-Edit the config:
-```bash
-# Notifications
-BARK_SERVER_URL="https://api.day.app/YOUR_KEY"
-DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/..."
-FEISHU_WEBHOOK_URL="https://open.feishu.cn/open-apis/bot/v2/hook/..."
-
-# Notification type handling (skip/default/transcript)
-# skip = no notification, default = generic message, transcript = extract from transcript
-NOTIFICATION_PERMISSION_PROMPT="skip"    # Skip to avoid duplicate with permission-request.sh
-NOTIFICATION_QUESTION="transcript"        # Extract specific question content
-NOTIFICATION_IDLE_PROMPT="transcript"     # Extract specific waiting content
-
-# Project directory auto-approve (default: true)
-# When enabled, all commands in project directory are auto-approved
-AUTO_APPROVE_PROJECT_COMMANDS=true
-
-# Debug logging (default: false)
-# When enabled, logs hook input/output to /tmp/barnhk-permission-debug.log
-DEBUG_ENABLED=false
-```
-
-**Feishu Card Layout:**
-
-Approval cards use optimized layout for readability:
-```
-┌─────────────────────────────────────────┐
-│ 🔐 Claude 命令审批请求                    │
-├─────────────────────────────────────────┤
-│ ⌨️ 命令                                  │
-│ `rm -rf build`                          │
-├────────────────────┬────────────────────┤
-│ 📁 目录             │ 🔗 请求ID           │
-│ `/gateway-center`  │ `1234`              │
-├────────────────────┴────────────────────┤
-│     [✓ 批准]    [✗ 拒绝]                 │
-└─────────────────────────────────────────┘
-```
-
-Result cards (approved/denied/timeout) also display directory and timestamp.
 
 ## Plugin Management
 
-cckit plugins are managed via Claude Code's official marketplace system.
+### For Users (npm)
 
-**Hook Loading:** Hooks are defined in `.claude-plugin/plugin.json` and loaded automatically via `enabledPlugins`. No manual registration to `settings.json` is needed.
-
-**Install:**
 ```bash
-npx @suj1e/cckit                                # install all plugins
-npx @suj1e/cckit install [plugin-name]           # install specific
-npm install -g @suj1e/cckit && cckit install       # global install
+npx @suj1e/cckit                    # install all plugins
+npx @suj1e/cckit install <name>     # install specific
+npx @suj1e/cckit uninstall <name>   # uninstall
+cckit list                          # show installed plugins
+cckit info <name>                   # plugin details
+cckit update                        # update plugins
 ```
 
-**Uninstall:**
+### For Development (local)
+
 ```bash
-npx @suj1e/cckit uninstall [plugin-name]
+node bin/cli.js install <name>      # install from local repo
+node bin/cli.js uninstall <name>    # uninstall
+node bin/cli.js list                # list
 ```
 
-**Update:**
-```bash
-npx @suj1e/cckit update        # update plugins
-npm update -g @suj1e/cckit     # update CLI itself
-```
+### Manual (claude CLI)
 
-**Manage:**
 ```bash
-cckit list                 # show installed plugins
-cckit info <name>          # show plugin details
-```
-
-**Manual commands:**
-```bash
-# Add marketplace
 claude plugin marketplace add /path/to/cckit
-
-# Install
 claude plugin install barnhk@cckit --scope user
-
-# Uninstall
 claude plugin uninstall barnhk@cckit --scope user
 ```
 
+## Release
+
+```bash
+npm version patch                    # bump + tag
+git push --follow-tags               # CI auto-publishes to npm
+```
+
+CI workflow: `.github/workflows/publish.yml` — triggers on `v*` tag, runs `npm install && npm publish --access public`.
+
+## Standards
+
+开发时必须遵守以下规范：
+
+### Hooks 规范 (`standards/hooks/claude-code-hooks.md`)
+
+- JSON 字段名：`tool_name`、`tool_input`（不是 `.tool` 或 `.permission`）
+- 退出码：阻断用 `exit 2`，不是 `exit 1`
+- 输出：`hookSpecificOutput` 结构化 JSON
+- **PreToolUse 输出**: `permissionDecision` + `denyReason`
+- **PermissionRequest 输出**: `decision.behavior`（不是 `permissionDecision`）
+  ```json
+  {"hookSpecificOutput":{"hookEventName":"PermissionRequest","decision":{"behavior":"allow"}}}
+  ```
+- **Notification 输入**: `message`、`title`、`notification_type` — 显示 `message` 内容而非通用文案
+
+### Plugins 规范 (`standards/plugins/claude-code-plugins.md`)
+
+覆盖 Skills、Agents、Hooks、MCP/LSP Servers、plugin.json schema、目录结构、CLI 命令。
+
+## Skills
+
+### jbrick
+
+Spring Boot 微服务脚手架，3-module Repository 架构 (`*-api`, `*-app`, `*-boot`)。
+
+- Java 21, Spring Boot 4.0.5, Spring Cloud 2025.1.0, Gradle 9.4.1, Nacos
+- 用法: `/jbrick user-center`
+- 模板: `skills/jbrick/assets/templates/`
+
+### just-task
+
+后台 just 命令执行器，在当前目录及其子目录搜索 justfile。
+
+- 用法: `/just-task run|restart|build|test|stop|log|st|deps|clean`
+
+### review-merge-sync
+
+代码审查 → 合并 → 推送 → 同步 worktree 工作流。
+
+- 用法: `/review-merge-sync <branch> [target]`
+
+## Hooks
+
+### barnhk
+
+安全防护 + 多通道通知插件，钩住 7 个事件：PreToolUse、PermissionRequest、TaskCompleted、Stop、SessionEnd、TeammateIdle、Notification。
+
+**功能**：
+- 拦截危险命令（rm -rf /, sudo, curl | bash, dd, mkfs, chmod 777 /）
+- 自动批准安全命令（git, npm, pnpm, yarn, pip, gradle, mvn, cargo, docker, docker compose, mkdir, touch, cp, mv, ls, cat, grep, find, openspec）
+- 项目目录自动批准（`AUTO_APPROVE_PROJECT_COMMANDS=true`）
+- Edit/Write 文件操作自动批准
+- 三通道通知：Bark (iOS) + Discord + 飞书 Webhook
+- 每个通知类型可配置 `skip` / `default` / `transcript` 模式
+- 跨平台：bash (`.sh`) + PowerShell (`.ps1`) 双版本
+
+**配置路径**（安装后）: `~/.claude/plugins/cache/cckit/barnhk/<version>/lib/barnhk.conf`
+
 ## Development
 
-When modifying skills or hooks:
-
-1. **Skills** are defined by a `SKILL.md` file with frontmatter specifying `name` and `description`
-2. **Hooks** are configured inline in `.claude-plugin/plugin.json` with `${CLAUDE_PLUGIN_ROOT}` for paths
-3. **TeammateIdle** input fields are `agent_name` and `agent_id` (not `teammate_*`)
-4. **PermissionRequest** uses `decision.behavior` format; **PreToolUse** uses `permissionDecision` format
-5. Test changes by reinstalling: `npm update -g @suj1e/cckit && cckit update`
-6. **Release**: `npm version patch/minor/major` → `git push --follow-tags` → CI auto-publishes
-6. **Cross-platform development**: When modifying barnhk hooks, update BOTH the bash (`.sh`) and PowerShell (`.ps1`) versions. PowerShell hooks use zero external dependencies (`jq` → `ConvertFrom-Json`, `curl` → `Invoke-WebRequest`, `tac` → `[array]::Reverse()`). Windows temp paths use `$env:TEMP` instead of `/tmp`. PowerShell hooks target v5.1+ (Windows 10 built-in).
+1. **Skills**: `SKILL.md` + frontmatter (`name`, `description`)
+2. **Hooks**: `.claude-plugin/plugin.json` 内联定义，`${CLAUDE_PLUGIN_ROOT}` 引用路径
+3. **TeammateIdle** 输入字段: `agent_name` / `agent_id`（不是 `teammate_*`）
+4. **PermissionRequest** → `decision.behavior`；**PreToolUse** → `permissionDecision`
+5. 测试: `node bin/cli.js install <plugin> && node bin/cli.js uninstall <plugin>`
+6. **跨平台**: 修改 barnhk 时，bash (`.sh`) 和 PowerShell (`.ps1`) 都要更新。PowerShell 零外部依赖（`jq` → `ConvertFrom-Json`, `curl` → `Invoke-WebRequest`, `tac` → `[array]::Reverse()`），Windows temp 路径用 `$env:TEMP`，目标 v5.1+
 
 ## Known Limitations
 
-### AskUserQuestion Hook Support
-
-The `AskUserQuestion` tool does **not** trigger any hooks in Claude Code:
-
-| Hook Type | Triggered by AskUserQuestion |
-|-----------|------------------------------|
-| PreToolUse | ❌ No |
-| Notification (question type) | ❌ No |
-| Notification (idle_prompt type) | ❌ No |
-
-This is a Claude Code limitation. Workaround: Manually check for questions via transcript polling (not implemented).
+`AskUserQuestion` 不触发任何 hook（PreToolUse、Notification 均不触发）。这是 Claude Code 的限制，无 workaround。

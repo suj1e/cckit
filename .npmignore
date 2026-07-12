@@ -1,11 +1,7 @@
 .git
 .gitignore
-openspec/
 .claude/
-node_modules/
 .editorconfig
-install.sh
-install.ps1
-install.bat
-uninstall.sh
-uninstall.ps1
+node_modules/
+openspec/
+package-lock.json

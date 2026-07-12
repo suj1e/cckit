@@ -1,70 +1,79 @@
-# cckit
+# @suj1e/cckit
 
-Claude Code Kit — A collection of Claude Code extensions (skills and hooks).
+![npm version](https://img.shields.io/npm/v/@suj1e/cckit)
+![license](https://img.shields.io/npm/l/@suj1e/cckit)
 
-## Quick Install
+Claude Code 扩展集合 — 一组开箱即用的 skills 和 hooks。
+
+## 安装
 
 ```bash
 npx @suj1e/cckit
 ```
 
-This installs all four plugins in one command. No clone, no script.
+一行命令，安装全部 4 个插件。无需 clone，无需脚本。
 
-Or install a specific plugin:
-
-```bash
-npx @suj1e/cckit install barnhk
-```
-
-## CLI Commands
-
-| Command | Description |
-|---------|-------------|
-| `npx @suj1e/cckit` | Install all plugins |
-| `npx @suj1e/cckit install [name]` | Install all or specific plugin |
-| `npx @suj1e/cckit uninstall [name]` | Uninstall all or specific plugin |
-| `npx @suj1e/cckit list` | Show installed plugins and status |
-| `npx @suj1e/cckit update [name]` | Update plugins |
-| `npx @suj1e/cckit info <name>` | Show plugin metadata |
-
-Global install (use `cckit` directly):
+也可以全局安装后直接用 `cckit` 命令：
 
 ```bash
 npm install -g @suj1e/cckit
-cckit install barnhk
-cckit list
+cckit install
 ```
 
-## Contents
+## CLI 命令
+
+```bash
+cckit                   # 安装全部插件（默认）
+cckit install [name]    # 安装全部或指定插件
+cckit uninstall [name]  # 卸载
+cckit list              # 查看已安装插件及状态
+cckit update [name]     # 更新插件
+cckit info <name>       # 查看插件详情
+```
+
+## 插件
 
 ### Skills
 
-| Skill | Description |
-|-------|-------------|
-| [jbrick](./skills/jbrick) | Spring Boot microservice scaffold generator with 3-module Repository pattern architecture |
-| [just-task](./skills/just-task) | Background just command runner for long-running tasks |
-| [review-merge-sync](./skills/review-merge-sync) | Code review → merge → sync workflow |
+| 插件 | 用途 |
+|------|------|
+| **jbrick** | Spring Boot 微服务脚手架生成器，3-module Repository 架构 |
+| **just-task** | 后台 just 命令执行器，支持长驻（run/build/test）和短命令 |
+| **review-merge-sync** | 代码审查 → 合并 → 推送 → 同步 worktree 工作流 |
 
 ### Hooks
 
-| Hook | Description |
-|------|-------------|
-| [barnhk](./hooks/barnhk) | Safety and notification hooks with dangerous command protection, auto-approval (docker, file ops), project directory auto-approve toggle, and multi-channel notifications (Bark, Discord, 飞书) |
+| 插件 | 用途 |
+|------|------|
+| **barnhk** | 安全防护 + 多通道通知（Bark / Discord / 飞书），自动批准安全命令，拦截危险操作 |
 
-## Manual Commands
-
-You can also use Claude Code CLI directly:
+## 用法示例
 
 ```bash
-# Add marketplace
-claude plugin marketplace add /path/to/cckit
+# 只装 barnhk 钩子
+npx @suj1e/cckit install barnhk
 
-# Install
-claude plugin install barnhk@cckit --scope user
+# 查看已安装的插件
+cckit list
 
-# Uninstall
-claude plugin uninstall barnhk@cckit --scope user
+# 更新全部插件
+cckit update
+
+# 卸载
+npx @suj1e/cckit uninstall barnhk
 ```
+
+## 更新
+
+```bash
+npm update -g @suj1e/cckit   # 更新 CLI
+cckit update                  # 更新插件
+```
+
+## 链接
+
+- [GitHub](https://github.com/suj1e/cckit) — 源码、问题反馈
+- [插件开发规范](./standards/) — 自定义 skill / hook 的参考文档
 
 ## License
 

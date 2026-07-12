@@ -27,7 +27,7 @@
 ## 5. CI/CD Pipeline
 
 - [x] 5.1 Create `.github/workflows/publish.yml` — trigger on `v*` tag, checkout, setup node, `npm publish --access public`
-- [ ] 5.2 Add NPM_TOKEN to GitHub repository secrets (manual — user action required)
+- [x] 5.2 Add NPM_TOKEN to GitHub repository secrets (done by user)
 
 ## 6. Verification
 
