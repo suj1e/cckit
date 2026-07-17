@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.4](https://github.com/suj1e/cckit/compare/v1.2.3...v1.2.4) (2026-07-17)
+
+
+### Bug Fixes
+
+* **barnhk:** restore execute permissions on hook scripts ([c72cebf](https://github.com/suj1e/cckit/commit/c72cebfb868711e4a59a81f73b9be066d6c6937a))
+
 ### [1.2.3](https://github.com/suj1e/cckit/compare/v1.2.2...v1.2.3) (2026-07-17)
 
 ### [1.2.2](https://github.com/suj1e/cckit/compare/v1.2.1...v1.2.2) (2026-07-12)
