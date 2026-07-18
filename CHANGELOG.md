@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.11](https://github.com/suj1e/cckit/compare/v1.2.10...v1.2.11) (2026-07-18)
+
+
+### Bug Fixes
+
+* **ci:** use correct needs.bump.outputs.version-value syntax ([548785f](https://github.com/suj1e/cckit/commit/548785f981959507ca624154a329e7987b2ae456))
+
 ### [1.2.10](https://github.com/suj1e/cckit/compare/v1.2.8...v1.2.10) (2026-07-18)
 
 
