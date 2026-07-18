@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.8](https://github.com/suj1e/cckit/compare/v1.2.7...v1.2.8) (2026-07-18)
+
 ### [1.2.7](https://github.com/suj1e/cckit/compare/v1.2.6...v1.2.7) (2026-07-18)
 
 ### [1.2.6](https://github.com/suj1e/cckit/compare/v1.2.4...v1.2.6) (2026-07-18)
