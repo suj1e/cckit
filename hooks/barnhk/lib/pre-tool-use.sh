@@ -17,14 +17,6 @@ TOOL_NAME=$(echo "$INPUT" | json_value '.tool_name')
 COMMAND=$(echo "$INPUT" | json_value '.tool_input.command')
 CWD=$(echo "$INPUT" | json_value '.cwd')
 
-# Extract project name (from cwd or fallback to $PWD)
-PROJECT_NAME=""
-if [[ -n "$CWD" ]]; then
-    PROJECT_NAME=$(basename "$CWD")
-elif [[ -n "$PWD" ]]; then
-    PROJECT_NAME=$(basename "$PWD")
-fi
-
 # Only check Bash tool commands
 if [[ "$TOOL_NAME" != "Bash" ]] || [[ -z "$COMMAND" ]]; then
     exit 0
@@ -37,14 +29,12 @@ case "$DANGER_LEVEL" in
     critical)
         REASON="Critical dangerous command detected: $COMMAND"
         echo "BLOCKED: $REASON" >&2
-        send_notification "claude-danger" "$TITLE_DANGER" "Blocked: $COMMAND" "$PROJECT_NAME"
         jq -n --arg reason "$REASON" '{hookSpecificOutput: {hookEventName: "PreToolUse", permissionDecision: "deny", permissionDecisionReason: $reason}}'
         exit 2
         ;;
     high)
         REASON="High-risk command detected: $COMMAND"
         echo "BLOCKED: $REASON" >&2
-        send_notification "claude-danger" "$TITLE_DANGER" "Blocked: $COMMAND" "$PROJECT_NAME"
         jq -n --arg reason "$REASON" '{hookSpecificOutput: {hookEventName: "PreToolUse", permissionDecision: "deny", permissionDecisionReason: $reason}}'
         exit 2
         ;;

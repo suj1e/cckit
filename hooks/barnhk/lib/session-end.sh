@@ -11,30 +11,4 @@ source "$SCRIPT_DIR/common.sh"
 # Load config
 load_config
 
-# Read JSON input
-INPUT=$(cat)
-
-# Extract session info (current spec fields)
-SESSION_ID=$(echo "$INPUT" | json_value '.session_id')
-END_REASON=$(echo "$INPUT" | json_value '.reason')
-CWD=$(echo "$INPUT" | json_value '.cwd')
-
-# Extract project name from cwd
-PROJECT_NAME=""
-if [[ -n "$CWD" ]]; then
-    PROJECT_NAME=$(basename "$CWD")
-fi
-
-# Build notification body
-BODY="[SESSION] Session ended"
-if [[ -n "$SESSION_ID" ]]; then
-    BODY="$BODY"$'\n'"Session: $SESSION_ID"
-fi
-if [[ -n "$END_REASON" ]]; then
-    BODY="$BODY"$'\n'"Reason: $END_REASON"
-fi
-
-# Send session end notification
-send_notification "claude-stop" "$TITLE_STOP" "$BODY" "$PROJECT_NAME"
-
 exit 0

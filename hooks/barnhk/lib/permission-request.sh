@@ -24,22 +24,7 @@ fi
 TOOL_NAME=$(echo "$INPUT" | json_value '.tool_name')
 COMMAND=$(echo "$INPUT" | json_value '.tool_input.command')
 FILE_PATH=$(echo "$INPUT" | json_value '.tool_input.path')
-SESSION_ID=$(echo "$INPUT" | json_value '.session_id')
 CWD=$(echo "$INPUT" | json_value '.cwd')
-
-# Extract project name (from cwd or fallback to $PWD)
-PROJECT_NAME=""
-if [[ -n "$CWD" ]]; then
-    PROJECT_NAME=$(basename "$CWD")
-elif [[ -n "$PWD" ]]; then
-    PROJECT_NAME=$(basename "$PWD")
-fi
-
-# Truncate long commands for readability
-TRUNCATED_CMD=$(truncate_string "$COMMAND" 100)
-
-# Build tool type label
-TOOL_LABEL="[$(echo "$TOOL_NAME" | tr '[:lower:]' '[:upper:]')]"
 
 # Auto-approve Edit/Write for files within project directory
 if [[ "$TOOL_NAME" == "Edit" ]] || [[ "$TOOL_NAME" == "Write" ]]; then
@@ -66,25 +51,8 @@ if [[ "$TOOL_NAME" == "Bash" ]] && [[ -n "$COMMAND" ]]; then
         echo "$OUTPUT"
         [[ "${DEBUG_ENABLED:-false}" == "true" ]] && echo "[$(date)] OUTPUT: $OUTPUT" >> "$DEBUG_LOG"
 
-        # Then send notification (non-blocking)
-        BODY="$TOOL_LABEL Auto-approved"$'\n'"Cmd: $TRUNCATED_CMD"
-        send_notification "claude-auto-permit" "$TITLE_PERMIT" "$BODY" "$PROJECT_NAME"
-
         exit 0
     fi
 fi
 
-# Build manual approval notification with details
-BODY="$TOOL_LABEL Manual approval needed"
-if [[ -n "$COMMAND" ]]; then
-    BODY="$BODY"$'\n'"Cmd: $TRUNCATED_CMD"
-fi
-if [[ -n "$FILE_PATH" ]]; then
-    BODY="$BODY"$'\n'"Path: $FILE_PATH"
-fi
-if [[ -n "$SESSION_ID" ]]; then
-    BODY="$BODY"$'\n'"Session: $SESSION_ID"
-fi
-
-send_notification "claude-manual-permit" "$TITLE_APPROVAL" "$BODY" "$PROJECT_NAME"
 exit 0
