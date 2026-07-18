@@ -45,35 +45,9 @@ jobs:
       - name: Push tag
         run: git push origin main --follow-tags
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          registry-url: 'https://registry.npmjs.org'
-
-      - run: npm install
-
-      - name: Verify package contents
-        run: npm pack --dry-run
-
-      - name: Publish to npm
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Extract changelog entry
-        run: |
-          awk "/^###? \[?${{ steps.version.outputs.value }}]?/{flag=1; next} /^###? \[/{flag=0} flag" CHANGELOG.md > /tmp/release-notes.md
-
-      - name: Create GitHub Release
-        run: |
-          gh release create v${{ steps.version.outputs.value }} \
-            --title "v${{ steps.version.outputs.value }}" \
-            --notes-file /tmp/release-notes.md
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   publish:
-    if: startsWith(github.ref, 'refs/tags/v')
+    needs: bump
+    if: ${{ github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v') }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
