@@ -242,6 +242,7 @@ function cmdList() {
   log('');
 
   // Check marketplace
+  const registered = isMarketplaceRegistered();
   const mkt = readJSON(KNOWN_MARKETPLACES);
   const mktEntry = mkt?.[MARKETPLACE_NAME];
   const mktPath = mktEntry?.path || mktEntry?.installLocation || 'unknown';
