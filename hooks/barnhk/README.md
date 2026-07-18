@@ -23,7 +23,7 @@ npx @suj1e/cckit install barnhk
 
 ## 配置
 
-安装后编辑 `~/.claude/cckit/barnhk.env`（首次运行自动创建，更新不受影响）：
+编辑 `~/.claude/cckit/barnhk.env`：
 
 ```bash
 # 项目目录自动批准
