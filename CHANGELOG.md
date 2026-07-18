@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.12](https://github.com/suj1e/cckit/compare/v1.2.11...v1.2.12) (2026-07-18)
+
+
+### Bug Fixes
+
+* **ci:** simplify publish job checkout to default branch ([9e97fe7](https://github.com/suj1e/cckit/commit/9e97fe70b46df3619161e275b5a8752b1ae8c90d))
+
 ### [1.2.11](https://github.com/suj1e/cckit/compare/v1.2.10...v1.2.11) (2026-07-18)
 
 
