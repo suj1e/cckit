@@ -1,6 +1,6 @@
 # barnhk
 
-Claude Code 安全防护 + 多通道通知插件。
+Claude Code 安全防护插件。
 
 ## 平台
 
@@ -18,7 +18,6 @@ npx @suj1e/cckit install barnhk
 
 - **危险命令拦截**: `rm -rf /`、`sudo`、`curl | bash`、`dd`、`mkfs`、`chmod 777 /`
 - **安全命令自动批准**: Git、npm、pnpm、yarn、pip、gradle、mvn、cargo、Docker、文件操作
-- **EchoBell 通知**: 一个 HTTP POST 推送到 EchoBell iOS app
 - **项目目录自动批准**: 项目目录下所有命令自动放行（危险命令除外）
 - **Edit/Write 自动批准**: 项目目录内的文件编辑自动通过
 
@@ -27,14 +26,6 @@ npx @suj1e/cckit install barnhk
 安装后编辑 `~/.claude/cckit/barnhk.env`（首次运行自动创建，更新不受影响）：
 
 ```bash
-# EchoBell webhook token（从 EchoBell iOS app → Channels → Webhook 获取）
-ECHOBELL_TOKEN=your-echobell-token
-
-# 通知类型处理 (skip / default / transcript)
-NOTIFICATION_PERMISSION_PROMPT=skip
-NOTIFICATION_QUESTION=transcript
-NOTIFICATION_IDLE_PROMPT=transcript
-
 # 项目目录自动批准
 AUTO_APPROVE_PROJECT_COMMANDS=true
 ```
@@ -45,25 +36,7 @@ AUTO_APPROVE_PROJECT_COMMANDS=true
 |------|----------|
 | PreToolUse | 工具执行前 — 危险命令检测 |
 | PermissionRequest | 权限请求 — 自动批准 |
-| Notification | Claude 通知 — 提问/提醒 |
 | TaskCompleted | 任务完成 |
 | Stop | 会话停止 |
 | SessionEnd | 会话结束 |
 | TeammateIdle | 队友空闲 |
-
-## 代码结构
-
-```
-lib/
-├── common.sh         # 入口 + dispatch_hook + 工具函数
-├── hooks.sh          # 7 个 hook 逻辑函数
-├── notify.sh         # EchoBell 通知后端
-├── safety.sh         # 命令安全检查
-├── transcript.sh     # 会话内容提取
-├── barnhk.env        # 配置文件（.env 格式）
-├── *.sh              # 7 个入口脚本（5 行 dispatch）
-└── tests/
-    ├── test-safety.sh
-    ├── test-notify.sh
-    └── test-hooks.sh
-```
