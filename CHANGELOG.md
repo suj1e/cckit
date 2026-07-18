@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.18](https://github.com/suj1e/cckit/compare/v1.2.17...v1.2.18) (2026-07-18)
+
+
+### Bug Fixes
+
+* **barnhk:** use bash prefix for Windows compatibility ([4383468](https://github.com/suj1e/cckit/commit/4383468c82a655c0e7e79677c3d385b865ad1552))
+
 ### [1.2.17](https://github.com/suj1e/cckit/compare/v1.2.16...v1.2.17) (2026-07-18)
 
 ### [1.2.16](https://github.com/suj1e/cckit/compare/v1.2.15...v1.2.16) (2026-07-18)
