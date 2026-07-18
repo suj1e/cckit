@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.20](https://github.com/suj1e/cckit/compare/v1.2.19...v1.2.20) (2026-07-18)
+
+
+### Bug Fixes
+
+* **cli:** restore registered variable declaration ([0d96c6f](https://github.com/suj1e/cckit/commit/0d96c6fbb611a14a6ca399567d18a9ca8b04f8b9))
+
 ### [1.2.19](https://github.com/suj1e/cckit/compare/v1.2.18...v1.2.19) (2026-07-18)
 
 
