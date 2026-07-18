@@ -242,8 +242,10 @@ function cmdList() {
   log('');
 
   // Check marketplace
-  const registered = isMarketplaceRegistered();
-  log(`Marketplace "cckit": ${check(registered, registered ? `registered → ${readJSON(KNOWN_MARKETPLACES)?.[MARKETPLACE_NAME]?.path || 'unknown path'}` : 'not registered')}`);
+  const mkt = readJSON(KNOWN_MARKETPLACES);
+  const mktEntry = mkt?.[MARKETPLACE_NAME];
+  const mktPath = mktEntry?.path || mktEntry?.installLocation || 'unknown';
+  log(`Marketplace "cckit": ${check(registered, registered ? `registered → ${mktPath}` : 'not registered')}`);
 
   if (registered) {
     const kf = readJSON(KNOWN_MARKETPLACES);
