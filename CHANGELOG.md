@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.19](https://github.com/suj1e/cckit/compare/v1.2.18...v1.2.19) (2026-07-18)
+
+
+### Bug Fixes
+
+* **cli:** show installLocation instead of unknown path in cckit list ([336db07](https://github.com/suj1e/cckit/commit/336db07a0c316de8edf32fc839bdba0ab35dc614))
+
 ### [1.2.18](https://github.com/suj1e/cckit/compare/v1.2.17...v1.2.18) (2026-07-18)
 
 
