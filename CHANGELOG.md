@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.6](https://github.com/suj1e/cckit/compare/v1.2.4...v1.2.6) (2026-07-18)
+
+
+### Features
+
+* **barnhk:** auto-create user config on first run ([b66a765](https://github.com/suj1e/cckit/commit/b66a765aab6ff226b6b624ab895da206adf5d251))
+* **barnhk:** remove notification backends from common.sh ([e28ec46](https://github.com/suj1e/cckit/commit/e28ec46c3a2fb9896ba6fd4bc80157ef9df38830))
+* **barnhk:** remove notification config and docs ([181fb23](https://github.com/suj1e/cckit/commit/181fb23d7f958d484c885762997d4c1e19788a70))
+* **barnhk:** remove notification.sh and send_notification calls from hooks ([31f61c8](https://github.com/suj1e/cckit/commit/31f61c8f9263de726fb1ebb6cde62b1eb52b6634))
+
 ### [1.2.5](https://github.com/suj1e/cckit/compare/v1.2.4...v1.2.5) (2026-07-18)
 
 
