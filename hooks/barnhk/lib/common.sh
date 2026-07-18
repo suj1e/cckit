@@ -5,9 +5,12 @@
 BARNHK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BARNHK_CONF="$BARNHK_DIR/barnhk.conf"
 
-# Load configuration
+# Load configuration (user config > plugin default)
 load_config() {
-    if [[ -f "$BARNHK_CONF" ]]; then
+    local user_conf="$HOME/.claude/cckit/barnhk.env"
+    if [[ -f "$user_conf" ]]; then
+        source "$user_conf"
+    elif [[ -f "$BARNHK_CONF" ]]; then
         source "$BARNHK_CONF"
     fi
 }

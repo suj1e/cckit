@@ -170,7 +170,7 @@ function cmdInstall(args) {
   if (success > 0 && fail === 0) {
     log('');
     log('Installed plugins:');
-    log('  barnhk hooks          Safety & notification hooks');
+    log('  barnhk hooks          Safety hooks');
     log('  /review-merge-sync    Code review → merge → sync workflow');
     log('');
     log('Uninstall: npx @suj1e/cckit uninstall [name]');

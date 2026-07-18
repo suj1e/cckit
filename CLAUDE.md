@@ -13,11 +13,11 @@ cckit/
 ├── package.json               # npm package metadata
 ├── bin/cli.js                 # CLI: install/uninstall/list/update/info
 ├── .claude-plugin/
-│   └── marketplace.json       # Marketplace definition (4 plugins)
+│   └── marketplace.json       # Marketplace definition (2 plugins)
 ├── skills/
 │   └── review-merge-sync/     # Code review → merge → sync
 ├── hooks/
-│   └── barnhk/                # Safety & notification hooks
+│   └── barnhk/                # Safety hooks
 ├── standards/                 # Hooks & plugins 规范文档
 └── .github/workflows/         # CI/CD (npm publish on tag)
 ```
@@ -99,13 +99,11 @@ CI workflow: `.github/workflows/publish.yml`
 
 ### barnhk
 
-安全防护 + 多通道通知插件，钩住 7 个事件。纯 bash，`dispatch_hook` 模式。
+安全防护插件，钩住 6 个事件。纯 bash，每个 hook 入口独立脚本。
 
 ```bash
 # 运行测试
 bash hooks/barnhk/tests/test-safety.sh
-bash hooks/barnhk/tests/test-notify.sh
-bash hooks/barnhk/tests/test-hooks.sh
 ```
 
 **功能**：
@@ -113,11 +111,9 @@ bash hooks/barnhk/tests/test-hooks.sh
 - 自动批准安全命令（git, npm, pnpm, yarn, pip, gradle, mvn, cargo, docker, docker compose, mkdir, touch, cp, mv, ls, cat, grep, find, openspec）
 - 项目目录自动批准（`AUTO_APPROVE_PROJECT_COMMANDS=true`）
 - Edit/Write 文件操作自动批准
-- 三通道通知：Bark (iOS) + Discord + 飞书 Webhook
-- 每个通知类型可配置 `skip` / `default` / `transcript` 模式
 - 纯 bash，跨平台（Windows 通过 Git Bash）
 
-**配置路径**（安装后）: `~/.claude/plugins/cache/cckit/barnhk/<version>/lib/barnhk.env`
+**配置路径**（安装后）: `~/.claude/cckit/barnhk.env`（用户配置优先），回退 `lib/barnhk.conf`（默认配置）
 
 ## Development
 
@@ -125,8 +121,8 @@ bash hooks/barnhk/tests/test-hooks.sh
 2. **Hooks**: `.claude-plugin/plugin.json` 内联定义，`${CLAUDE_PLUGIN_ROOT}` 引用路径
 3. **TeammateIdle** 输入字段: `agent_name` / `agent_id`（不是 `teammate_*`）
 4. **PermissionRequest** → `decision.behavior`；**PreToolUse** → `permissionDecision`
-5. 测试: `node bin/cli.js install barnhk && node bin/cli.js uninstall barnhk`；单测: `bash hooks/barnhk/tests/test-*.sh`
-6. **barnhk 重构**: 使用 `dispatch_hook` 模式（入口 5 行），逻辑在 `lib/hooks.sh`。拆分后的模块：`common.sh`（入口）、`hooks.sh`、`notify.sh`、`safety.sh`、`transcript.sh`
+5. 测试: `node bin/cli.js install barnhk && node bin/cli.js uninstall barnhk`
+6. **barnhk 结构**: `common.sh`（共享函数：安全检测 + 工具函数），每个 hook 事件独立脚本（pre-tool-use.sh, permission-request.sh, notification.sh, stop.sh, session-end.sh, task-completed.sh, teammate-idle.sh）
 
 ## Known Limitations
 
