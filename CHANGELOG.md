@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.10](https://github.com/suj1e/cckit/compare/v1.2.8...v1.2.10) (2026-07-18)
+
+
+### Bug Fixes
+
+* **ci:** make publish job run after bump in same workflow ([3c9ce6d](https://github.com/suj1e/cckit/commit/3c9ce6db7181c5f8d707efe60d5be813ff0aa356))
+* **ci:** publish job checkout correct tag from bump ([30b56a7](https://github.com/suj1e/cckit/commit/30b56a79d36900dec5f75af7d36dd105005c153c))
+
 ### [1.2.9](https://github.com/suj1e/cckit/compare/v1.2.8...v1.2.9) (2026-07-18)
 
 
