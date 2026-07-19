@@ -128,6 +128,7 @@ description: |
 
 ```
 /ship barnhk-remove-notifications
+→ superpowers:brainstorming → 探索设计方案
 → opsx:new → 创建 change
 → 分析 barnhk 代码结构
 → 收集需求（范围、影响）
