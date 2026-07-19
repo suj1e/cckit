@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.23](https://github.com/suj1e/cckit/compare/v1.2.22...v1.2.23) (2026-07-19)
+
+
+### Bug Fixes
+
+* remove nested skills layer in review-merge-sync ([1951eab](https://github.com/suj1e/cckit/commit/1951eaba1b8400c9fffd9c5a051a81b533233234))
+
 ### [1.2.22](https://github.com/suj1e/cckit/compare/v1.2.21...v1.2.22) (2026-07-19)
 
 
