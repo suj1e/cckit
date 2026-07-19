@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.22](https://github.com/suj1e/cckit/compare/v1.2.21...v1.2.22) (2026-07-19)
+
+
+### Features
+
+* add /ship skill — end-to-end dev workflow ([7ef80e1](https://github.com/suj1e/cckit/commit/7ef80e1699e8c5aa3d88cd89dcbb29079c927116))
+* fix ship skill file structure and update docs ([ef0c59a](https://github.com/suj1e/cckit/commit/ef0c59a5d2e9ba6386353d8afd617a0aefa03ebe))
+* register ship plugin to marketplace ([3003fec](https://github.com/suj1e/cckit/commit/3003fec8749d61cb3c5408a2fd891811d6fe830a))
+
 ### [1.2.21](https://github.com/suj1e/cckit/compare/v1.2.20...v1.2.21) (2026-07-19)
 
 
