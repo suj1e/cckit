@@ -1,6 +1,6 @@
 # ship
 
-End-to-end development workflow: proposal → design → plan → implement → verify → archive.
+End-to-end development workflow via opsx skills: proposal → design → plan → implement → verify → archive.
 
 ## 用法
 

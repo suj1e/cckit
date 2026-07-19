@@ -2,27 +2,28 @@
 name: ship
 description: |
   End-to-end development workflow: proposal → design → plan → implement → verify → archive.
-  Orchestrates OpenSpec + Superpowers skills into a single command.
+  Orchestrates opsx (OpenSpec) + Superpowers skills into a single command.
   Trigger: /ship <change-name>
 ---
 
 # Ship — 从需求到上线
 
 对指定变更执行完整开发流程：brainstorming → design → plan → implement → verify → archive。
+依赖 opsx skills（OpenSpec 的 skill 封装）和 superpowers skills。
 
 ## 前置要求
 
-- OpenSpec CLI 已安装（`openspec` 命令可用）
 - 项目有 `openspec/` 目录
+- 可用 opsx skills（`opsx:new`、`opsx:propose`、`opsx:verify`、`opsx:archive`）
 
 ## 流程
 
 ### 步骤 1：创建 OpenSpec Change
 
-```bash
-openspec new change <name>
-cd openspec/changes/<name>
+调用 **opsx:new** skill，传入 change 名称：
+
 ```
+/opsx:new <name>
 
 ### 步骤 2：分析上下文
 
@@ -91,11 +92,7 @@ cd openspec/changes/<name>
 
 ### 步骤 6：写 Tasks
 
-```bash
-openspec propose
-```
-
-自动生成 `tasks.md`。如果用户需要调整，手动编辑。
+调用 **opsx:propose** skill，自动生成 `tasks.md`。如果用户需要调整，手动编辑。
 
 ### 步骤 7：生成 Implementation Plan
 
@@ -116,17 +113,13 @@ openspec propose
 
 ### 步骤 10：验证
 
-```bash
-openspec verify-change
-```
-
-检查所有 spec 是否满足。如有失败，修复后重新验证。
+调用 **opsx:verify** skill，检查所有 spec 是否满足。如有失败，修复后重新验证。
 
 ### 步骤 11：归档
 
 询问用户是否归档：
 
-- **归档** → `openspec archive-change`
+- **归档** → `opsx:archive`
 - **保留** → 结束流程，变更留在 `openspec/changes/` 下
 
 ---
@@ -135,17 +128,17 @@ openspec verify-change
 
 ```
 /ship barnhk-remove-notifications
-→ 创建 change 目录
+→ opsx:new → 创建 change
 → 分析 barnhk 代码结构
 → 收集需求（范围、影响）
 → 写 proposal.md → 用户确认
 → 写 design.md → 用户确认
-→ openspec propose → tasks.md
+→ opsx:propose → tasks.md
 → writing-plans → plan
 → 用户确认 plan
 → subagent-driven-development 执行
-→ openspec verify-change
-→ openspec archive-change
+→ opsx:verify
+→ opsx:archive
 
 /ship fix-login-timeout
 → 同上，brainstorming 阶段侧重根因分析
