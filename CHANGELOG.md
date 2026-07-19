@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.26](https://github.com/suj1e/cckit/compare/v1.2.25...v1.2.26) (2026-07-19)
+
+
+### Bug Fixes
+
+* **ship:** add brainstorming step via superpowers:brainstorming skill ([e544df7](https://github.com/suj1e/cckit/commit/e544df7da87a63c827bdb622f15ef6186192c05d))
+
 ### [1.2.25](https://github.com/suj1e/cckit/compare/v1.2.24...v1.2.25) (2026-07-19)
 
 ### [1.2.24](https://github.com/suj1e/cckit/compare/v1.2.23...v1.2.24) (2026-07-19)
