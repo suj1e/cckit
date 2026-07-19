@@ -1,0 +1,10 @@
+{
+  "name": "ship",
+  "version": "1.0.0",
+  "description": "End-to-end dev workflow: proposal → design → plan → implement → verify → archive",
+  "author": {
+    "name": "suj1e"
+  },
+  "license": "MIT",
+  "keywords": ["workflow", "openspec", "superpowers", "ship"]
+}

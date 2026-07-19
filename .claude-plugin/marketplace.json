@@ -22,6 +22,15 @@
         "name": "suj1e"
       },
       "source": "./skills/review-merge-sync"
+    },
+    {
+      "name": "ship",
+      "description": "End-to-end dev workflow: proposal → design → plan → implement → verify → archive",
+      "version": "1.0.0",
+      "author": {
+        "name": "suj1e"
+      },
+      "source": "./skills/ship"
     }
   ]
 }
