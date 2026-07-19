@@ -2,7 +2,7 @@
 name: review-merge-sync
 description: |
   Review a feature/bugfix branch, merge to target branch if approved, push, and optionally sync the corresponding worktree.
-  Trigger: /review-merge-sync <source-branch> [target-branch]
+  Trigger: /review-merge-sync <source-branch> [target-branch] [--no-review]
   Default target branch: main
 ---
 
@@ -14,8 +14,11 @@ description: |
 
 - `<source-branch>`（必填）：要 review 并合并的分支名，如 `bugfix`、`optimize`
 - `<target-branch>`（选填，默认 `main`）：合并到的目标分支
+- `--no-review`（选填）：跳过 code review 步骤，直接合并
 
 ## 流程
+
+**如果指定了 `--no-review`，跳过步骤 1 和 2，直接从步骤 3 开始。**
 
 ### 步骤 1：Code Review
 
@@ -81,4 +84,7 @@ git -C "<worktree-path>" merge origin/<target-branch> --no-edit
 /review-merge-sync feat/x develop
 → review feat/x relative to develop
 → 用户确认 → 合并 feat/x 到 develop → push → 同步 feat/x worktree
+
+/review-merge-sync hotfix main --no-review
+→ 跳过 review → 直接合并 hotfix 到 main → push → 同步 worktree
 ```
