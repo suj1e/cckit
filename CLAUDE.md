@@ -13,9 +13,10 @@ cckit/
 ├── package.json               # npm package metadata
 ├── bin/cli.js                 # CLI: install/uninstall/list/update/info
 ├── .claude-plugin/
-│   └── marketplace.json       # Marketplace definition (2 plugins)
+│   └── marketplace.json       # Marketplace definition (3 plugins)
 ├── skills/
 │   └── review-merge-sync/     # Code review → merge → sync
+│   ├── ship/                  # End-to-end dev workflow
 ├── hooks/
 │   └── barnhk/                # Safety hooks
 ├── standards/                 # Hooks & plugins 规范文档
@@ -95,6 +96,13 @@ CI workflow: `.github/workflows/publish.yml`
 
 - 用法: `/review-merge-sync <branch> [target]`
 
+### ship
+
+端到端开发工作流：OpenSpec brainstorming → design → plan → implement → verify → archive。
+
+- 用法: `/ship <change-name>`
+- 依赖 OpenSpec CLI (`openspec` 命令) 和 `superpowers` skills
+
 ## Hooks
 
 ### barnhk
@@ -121,7 +129,7 @@ bash hooks/barnhk/tests/test-safety.sh
 2. **Hooks**: `.claude-plugin/plugin.json` 内联定义，`${CLAUDE_PLUGIN_ROOT}` 引用路径
 3. **TeammateIdle** 输入字段: `agent_name` / `agent_id`（不是 `teammate_*`）
 4. **PermissionRequest** → `decision.behavior`；**PreToolUse** → `permissionDecision`
-5. 测试: `node bin/cli.js install barnhk && node bin/cli.js uninstall barnhk`
+5. 测试: `node bin/cli.js install barnhk && node bin/cli.js uninstall barnhk && node bin/cli.js install ship && node bin/cli.js uninstall ship`
 6. **barnhk 结构**: `common.sh`（共享函数：安全检测 + 工具函数），每个 hook 事件独立脚本（pre-tool-use.sh, permission-request.sh, notification.sh, stop.sh, session-end.sh, task-completed.sh, teammate-idle.sh）
 
 ## Known Limitations

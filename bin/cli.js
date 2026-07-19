@@ -14,7 +14,7 @@ const MARKETPLACE_NAME = 'cckit';
 const MARKETPLACE_JSON = path.join(PKG_ROOT, '.claude-plugin', 'marketplace.json');
 const KNOWN_MARKETPLACES = path.join(os.homedir(), '.claude', 'plugins', 'known_marketplaces.json');
 
-const ALL_PLUGINS = ['barnhk', 'review-merge-sync'];
+const ALL_PLUGINS = ['barnhk', 'review-merge-sync', 'ship'];
 
 const GREEN = '\x1b[32m';
 const RED = '\x1b[31m';
@@ -172,6 +172,7 @@ function cmdInstall(args) {
     log('Installed plugins:');
     log('  barnhk hooks          Safety hooks');
     log('  /review-merge-sync    Code review → merge → sync workflow');
+    log('  /ship                 End-to-end dev workflow');
     log('');
     log('Uninstall: npx @suj1e/cckit uninstall [name]');
   }
