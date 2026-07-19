@@ -98,10 +98,10 @@ CI workflow: `.github/workflows/publish.yml`
 
 ### ship
 
-端到端开发工作流：opsx (OpenSpec) brainstorming → design → plan → implement → verify → archive。
+端到端开发工作流：brainstorming → proposal → design → plan → implement → verify → archive。
 
 - 用法: `/ship <change-name>`
-- 依赖 opsx skills 和 superpowers skills
+- 依赖 opsx skills 和 superpowers skills（brainstorming + writing-plans + subagent-driven-development）
 
 ## Hooks
 

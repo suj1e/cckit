@@ -25,7 +25,7 @@
     },
     {
       "name": "ship",
-      "description": "End-to-end dev workflow via opsx skills: proposal → design → plan → implement → verify → archive",
+      "description": "End-to-end dev workflow: brainstorming → proposal → design → plan → implement → verify → archive via opsx + superpowers skills",
       "version": "1.0.0",
       "author": {
         "name": "suj1e"

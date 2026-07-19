@@ -1,6 +1,6 @@
 # ship
 
-End-to-end development workflow via opsx skills: proposal → design → plan → implement → verify → archive.
+End-to-end development workflow: brainstorming → proposal → design → plan → implement → verify → archive via opsx + superpowers skills.
 
 ## 用法
 
