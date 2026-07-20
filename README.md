@@ -46,11 +46,20 @@ cckit info <name>       # 查看插件详情
 |------|------|
 | **barnhk** | 安全防护插件，自动批准安全命令，拦截危险操作 |
 
+### Statusline
+
+| 插件 | 用途 |
+|------|------|
+| **statusline** | 状态栏：模型名、上下文进度条、git 分支、会话费用 |
+
 ## 用法示例
 
 ```bash
 # 只装 barnhk 钩子
 npx @suj1e/cckit install barnhk
+
+# 只装 statusline 状态栏
+npx @suj1e/cckit install statusline
 
 # 查看已安装的插件
 cckit list
