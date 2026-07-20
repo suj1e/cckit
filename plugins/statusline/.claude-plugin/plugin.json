@@ -1,0 +1,17 @@
+{
+  "name": "statusline",
+  "version": "1.0.0",
+  "description": "Claude Code status line: model, context usage bar, git branch, and session cost",
+  "author": {
+    "name": "suj1e"
+  },
+  "license": "MIT",
+  "keywords": ["statusline", "context", "git", "cost"],
+  "settings": {
+    "statusLine": {
+      "type": "command",
+      "command": "${CLAUDE_PLUGIN_ROOT}/scripts/statusline.sh",
+      "padding": 2
+    }
+  }
+}

@@ -31,6 +31,15 @@
         "name": "suj1e"
       },
       "source": "./skills/ship"
+    },
+    {
+      "name": "statusline",
+      "description": "Claude Code status line: model, context usage bar, git branch, and session cost",
+      "version": "1.0.0",
+      "author": {
+        "name": "suj1e"
+      },
+      "source": "./plugins/statusline"
     }
   ]
 }

@@ -14,7 +14,7 @@ const MARKETPLACE_NAME = 'cckit';
 const MARKETPLACE_JSON = path.join(PKG_ROOT, '.claude-plugin', 'marketplace.json');
 const KNOWN_MARKETPLACES = path.join(os.homedir(), '.claude', 'plugins', 'known_marketplaces.json');
 
-const ALL_PLUGINS = ['barnhk', 'review-merge-sync', 'ship'];
+const ALL_PLUGINS = ['barnhk', 'review-merge-sync', 'ship', 'statusline'];
 
 const GREEN = '\x1b[32m';
 const RED = '\x1b[31m';
@@ -105,6 +105,122 @@ function isMarketplaceRegistered() {
   return kf && kf[MARKETPLACE_NAME] !== undefined;
 }
 
+// ── Statusline helpers ────────────────────────────────────────────────────────
+
+const CCKIT_DIR = path.join(os.homedir(), '.claude', 'cckit');
+const STATUSLINE_SCRIPT = path.join(CCKIT_DIR, 'statusline.sh');
+const STATUSLINE_CONFIG_KEY = 'cckit_statusline_installed';
+
+function ensureCckitDir() {
+  if (!fs.existsSync(CCKIT_DIR)) {
+    fs.mkdirSync(CCKIT_DIR, { recursive: true });
+  }
+}
+
+// Copy statusline.sh from plugin cache to ~/.claude/cckit/
+function deployStatuslineScript() {
+  ensureCckitDir();
+
+  // Find the installed plugin in cache
+  const cacheBase = path.join(os.homedir(), '.claude', 'plugins', 'cache', 'cckit', 'statusline');
+  if (!fs.existsSync(cacheBase)) {
+    warn('statusline plugin cache not found, skipping script deployment');
+    return false;
+  }
+
+  // Find the version directory (there should be one)
+  const versions = fs.readdirSync(cacheBase).filter(f => {
+    const full = path.join(cacheBase, f);
+    return fs.statSync(full).isDirectory();
+  });
+  if (versions.length === 0) {
+    warn('No version directory found in statusline cache');
+    return false;
+  }
+
+  // Use the latest version (sorted)
+  versions.sort();
+  const pluginRoot = path.join(cacheBase, versions[versions.length - 1]);
+  const srcScript = path.join(pluginRoot, 'scripts', 'statusline.sh');
+
+  if (!fs.existsSync(srcScript)) {
+    warn(`statusline.sh not found at ${srcScript}`);
+    return false;
+  }
+
+  // Copy script
+  fs.copyFileSync(srcScript, STATUSLINE_SCRIPT);
+
+  // Make executable (no-op on Windows, fine on Unix)
+  try { fs.chmodSync(STATUSLINE_SCRIPT, 0o755); } catch { /* ignore on Windows */ }
+
+  return true;
+}
+
+// Inject statusLine into ~/.claude/settings.json
+function injectStatuslineConfig() {
+  const settingsPath = path.join(os.homedir(), '.claude', 'settings.json');
+
+  let settings = {};
+  if (fs.existsSync(settingsPath)) {
+    settings = readJSON(settingsPath) || {};
+  }
+
+  // Only inject if not already present
+  if (settings.statusLine) {
+    log(`${YELLOW}⚠${NC} statusLine already configured in settings.json, skipping injection`);
+    return false;
+  }
+
+  settings.statusLine = {
+    type: 'command',
+    command: STATUSLINE_SCRIPT,
+    padding: 2
+  };
+
+  // Write back with pretty formatting
+  fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2) + '\n', 'utf8');
+  return true;
+}
+
+// Remove statusline config from ~/.claude/settings.json
+function removeStatuslineConfig() {
+  const settingsPath = path.join(os.homedir(), '.claude', 'settings.json');
+
+  if (!fs.existsSync(settingsPath)) return false;
+
+  let settings = readJSON(settingsPath);
+  if (!settings || !settings.statusLine) return false;
+
+  // Check if the statusLine points to our script
+  const cmd = settings.statusLine.command || '';
+  const normalizedCmd = cmd.replace(/\\/g, '/');
+  if (!normalizedCmd.includes('cckit/statusline.sh') && !normalizedCmd.includes('.claude/cckit/statusline.sh')) {
+    return false; // Not our config, don't touch
+  }
+
+  delete settings.statusLine;
+
+  // Remove empty objects to keep settings clean
+  Object.keys(settings).forEach(key => {
+    if (typeof settings[key] === 'object' && settings[key] !== null && Object.keys(settings[key]).length === 0) {
+      delete settings[key];
+    }
+  });
+
+  fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2) + '\n', 'utf8');
+  return true;
+}
+
+// Remove deployed script
+function removeStatuslineScript() {
+  if (fs.existsSync(STATUSLINE_SCRIPT)) {
+    fs.unlinkSync(STATUSLINE_SCRIPT);
+    return true;
+  }
+  return false;
+}
+
 // ── Commands ─────────────────────────────────────────────────────────────────
 
 function cmdInstall(args) {
@@ -155,6 +271,18 @@ function cmdInstall(args) {
       run(`claude plugin install ${name}@${MARKETPLACE_NAME} --scope user`, { stdio: 'pipe' });
       log(`${GREEN}✓${NC} ${name} installed`);
       success++;
+
+      // Post-install: deploy statusline script and inject config
+      if (name === 'statusline') {
+        log(`${CYAN}→ Deploying statusline script...${NC}`);
+        if (deployStatuslineScript()) {
+          log(`${GREEN}✓${NC} Script deployed to ${STATUSLINE_SCRIPT}`);
+        }
+        log(`${CYAN}→ Injecting statusLine config...${NC}`);
+        if (injectStatuslineConfig()) {
+          log(`${GREEN}✓${NC} statusLine added to ~/.claude/settings.json`);
+        }
+      }
     } catch (err) {
       const msg = (err.stderr || err.message || '').toString();
       log(`${RED}✗${NC} ${name} failed: ${msg.trim()}`);
@@ -173,6 +301,7 @@ function cmdInstall(args) {
     log('  barnhk hooks          Safety hooks');
     log('  /review-merge-sync    Code review → merge → sync workflow');
     log('  /ship                 End-to-end dev workflow');
+    log('  statusline            Status line: model, context bar, git, cost');
     log('');
     log('Uninstall: npx @suj1e/cckit uninstall [name]');
   }
@@ -212,6 +341,18 @@ function cmdUninstall(args) {
       run(`claude plugin uninstall ${name}@${MARKETPLACE_NAME} --scope user`, { stdio: 'pipe' });
       log(`${GREEN}✓${NC} ${name} uninstalled`);
       success++;
+
+      // Post-uninstall: remove statusline config and script
+      if (name === 'statusline') {
+        log(`${CYAN}→ Cleaning up statusline config...${NC}`);
+        const removedConfig = removeStatuslineConfig();
+        const removedScript = removeStatuslineScript();
+        if (removedConfig) log(`${GREEN}✓${NC} statusLine removed from settings.json`);
+        if (removedScript) log(`${GREEN}✓${NC} Script removed from ${STATUSLINE_SCRIPT}`);
+        if (!removedConfig && !removedScript) {
+          log(`${YELLOW}⚠${NC} No cckit statusline files found to clean up`);
+        }
+      }
     } catch (err) {
       const msg = (err.stderr || err.message || '').toString();
       // "not installed" is not really a failure
@@ -287,8 +428,9 @@ function cmdList() {
     let desc = '';
     try {
       const pluginJson = path.join(PKG_ROOT, 'hooks', name, '.claude-plugin', 'plugin.json');
-      const altJson = path.join(PKG_ROOT, 'skills', name, '.claude-plugin', 'plugin.json');
-      const pj = readJSON(fs.existsSync(pluginJson) ? pluginJson : altJson);
+      const skillsJson = path.join(PKG_ROOT, 'skills', name, '.claude-plugin', 'plugin.json');
+      const pluginsJson = path.join(PKG_ROOT, 'plugins', name, '.claude-plugin', 'plugin.json');
+      const pj = readJSON(fs.existsSync(pluginJson) ? pluginJson : fs.existsSync(skillsJson) ? skillsJson : pluginsJson);
       if (pj && pj.description) desc = ` — ${pj.description}`;
     } catch { /* ignore */ }
 
@@ -342,6 +484,7 @@ function cmdInfo(name) {
   const sourcePaths = [
     path.join(PKG_ROOT, 'skills', name, '.claude-plugin', 'plugin.json'),
     path.join(PKG_ROOT, 'hooks', name, '.claude-plugin', 'plugin.json'),
+    path.join(PKG_ROOT, 'plugins', name, '.claude-plugin', 'plugin.json'),
   ];
 
   for (const p of sourcePaths) {
