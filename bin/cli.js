@@ -459,6 +459,14 @@ function cmdUpdate(args) {
     try {
       run(`claude plugin update ${name}@${MARKETPLACE_NAME} --scope user`, { stdio: 'pipe' });
       log(`${GREEN}✓${NC} ${name} updated`);
+
+      // Re-deploy statusline script after plugin update
+      if (name === 'statusline') {
+        log(`${CYAN}→ Redeploying statusline script...${NC}`);
+        if (deployStatuslineScript()) {
+          log(`${GREEN}✓${NC} Script redeployed to ${STATUSLINE_SCRIPT}`);
+        }
+      }
     } catch (err) {
       const msg = (err.stderr || err.message || '').toString();
       log(`${RED}✗${NC} ${name}: ${msg.trim()}`);
