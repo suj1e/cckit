@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.27](https://github.com/suj1e/cckit/compare/v1.2.26...v1.2.27) (2026-07-20)
+
+
+### Features
+
+* add statusline plugin with auto-deploy and settings injection ([c1c5b31](https://github.com/suj1e/cckit/commit/c1c5b31224e36dfa097026bd78977fdd06db79a7))
+* redeploy statusline script on plugin update ([c5717a7](https://github.com/suj1e/cckit/commit/c5717a7b84f560c80a68e44c15082c8203fa1095))
+
 ### [1.2.26](https://github.com/suj1e/cckit/compare/v1.2.25...v1.2.26) (2026-07-19)
 
 
